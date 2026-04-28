@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Learning for Temporal Data</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="assets/presentation_temporal.css">
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section class="title-slide">
+          <div class="kicker">Temporal data lecture</div>
+          <h1>Deep Learning for Temporal Data</h1>
+          <span class="rule"></span>
+          <p class="subtitle">
+            From fixed windows and recurrent models to reservoir computing,
+            temporal convolutions, transformers, and remote-sensing time series.
+          </p>
+          <div class="tag-row">
+            <span class="tag primary">30 minutes</span>
+            <span class="tag">20-25 slides</span>
+            <span class="tag">technical introduction</span>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Motivation</div>
+          <h2>Temporal data asks for memory</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
+            <div>
+              <p class="lead">
+                We observe a process through ordered measurements and want a
+                model that remembers the right past at the right scale.
+              </p>
+              <ul>
+                <li class="fragment">Forecast: predict future values.</li>
+                <li class="fragment">Classify: assign a label to a sequence.</li>
+                <li class="fragment">Detect: find changes, events, or anomalies.</li>
+                <li class="fragment">Impute: reconstruct missing observations.</li>
+              </ul>
+            </div>
+            <div>
+              <img class="media" src="assets/figures/mts-forecasting.png" alt="Multi-step time-series forecasting schematic">
+              <p class="caption">Forecasting setup adapted from the tutorial style.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Formal setup</div>
+          <h2>A minimal sequence-learning view</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
+            <div>
+              <div class="equation">
+                \[
+                \mathcal{F}_{\theta}\left(x_{t-W:t}, u_{t:t+H}\right)
+                = \hat{x}_{t:t+H}
+                \]
+              </div>
+              <ul>
+                <li class="fragment"><strong>\(W\)</strong>: context length, or how much history the model sees.</li>
+                <li class="fragment"><strong>\(H\)</strong>: prediction horizon.</li>
+                <li class="fragment"><strong>\(u_t\)</strong>: exogenous information such as calendar, weather, orbit, or metadata.</li>
+              </ul>
+            </div>
+            <div class="callout">
+              <p><strong>Architectural question:</strong></p>
+              <p>How should information move across time?</p>
+              <div class="tag-row">
+                <span class="tag primary fragment">state</span>
+                <span class="tag primary fragment">filter</span>
+                <span class="tag primary fragment">attention</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Learning across collections</div>
+          <h2>Local and global predictors</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div class="card">
+              <h3>Local models</h3>
+              <img class="media short" src="assets/figures/generic-local-model.png" alt="Local model schematic">
+              <p class="small">One model per signal: tailored, but data inefficient.</p>
+              <p class="equation">\(\hat{x}^i_{t+h}=f(x^i_{t-W:t};\theta^i)\)</p>
+            </div>
+            <div class="card fragment">
+              <h3>Global models</h3>
+              <img class="media short" src="assets/figures/generic-global-model.png" alt="Global model schematic">
+              <p class="small">One shared model: sample efficient and scalable.</p>
+              <p class="equation">\(\hat{x}^i_{t+h}=f(x^i_{t-W:t};\theta)\)</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-auto-animate>
+          <div class="kicker">Fixed windows</div>
+          <h2>A sliding context becomes a table</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div>
+              <p>
+                Choose a fixed window of \(P\) past values and learn a map to
+                the target horizon.
+              </p>
+              <div class="equation">
+                \[
+                \hat{x}_{t+\tau}=g\left([x_{t-P},\ldots,x_{t-1},x_t]\right)
+                \]
+              </div>
+              <ul>
+                <li class="fragment">Linear AR: \(g\) is linear.</li>
+                <li class="fragment">Tree/SVM/MLP: \(g\) can be nonlinear.</li>
+                <li class="fragment">Every new time step shifts the window.</li>
+              </ul>
+            </div>
+            <div>
+              <div class="media-row">
+                <img class="media short" src="RNNs+Reservoir/media/windowed.png" alt="Windowed forecasting schematic">
+                <img class="media short" src="RNNs+Reservoir/media/sin.gif" alt="Animated sliding window over a sinusoidal time series">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Nonlinear windows</div>
+          <h2>An MLP is a learned window operator</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-right">
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/mlp_windowed.png" alt="MLP windowed forecasting schematic">
+            </div>
+            <div>
+              <ul>
+                <li class="fragment">Input dimension: \(d_{\mathrm{in}}=P\).</li>
+                <li class="fragment">Output dimension: \(d_{\mathrm{out}}=H\), or a single horizon.</li>
+                <li class="fragment">Nonlinear layers learn interactions among lags.</li>
+                <li class="fragment">Training pairs are made by shifting a long sequence into many past/future examples.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Notebook example</div>
+          <h2>Electricity demand: nonlinear and seasonal</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/load_vs_temp.png" alt="Electricity demand versus temperature">
+              <p class="caption">The temperature/load relation is often U-shaped rather than linear.</p>
+            </div>
+            <div>
+              <ul>
+                <li class="fragment">Demand depends on temperature, calendar, and daily/weekly rhythms.</li>
+                <li class="fragment">A useful baseline is seasonal persistence: tomorrow resembles yesterday.</li>
+                <li class="fragment">Neural models must beat simple temporal baselines before we trust the extra complexity.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Limitation</div>
+          <h2>What should \(P\) be?</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/word_pred.gif" alt="Different sentences require different memory lengths">
+            </div>
+            <div>
+              <ul>
+                <li class="fragment">Too short: the relevant evidence is outside the window.</li>
+                <li class="fragment">Too long: more parameters, more noise, weaker local resolution.</li>
+                <li class="fragment">A fixed window is a hard architectural assumption about memory.</li>
+              </ul>
+              <p class="callout fragment">
+                This is the doorway to recurrent states, reservoirs, convolutions,
+                and attention.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">RNN idea</div>
+          <h2>A hidden state carries context</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-right">
+            <div>
+              <ul>
+                <li class="fragment">Process one observation at a time.</li>
+                <li class="fragment">Update a hidden state \(h_t\) with the new input and old state.</li>
+                <li class="fragment">Use \(h_t\) as a compressed summary of the past.</li>
+              </ul>
+              <div class="equation fragment">
+                \[
+                h_t=\phi(W_x x_t + W_h h_{t-1}), \qquad
+                y_t=W_o h_t
+                \]
+              </div>
+            </div>
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/RNN.gif" alt="Animated recurrent neural network">
+              <p class="caption">Animated RNN from the notebook.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Training</div>
+          <h2>Backpropagation through time</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/bptt.png" alt="Backpropagation through time diagram">
+            </div>
+            <div>
+              <ul>
+                <li class="fragment">Unroll the recurrence into a deep feed-forward graph.</li>
+                <li class="fragment">Share parameters across all time steps.</li>
+                <li class="fragment">Gradients must travel through many repeated transformations.</li>
+              </ul>
+              <p class="callout fragment">
+                Long memory is possible, but optimization can become the bottleneck.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Failure modes</div>
+          <h2>Why vanilla RNNs are hard to scale</h2>
+          <span class="rule"></span>
+          <div class="three-col">
+            <div class="card">
+              <h3>Vanishing gradients</h3>
+              <p class="small">Distant events receive tiny updates and are forgotten during training.</p>
+            </div>
+            <div class="card fragment">
+              <h3>Exploding gradients</h3>
+              <p class="small">Repeated dynamics can amplify errors; clipping helps but does not solve modeling.</p>
+            </div>
+            <div class="card fragment">
+              <h3>Sequential compute</h3>
+              <p class="small">Time steps depend on previous hidden states, limiting parallelism.</p>
+            </div>
+          </div>
+          <p class="fragment small">
+            Gated units such as LSTMs and GRUs improve memory control, but the recurrence is still sequential.
+          </p>
+        </section>
+
+        <section>
+          <div class="kicker">Echo State Networks</div>
+          <h2>A randomized RNN with a trained readout</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-right">
+            <div>
+              <ul>
+                <li class="fragment">Random input and recurrent weights create a high-dimensional dynamical system.</li>
+                <li class="fragment">The reservoir state \(h_t\) contains many nonlinear temporal features.</li>
+                <li class="fragment">Only the output map \(W_o\) is fitted, often with ridge regression.</li>
+              </ul>
+            </div>
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/Reservoir.gif" alt="Animated reservoir computing schematic">
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Readout</div>
+          <h2>One reservoir, many forecasting horizons</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div>
+              <img class="media short" src="RNNs+Reservoir/media/Reservoir_pred1.png" alt="Reservoir readout for one horizon">
+              <p class="caption">Readout selects features for horizon \(\tau_1\).</p>
+            </div>
+            <div class="fragment">
+              <img class="media short" src="RNNs+Reservoir/media/Reservoir_pred2.png" alt="Reservoir readout for another horizon">
+              <p class="caption">A different readout can select features for horizon \(\tau_2\).</p>
+            </div>
+          </div>
+          <div class="equation fragment">
+            \[
+            x_{t+\tau}=g(h_t), \qquad
+            h_t=\tanh(W_i x_t + W_h h_{t-1})
+            \]
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Reservoir tuning</div>
+          <h2>Memory lives near the edge of chaos</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div>
+              <img class="media" src="RNNs+Reservoir/media/dynamics.png" alt="Reservoir dynamics under different spectral radii">
+            </div>
+            <div>
+              <ul>
+                <li class="fragment"><strong>Spectral radius \(\rho\)</strong>: controls contraction and memory.</li>
+                <li class="fragment"><strong>Input scaling</strong>: controls the linear/nonlinear operating regime.</li>
+                <li class="fragment"><strong>Reservoir size</strong>: trades richer dynamics for computation.</li>
+              </ul>
+              <p class="callout fragment">
+                Reservoirs trade supervised training for a rich, redundant pool of dynamical features.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section data-auto-animate>
+          <div class="kicker">Convolution</div>
+          <h2>A filter is a sliding learned window</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
+            <div>
+              <p>
+                A 1-D convolution applies the same small kernel at every time
+                position.
+              </p>
+              <div class="equation">
+                \[
+                z_t=\sum_{k=0}^{K-1} w_k x_{t-k}
+                \]
+              </div>
+              <ul>
+                <li class="fragment">Like AR: local lagged features.</li>
+                <li class="fragment">Unlike AR: many nonlinear channels stacked in depth.</li>
+                <li class="fragment">Unlike RNN: all positions can be processed in parallel.</li>
+              </ul>
+            </div>
+            <svg class="diagram" viewBox="0 0 620 310" role="img" aria-label="A causal convolution sliding across a sequence">
+              <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+                  <path d="M0,0 L10,4 L0,8 Z" fill="#60727a"></path>
+                </marker>
+              </defs>
+              <g transform="translate(28 72)">
+                <rect class="svg-box" x="0" y="0" width="44" height="44"></rect>
+                <rect class="svg-box" x="52" y="0" width="44" height="44"></rect>
+                <rect class="svg-box" x="104" y="0" width="44" height="44"></rect>
+                <rect class="svg-accent" x="156" y="0" width="44" height="44"></rect>
+                <rect class="svg-accent" x="208" y="0" width="44" height="44"></rect>
+                <rect class="svg-accent" x="260" y="0" width="44" height="44"></rect>
+                <rect class="svg-box" x="312" y="0" width="44" height="44"></rect>
+                <rect class="svg-box" x="364" y="0" width="44" height="44"></rect>
+                <text x="13" y="30" font-size="20">x</text>
+                <text x="65" y="30" font-size="20">x</text>
+                <text x="117" y="30" font-size="20">x</text>
+                <text x="169" y="30" font-size="20">x</text>
+                <text x="221" y="30" font-size="20">x</text>
+                <text x="273" y="30" font-size="20">x</text>
+                <text x="325" y="30" font-size="20">x</text>
+                <text x="377" y="30" font-size="20">x</text>
+                <text x="160" y="-18" font-size="18" fill="#007aa3">kernel K = 3</text>
+                <line class="arrow" x1="230" y1="62" x2="230" y2="132"></line>
+                <rect class="svg-green" x="176" y="150" width="108" height="48"></rect>
+                <text x="204" y="181" font-size="20">z_t</text>
+              </g>
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Temporal convolutional networks</div>
+          <h2>Depth and dilation expand the receptive field</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <svg class="diagram" viewBox="0 0 620 360" role="img" aria-label="Dilated causal convolution receptive field">
+              <defs>
+                <marker id="arrowhead2" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+                  <path d="M0,0 L10,4 L0,8 Z" fill="#60727a"></path>
+                </marker>
+              </defs>
+              <g transform="translate(70 26)">
+                <text x="0" y="22" font-size="18" fill="#60727a">Layer 3</text>
+                <circle class="svg-red" cx="250" cy="22" r="18"></circle>
+                <text x="0" y="112" font-size="18" fill="#60727a">Layer 2</text>
+                <circle class="svg-orange" cx="190" cy="112" r="18"></circle>
+                <circle class="svg-orange" cx="310" cy="112" r="18"></circle>
+                <text x="0" y="202" font-size="18" fill="#60727a">Layer 1</text>
+                <circle class="svg-accent" cx="130" cy="202" r="18"></circle>
+                <circle class="svg-accent" cx="250" cy="202" r="18"></circle>
+                <circle class="svg-accent" cx="370" cy="202" r="18"></circle>
+                <text x="0" y="292" font-size="18" fill="#60727a">Input</text>
+                <g fill="#ffffff" stroke="#d7e4e8" stroke-width="2">
+                  <rect x="70" y="270" width="32" height="32" rx="5"></rect>
+                  <rect x="130" y="270" width="32" height="32" rx="5"></rect>
+                  <rect x="190" y="270" width="32" height="32" rx="5"></rect>
+                  <rect x="250" y="270" width="32" height="32" rx="5"></rect>
+                  <rect x="310" y="270" width="32" height="32" rx="5"></rect>
+                  <rect x="370" y="270" width="32" height="32" rx="5"></rect>
+                  <rect x="430" y="270" width="32" height="32" rx="5"></rect>
+                </g>
+                <g stroke="#60727a" stroke-width="2" fill="none" marker-end="url(#arrowhead2)">
+                  <line x1="86" y1="270" x2="122" y2="220"></line>
+                  <line x1="146" y1="270" x2="130" y2="222"></line>
+                  <line x1="206" y1="270" x2="242" y2="220"></line>
+                  <line x1="266" y1="270" x2="250" y2="222"></line>
+                  <line x1="326" y1="270" x2="362" y2="220"></line>
+                  <line x1="386" y1="270" x2="370" y2="222"></line>
+                  <line x1="130" y1="184" x2="184" y2="130"></line>
+                  <line x1="250" y1="184" x2="190" y2="132"></line>
+                  <line x1="250" y1="184" x2="304" y2="130"></line>
+                  <line x1="370" y1="184" x2="310" y2="132"></line>
+                  <line x1="190" y1="94" x2="244" y2="40"></line>
+                  <line x1="310" y1="94" x2="256" y2="40"></line>
+                </g>
+              </g>
+            </svg>
+            <div>
+              <ul>
+                <li class="fragment">Causal padding prevents future leakage.</li>
+                <li class="fragment">Dilation skips positions to cover longer history.</li>
+                <li class="fragment">Residual blocks make deep temporal filters trainable.</li>
+              </ul>
+              <p class="callout fragment">
+                A TCN keeps the window intuition while escaping one fixed,
+                shallow window size.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Analogy</div>
+          <h2>Classic windows vs temporal convolutions</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div class="card">
+              <h3>Classic window model</h3>
+              <ul class="small">
+                <li>Explicit lag vector.</li>
+                <li>One predictor sees the full chosen window.</li>
+                <li>The window length is an input-design decision.</li>
+              </ul>
+            </div>
+            <div class="card fragment">
+              <h3>1-D convolutional model</h3>
+              <ul class="small">
+                <li>Small learned filters scan the series.</li>
+                <li>Depth composes local temporal motifs.</li>
+                <li>The receptive field grows by architecture.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="source">
+            See Bai, Kolter, and Koltun, 2018, for a broad empirical comparison of TCNs and recurrent networks.
+          </p>
+        </section>
+
+        <section>
+          <div class="kicker">Self-attention</div>
+          <h2>Content-addressable memory over time</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
+            <div>
+              <div class="equation">
+                \[
+                \mathrm{Attn}(Q,K,V)
+                =\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d}}\right)V
+                \]
+              </div>
+              <ul>
+                <li class="fragment">Each time step produces a query, key, and value.</li>
+                <li class="fragment">Attention weights decide which other steps matter.</li>
+                <li class="fragment">Multi-head attention learns several relation types at once.</li>
+              </ul>
+            </div>
+            <svg class="diagram" viewBox="0 0 650 340" role="img" aria-label="Attention between time steps">
+              <g transform="translate(42 60)">
+                <text x="0" y="-24" font-size="20" fill="#60727a">tokens in time</text>
+                <g>
+                  <rect class="svg-box" x="0" y="0" width="68" height="46"></rect>
+                  <rect class="svg-box" x="86" y="0" width="68" height="46"></rect>
+                  <rect class="svg-box" x="172" y="0" width="68" height="46"></rect>
+                  <rect class="svg-accent" x="258" y="0" width="68" height="46"></rect>
+                  <rect class="svg-box" x="344" y="0" width="68" height="46"></rect>
+                  <rect class="svg-box" x="430" y="0" width="68" height="46"></rect>
+                  <text x="18" y="30" font-size="20">t-5</text>
+                  <text x="104" y="30" font-size="20">t-4</text>
+                  <text x="190" y="30" font-size="20">t-3</text>
+                  <text x="276" y="30" font-size="20">t-2</text>
+                  <text x="362" y="30" font-size="20">t-1</text>
+                  <text x="454" y="30" font-size="20">t</text>
+                </g>
+                <g stroke="#007aa3" stroke-width="3" fill="none" opacity="0.9">
+                  <path d="M292 48 C292 118 34 118 34 48"></path>
+                  <path d="M292 48 C292 142 206 142 206 48"></path>
+                  <path d="M292 48 C292 118 464 118 464 48"></path>
+                </g>
+                <g transform="translate(110 184)">
+                  <rect class="svg-green" x="0" y="0" width="300" height="56"></rect>
+                  <text x="28" y="35" font-size="20">weighted temporal context</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Tradeoffs</div>
+          <h2>Why transformers changed sequence modeling</h2>
+          <span class="rule"></span>
+          <div class="two-col">
+            <div class="card soft">
+              <h3>Strengths</h3>
+              <ul class="small">
+                <li>Direct long-range interactions.</li>
+                <li>High parallelism during training.</li>
+                <li>Flexible conditioning on positional encodings, calendar features, metadata, and masks.</li>
+              </ul>
+            </div>
+            <div class="card fragment">
+              <h3>Costs</h3>
+              <ul class="small">
+                <li>Quadratic attention in sequence length.</li>
+                <li>Less built-in locality than convolutions.</li>
+                <li>Data hungry without good inductive bias.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="source">
+            Transformer architecture: Vaswani et al., 2017.
+          </p>
+        </section>
+
+        <section>
+          <div class="kicker">Satellite image time series</div>
+          <h2>Pixels, parcels, and repeated acquisitions</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
+            <div>
+              <p>
+                A satellite image time series observes the same area over months
+                or years, often through multiple spectral bands.
+              </p>
+              <ul>
+                <li class="fragment">Signals are seasonal, irregular, and cloud affected.</li>
+                <li class="fragment">Labels can be pixel-level, parcel-level, or region-level.</li>
+                <li class="fragment">Architecture choice decides how spectral, spatial, and temporal cues interact.</li>
+              </ul>
+            </div>
+            <div>
+              <img class="media" src="assets/remote_sensing/esa_s2_mosaic.png" alt="Sentinel-2 dynamic mosaic and provenance image">
+              <p class="caption">
+                Sentinel-2 dynamic mosaic and provenance image. Source: ESA EO Science for Society.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Phenology</div>
+          <h2>Crop mapping reads temporal signatures</h2>
+          <span class="rule"></span>
+          <div>
+            <img class="media wide" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
+            <p class="caption">
+              Monthly NDVI images from Sentinel-2 composites. Black areas lack cloud-free pixels.
+              Source: ESA EO Science for Society.
+            </p>
+          </div>
+          <div class="three-col">
+            <div class="card fragment">
+              <h3>RNN/LSTM</h3>
+              <p class="small">Track growth stage as a latent state.</p>
+            </div>
+            <div class="card fragment">
+              <h3>TCN</h3>
+              <p class="small">Detect local phenological motifs with seasonal receptive fields.</p>
+            </div>
+            <div class="card fragment">
+              <h3>Transformer</h3>
+              <p class="small">Attend over useful dates and mask cloudy acquisitions.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Change and events</div>
+          <h2>Flood mapping is a before/after temporal task</h2>
+          <span class="rule"></span>
+          <div class="media-row">
+            <div>
+              <img class="media tall" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
+              <p class="caption">Before: March 23, 2015</p>
+            </div>
+            <div>
+              <img class="media tall" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
+              <p class="caption">After: May 26, 2015</p>
+            </div>
+          </div>
+          <p class="source">
+            NASA Earth Observatory images by Joshua Stevens, using Landsat data from the U.S. Geological Survey.
+          </p>
+        </section>
+
+        <section>
+          <div class="kicker">Architecture map</div>
+          <h2>Which model bias helps which EO problem?</h2>
+          <span class="rule"></span>
+          <table class="comparison">
+            <thead>
+              <tr>
+                <th>Architecture</th>
+                <th>Temporal memory</th>
+                <th>Parallelism</th>
+                <th>Good fit</th>
+                <th>Watch out</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Window + MLP</strong></td>
+                <td>Fixed explicit lags</td>
+                <td>High</td>
+                <td>Small tabular forecasting baselines</td>
+                <td>Choosing \(P\); weak long memory</td>
+              </tr>
+              <tr>
+                <td><strong>RNN/GRU/LSTM</strong></td>
+                <td>Learned recurrent state</td>
+                <td>Low across time</td>
+                <td>Streaming data; compact sequence encoders</td>
+                <td>Optimization and long sequences</td>
+              </tr>
+              <tr>
+                <td><strong>Reservoir/ESN</strong></td>
+                <td>Random dynamical features</td>
+                <td>Medium</td>
+                <td>Fast training; limited labels; readout experiments</td>
+                <td>Hyperparameter sensitivity</td>
+              </tr>
+              <tr>
+                <td><strong>TCN</strong></td>
+                <td>Receptive field by depth/dilation</td>
+                <td>High</td>
+                <td>Phenology, dense sensor streams, local motifs</td>
+                <td>Very long context needs depth or dilation</td>
+              </tr>
+              <tr>
+                <td><strong>Transformer</strong></td>
+                <td>Direct attention over observed dates</td>
+                <td>High</td>
+                <td>Irregular/multimodal SITS; masked observations</td>
+                <td>Data and memory cost</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <div class="kicker">Takeaways</div>
+          <h2>Same question, different memory mechanisms</h2>
+          <span class="rule"></span>
+          <div class="three-col">
+            <div class="card">
+              <h3>State</h3>
+              <p class="small">RNNs and reservoirs compress the past into a moving representation.</p>
+            </div>
+            <div class="card fragment">
+              <h3>Filter</h3>
+              <p class="small">Temporal convolutions learn local windows and compose them into large receptive fields.</p>
+            </div>
+            <div class="card fragment">
+              <h3>Attention</h3>
+              <p class="small">Transformers select useful time steps directly, especially with masks and metadata.</p>
+            </div>
+          </div>
+          <p class="quote fragment">
+            For temporal data, architecture is a theory of what kind of past matters.
+          </p>
+        </section>
+
+        <section>
+          <div class="kicker">Sources and credits</div>
+          <h2>References</h2>
+          <span class="rule"></span>
+          <ul class="small">
+            <li>Notebook media and examples: <code>RNNs+Reservoir/nn-reservoir-computing.ipynb</code>.</li>
+            <li>Visual style and selected schematics adapted from <code>tutorial_log_filippo</code>.</li>
+            <li><a href="https://doi.org/10.1145/3533382">Benidis et al.</a>, "Deep Learning for Time Series Forecasting", ACM Computing Surveys, 2022.</li>
+            <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
+            <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
+            <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a>, "Attention Is All You Need", NeurIPS, 2017.</li>
+            <li><a href="https://www.mdpi.com/2072-4292/11/5/523">Pelletier, Webb, and Petitjean</a>, "Temporal Convolutional Neural Network for the Classification of Satellite Image Time Series", Remote Sensing, 2019.</li>
+            <li><a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Garnot_Satellite_Image_Time_Series_Classification_With_Pixel-Set_Encoders_and_Temporal_CVPR_2020_paper.pdf">Garnot et al.</a>, "Satellite Image Time Series Classification with Pixel-Set Encoders and Temporal Self-Attention", CVPR, 2020.</li>
+            <li><a href="https://eo4society.esa.int/2022/04/12/dynamic-sentinel-2-mosaic-service/">ESA EO Science for Society</a>, "Dynamic Sentinel-2 mosaic service", 2022.</li>
+            <li><a href="https://earthobservatory.nasa.gov/images/85959/flooding-of-the-red-river">NASA Earth Observatory</a>, "Flooding of The Red River", 2015.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        width: 1366,
+        height: 768,
+        margin: 0.045,
+        controls: true,
+        progress: true,
+        center: false,
+        slideNumber: "c/t",
+        transition: "slide",
+        backgroundTransition: "fade",
+        pdfSeparateFragments: false,
+        plugins: [RevealMath.MathJax3, RevealNotes, RevealHighlight],
+        mathjax3: {
+          tex: {
+            inlineMath: [["\\(", "\\)"]],
+            displayMath: [["\\[", "\\]"]]
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
