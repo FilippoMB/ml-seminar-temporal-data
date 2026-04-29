@@ -36,7 +36,7 @@
 
 .reveal .slides > section {
   box-sizing: border-box;
-  padding: 40px 58px;
+  padding: 40px 48px;
 }
 
 .reveal h1,
@@ -129,7 +129,7 @@
 .four-col {
   align-items: center;
   display: grid;
-  gap: 24px;
+  gap: 20px;
 }
 
 .two-col > *,
@@ -474,7 +474,7 @@
 .window-layout {
   align-items: center;
   display: grid;
-  gap: 32px;
+  gap: 24px;
   grid-template-columns: 0.72fr 1.28fr;
 }
 
