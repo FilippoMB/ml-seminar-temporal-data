@@ -76,6 +76,8 @@ latex-build/
 build-latex/
 
 # Generated archives and temporary files
+output.pdf
+screenshots/
 *.tmp
 *.temp
 *.bak

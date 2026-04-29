@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "check:overflow": "node .agents/skills/revealjs/scripts/check-overflow.js presentation_temporal.html"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.42.0"
+  }
+}
