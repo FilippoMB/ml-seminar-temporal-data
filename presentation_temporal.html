@@ -13,17 +13,32 @@
     <div class="reveal">
       <div class="slides">
         <section class="title-slide">
-          <div class="kicker">Temporal data lecture</div>
-          <h1>Deep Learning for Temporal Data</h1>
-          <span class="rule"></span>
-          <p class="subtitle">
-            From fixed windows and recurrent models to reservoir computing,
-            temporal convolutions, transformers, and remote-sensing time series.
-          </p>
-          <div class="tag-row">
-            <span class="tag primary">30 minutes</span>
-            <span class="tag">20-25 slides</span>
-            <span class="tag">technical introduction</span>
+          <div class="title-layout">
+            <div class="title-copy">
+              <div class="kicker">Temporal data lecture</div>
+              <h1>Deep Learning for Temporal Data</h1>
+              <span class="rule"></span>
+              <p class="subtitle">
+                Sequence models, memory mechanisms, and Earth-observation examples
+                for technical audiences in physics, computer science, and remote sensing.
+              </p>
+              <div class="tag-row" aria-label="Lecture themes">
+                <span class="tag primary">remote sensing</span>
+                <span class="tag">sequence models</span>
+                <span class="tag">forecast, classify, detect</span>
+              </div>
+            </div>
+            <div class="title-visual">
+              <img src="assets/remote_sensing/esa_s2_mosaic.png" alt="Sentinel-2 mosaic used as an Earth observation signal example">
+              <div class="temporal-card">
+                <span class="temporal-card-label">observations through time</span>
+                <div class="temporal-mini-strip" aria-hidden="true">
+                  <span></span><span></span><span class="cloud"></span><span></span>
+                  <span class="peak"></span><span class="peak"></span><span></span><span class="cloud"></span>
+                  <span></span><span></span><span class="peak"></span><span></span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -34,19 +49,42 @@
           <div class="two-col wide-left">
             <div>
               <p class="lead">
-                We observe a process through ordered measurements and want a
-                model that remembers the right past at the right scale.
+                We observe a process through ordered measurements and want a model
+                that keeps the useful past while ignoring irrelevant variation.
               </p>
               <ul>
                 <li class="fragment">Forecast: predict future values.</li>
-                <li class="fragment">Classify: assign a label to a sequence.</li>
+                <li class="fragment">Classify: assign a label to a whole sequence.</li>
                 <li class="fragment">Detect: find changes, events, or anomalies.</li>
                 <li class="fragment">Impute: reconstruct missing observations.</li>
               </ul>
             </div>
             <div>
               <img class="media" src="assets/figures/mts-forecasting.png" alt="Multi-step time-series forecasting schematic">
-              <p class="caption">Forecasting setup adapted from the tutorial style.</p>
+              <p class="caption">A sequence model maps past context and covariates to future or sequence-level outputs.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">Earth observation</div>
+          <h2>Remote sensing turns places into sequences</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
+            <div>
+              <p>
+                A pixel, parcel, sensor footprint, or region can be represented
+                as a temporal signal after spatial and spectral preprocessing.
+              </p>
+              <ul>
+                <li class="fragment">Vegetation indices trace phenology across the growing season.</li>
+                <li class="fragment">Clouds, snow, and orbit schedules create gaps and irregular dates.</li>
+                <li class="fragment">Labels may describe crops, land cover, hazards, or change events.</li>
+              </ul>
+            </div>
+            <div>
+              <img class="media image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
+              <p class="caption">Monthly NDVI from Sentinel-2 composites. Dark areas indicate missing cloud-free observations. Source: ESA EO Science for Society.</p>
             </div>
           </div>
         </section>
@@ -59,23 +97,24 @@
             <div>
               <div class="equation">
                 \[
-                \mathcal{F}_{\theta}\left(x_{t-W:t}, u_{t:t+H}\right)
-                = \hat{x}_{t:t+H}
+                \mathcal{F}_{\theta}\left(x_{t-W:t}, u_{t-W:t+H}\right)
+                = \hat{y}_{t:t+H}
                 \]
               </div>
               <ul>
-                <li class="fragment"><strong>\(W\)</strong>: context length, or how much history the model sees.</li>
-                <li class="fragment"><strong>\(H\)</strong>: prediction horizon.</li>
-                <li class="fragment"><strong>\(u_t\)</strong>: exogenous information such as calendar, weather, orbit, or metadata.</li>
+                <li class="fragment"><strong>\(x_t\)</strong>: observed signal, possibly multivariate.</li>
+                <li class="fragment"><strong>\(u_t\)</strong>: exogenous context such as calendar, weather, orbit, mask, or metadata.</li>
+                <li class="fragment"><strong>\(W\)</strong>: context length. <strong>\(H\)</strong>: output horizon.</li>
               </ul>
             </div>
             <div class="callout">
-              <p><strong>Architectural question:</strong></p>
+              <p><strong>Architectural question</strong></p>
               <p>How should information move across time?</p>
               <div class="tag-row">
                 <span class="tag primary fragment">state</span>
                 <span class="tag primary fragment">filter</span>
                 <span class="tag primary fragment">attention</span>
+                <span class="tag primary fragment">scan</span>
               </div>
             </div>
           </div>
@@ -90,15 +129,18 @@
               <h3>Local models</h3>
               <img class="media short" src="assets/figures/generic-local-model.png" alt="Local model schematic">
               <p class="small">One model per signal: tailored, but data inefficient.</p>
-              <p class="equation">\(\hat{x}^i_{t+h}=f(x^i_{t-W:t};\theta^i)\)</p>
+              <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t};\theta^i)\)</p>
             </div>
             <div class="card fragment">
               <h3>Global models</h3>
               <img class="media short" src="assets/figures/generic-global-model.png" alt="Global model schematic">
-              <p class="small">One shared model: sample efficient and scalable.</p>
-              <p class="equation">\(\hat{x}^i_{t+h}=f(x^i_{t-W:t};\theta)\)</p>
+              <p class="small">One shared model: sample efficient and scalable across many related series.</p>
+              <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t}, a^i;\theta)\)</p>
             </div>
           </div>
+          <p class="note fragment">
+            Remote-sensing datasets usually favor global models because many pixels or parcels share seasonal structure.
+          </p>
         </section>
 
         <section data-auto-animate>
@@ -108,18 +150,18 @@
           <div class="two-col">
             <div>
               <p>
-                Choose a fixed window of \(P\) past values and learn a map to
-                the target horizon.
+                Choose \(P\) past values and learn a map from lagged features to
+                the target.
               </p>
               <div class="equation">
                 \[
-                \hat{x}_{t+\tau}=g\left([x_{t-P},\ldots,x_{t-1},x_t]\right)
+                \hat{y}_{t+\tau}=g\left([x_{t-P},\ldots,x_{t-1},x_t]\right)
                 \]
               </div>
               <ul>
                 <li class="fragment">Linear AR: \(g\) is linear.</li>
-                <li class="fragment">Tree/SVM/MLP: \(g\) can be nonlinear.</li>
-                <li class="fragment">Every new time step shifts the window.</li>
+                <li class="fragment">Tree, SVM, or MLP: \(g\) can be nonlinear.</li>
+                <li class="fragment">Every new time step shifts the design row.</li>
               </ul>
             </div>
             <div>
@@ -137,34 +179,37 @@
           <span class="rule"></span>
           <div class="two-col wide-right">
             <div>
-              <img class="media" src="RNNs+Reservoir/media/mlp_windowed.png" alt="MLP windowed forecasting schematic">
+              <img class="media image-frame" src="RNNs+Reservoir/media/mlp_windowed.png" alt="MLP windowed forecasting schematic">
             </div>
             <div>
               <ul>
-                <li class="fragment">Input dimension: \(d_{\mathrm{in}}=P\).</li>
-                <li class="fragment">Output dimension: \(d_{\mathrm{out}}=H\), or a single horizon.</li>
-                <li class="fragment">Nonlinear layers learn interactions among lags.</li>
-                <li class="fragment">Training pairs are made by shifting a long sequence into many past/future examples.</li>
+                <li class="fragment">Input dimension: \(d_{\mathrm{in}}=P \times\) variables.</li>
+                <li class="fragment">Output dimension: one horizon, multiple horizons, or a class label.</li>
+                <li class="fragment">Nonlinear layers learn interactions among lags and covariates.</li>
+                <li class="fragment">Training pairs come from shifting long sequences into many examples.</li>
               </ul>
             </div>
           </div>
         </section>
 
         <section>
-          <div class="kicker">Notebook example</div>
+          <div class="kicker">Baseline example</div>
           <h2>Electricity demand: nonlinear and seasonal</h2>
           <span class="rule"></span>
           <div class="two-col">
             <div>
-              <img class="media" src="RNNs+Reservoir/media/load_vs_temp.png" alt="Electricity demand versus temperature">
-              <p class="caption">The temperature/load relation is often U-shaped rather than linear.</p>
+              <img class="media image-frame" src="RNNs+Reservoir/media/load_vs_temp.png" alt="Electricity demand versus temperature">
+              <p class="caption">The load-temperature relation is often U-shaped rather than linear.</p>
             </div>
             <div>
               <ul>
-                <li class="fragment">Demand depends on temperature, calendar, and daily/weekly rhythms.</li>
-                <li class="fragment">A useful baseline is seasonal persistence: tomorrow resembles yesterday.</li>
+                <li class="fragment">Demand depends on temperature, calendar, and daily or weekly rhythms.</li>
+                <li class="fragment">Seasonal persistence is a strong baseline: tomorrow often resembles yesterday.</li>
                 <li class="fragment">Neural models must beat simple temporal baselines before we trust the extra complexity.</li>
               </ul>
+              <p class="note fragment">
+                This same discipline matters for Earth observation: compare to phenology curves, seasonal medians, and simple change rules.
+              </p>
             </div>
           </div>
         </section>
@@ -175,17 +220,16 @@
           <span class="rule"></span>
           <div class="two-col">
             <div>
-              <img class="media" src="RNNs+Reservoir/media/word_pred.gif" alt="Different sentences require different memory lengths">
+              <img class="media image-frame" src="RNNs+Reservoir/media/word_pred.gif" alt="Different sentences require different memory lengths">
             </div>
             <div>
               <ul>
-                <li class="fragment">Too short: the relevant evidence is outside the window.</li>
+                <li class="fragment">Too short: relevant evidence is outside the window.</li>
                 <li class="fragment">Too long: more parameters, more noise, weaker local resolution.</li>
-                <li class="fragment">A fixed window is a hard architectural assumption about memory.</li>
+                <li class="fragment">Fixed windows make memory an input-design decision.</li>
               </ul>
               <p class="callout fragment">
-                This is the doorway to recurrent states, reservoirs, convolutions,
-                and attention.
+                The rest of the lecture asks how architectures learn, share, or select memory.
               </p>
             </div>
           </div>
@@ -210,8 +254,8 @@
               </div>
             </div>
             <div>
-              <img class="media" src="RNNs+Reservoir/media/RNN.gif" alt="Animated recurrent neural network">
-              <p class="caption">Animated RNN from the notebook.</p>
+              <img class="media image-frame" src="RNNs+Reservoir/media/RNN.gif" alt="Animated recurrent neural network">
+              <p class="caption">The same recurrent update is reused at every time step.</p>
             </div>
           </div>
         </section>
@@ -222,100 +266,84 @@
           <span class="rule"></span>
           <div class="two-col">
             <div>
-              <img class="media" src="RNNs+Reservoir/media/bptt.png" alt="Backpropagation through time diagram">
+              <img class="media image-frame" src="RNNs+Reservoir/media/bptt.png" alt="Backpropagation through time diagram">
             </div>
             <div>
               <ul>
                 <li class="fragment">Unroll the recurrence into a deep feed-forward graph.</li>
                 <li class="fragment">Share parameters across all time steps.</li>
-                <li class="fragment">Gradients must travel through many repeated transformations.</li>
+                <li class="fragment">Gradients travel through many repeated transformations.</li>
               </ul>
               <p class="callout fragment">
-                Long memory is possible, but optimization can become the bottleneck.
+                Long memory is possible, but optimization and sequential compute can become the bottleneck.
               </p>
             </div>
           </div>
         </section>
 
         <section>
-          <div class="kicker">Failure modes</div>
-          <h2>Why vanilla RNNs are hard to scale</h2>
+          <div class="kicker">Gated recurrence</div>
+          <h2>LSTMs and GRUs learn what to keep</h2>
           <span class="rule"></span>
           <div class="three-col">
             <div class="card">
-              <h3>Vanishing gradients</h3>
-              <p class="small">Distant events receive tiny updates and are forgotten during training.</p>
+              <h3>Write</h3>
+              <p class="small">How much new evidence should enter the state?</p>
             </div>
             <div class="card fragment">
-              <h3>Exploding gradients</h3>
-              <p class="small">Repeated dynamics can amplify errors; clipping helps but does not solve modeling.</p>
+              <h3>Forget</h3>
+              <p class="small">Which old information should decay or be overwritten?</p>
             </div>
             <div class="card fragment">
-              <h3>Sequential compute</h3>
-              <p class="small">Time steps depend on previous hidden states, limiting parallelism.</p>
+              <h3>Read</h3>
+              <p class="small">Which part of memory is useful for the current output?</p>
             </div>
           </div>
-          <p class="fragment small">
-            Gated units such as LSTMs and GRUs improve memory control, but the recurrence is still sequential.
+          <p class="note fragment">
+            For crop mapping, this can be read as a latent growth-stage tracker: emergence, peak greenness, senescence, harvest.
           </p>
         </section>
 
         <section>
-          <div class="kicker">Echo State Networks</div>
-          <h2>A randomized RNN with a trained readout</h2>
+          <div class="kicker">Reservoir computing</div>
+          <h2>An Echo State Network trains only the readout</h2>
           <span class="rule"></span>
           <div class="two-col wide-right">
             <div>
               <ul>
                 <li class="fragment">Random input and recurrent weights create a high-dimensional dynamical system.</li>
                 <li class="fragment">The reservoir state \(h_t\) contains many nonlinear temporal features.</li>
-                <li class="fragment">Only the output map \(W_o\) is fitted, often with ridge regression.</li>
+                <li class="fragment">Only the output map is fitted, often with ridge regression.</li>
               </ul>
+              <div class="equation fragment">
+                \[
+                h_t=\tanh(W_i x_t + W_h h_{t-1}), \qquad
+                \hat{y}_{t+\tau}=W_o h_t
+                \]
+              </div>
             </div>
             <div>
-              <img class="media" src="RNNs+Reservoir/media/Reservoir.gif" alt="Animated reservoir computing schematic">
+              <img class="media image-frame" src="RNNs+Reservoir/media/Reservoir.gif" alt="Animated reservoir computing schematic">
             </div>
           </div>
         </section>
 
         <section>
-          <div class="kicker">Readout</div>
-          <h2>One reservoir, many forecasting horizons</h2>
+          <div class="kicker">Reservoir practice</div>
+          <h2>Useful when training recurrence is expensive</h2>
           <span class="rule"></span>
           <div class="two-col">
             <div>
-              <img class="media short" src="RNNs+Reservoir/media/Reservoir_pred1.png" alt="Reservoir readout for one horizon">
-              <p class="caption">Readout selects features for horizon \(\tau_1\).</p>
-            </div>
-            <div class="fragment">
-              <img class="media short" src="RNNs+Reservoir/media/Reservoir_pred2.png" alt="Reservoir readout for another horizon">
-              <p class="caption">A different readout can select features for horizon \(\tau_2\).</p>
-            </div>
-          </div>
-          <div class="equation fragment">
-            \[
-            x_{t+\tau}=g(h_t), \qquad
-            h_t=\tanh(W_i x_t + W_h h_{t-1})
-            \]
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Reservoir tuning</div>
-          <h2>Memory lives near the edge of chaos</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div>
-              <img class="media" src="RNNs+Reservoir/media/dynamics.png" alt="Reservoir dynamics under different spectral radii">
+              <img class="media image-frame" src="RNNs+Reservoir/media/dynamics.png" alt="Reservoir dynamics under different spectral radii">
             </div>
             <div>
               <ul>
-                <li class="fragment"><strong>Spectral radius \(\rho\)</strong>: controls contraction and memory.</li>
-                <li class="fragment"><strong>Input scaling</strong>: controls the linear/nonlinear operating regime.</li>
-                <li class="fragment"><strong>Reservoir size</strong>: trades richer dynamics for computation.</li>
+                <li class="fragment"><strong>Spectral radius</strong> controls contraction and memory.</li>
+                <li class="fragment"><strong>Input scaling</strong> controls the linear or nonlinear operating regime.</li>
+                <li class="fragment"><strong>Readout regularization</strong> controls overfitting when labels are limited.</li>
               </ul>
               <p class="callout fragment">
-                Reservoirs trade supervised training for a rich, redundant pool of dynamical features.
+                Reservoirs trade supervised recurrent training for a rich, fixed pool of dynamical features.
               </p>
             </div>
           </div>
@@ -344,11 +372,11 @@
             </div>
             <svg class="diagram" viewBox="0 0 620 310" role="img" aria-label="A causal convolution sliding across a sequence">
               <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
-                  <path d="M0,0 L10,4 L0,8 Z" fill="#60727a"></path>
+                <marker id="arrowhead-conv" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+                  <path d="M0,0 L10,4 L0,8 Z"></path>
                 </marker>
               </defs>
-              <g transform="translate(28 72)">
+              <g transform="translate(40 72)">
                 <rect class="svg-box" x="0" y="0" width="44" height="44"></rect>
                 <rect class="svg-box" x="52" y="0" width="44" height="44"></rect>
                 <rect class="svg-box" x="104" y="0" width="44" height="44"></rect>
@@ -357,18 +385,18 @@
                 <rect class="svg-accent" x="260" y="0" width="44" height="44"></rect>
                 <rect class="svg-box" x="312" y="0" width="44" height="44"></rect>
                 <rect class="svg-box" x="364" y="0" width="44" height="44"></rect>
-                <text x="13" y="30" font-size="20">x</text>
-                <text x="65" y="30" font-size="20">x</text>
-                <text x="117" y="30" font-size="20">x</text>
-                <text x="169" y="30" font-size="20">x</text>
-                <text x="221" y="30" font-size="20">x</text>
-                <text x="273" y="30" font-size="20">x</text>
-                <text x="325" y="30" font-size="20">x</text>
-                <text x="377" y="30" font-size="20">x</text>
-                <text x="160" y="-18" font-size="18" fill="#007aa3">kernel K = 3</text>
-                <line class="arrow" x1="230" y1="62" x2="230" y2="132"></line>
+                <text x="13" y="30">x</text>
+                <text x="65" y="30">x</text>
+                <text x="117" y="30">x</text>
+                <text x="169" y="30">x</text>
+                <text x="221" y="30">x</text>
+                <text x="273" y="30">x</text>
+                <text x="325" y="30">x</text>
+                <text x="377" y="30">x</text>
+                <text class="svg-label" x="162" y="-18">kernel K = 3</text>
+                <line class="arrow conv-arrow" x1="230" y1="62" x2="230" y2="132"></line>
                 <rect class="svg-green" x="176" y="150" width="108" height="48"></rect>
-                <text x="204" y="181" font-size="20">z_t</text>
+                <text x="205" y="181">z_t</text>
               </g>
             </svg>
           </div>
@@ -381,31 +409,31 @@
           <div class="two-col">
             <svg class="diagram" viewBox="0 0 620 360" role="img" aria-label="Dilated causal convolution receptive field">
               <defs>
-                <marker id="arrowhead2" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
-                  <path d="M0,0 L10,4 L0,8 Z" fill="#60727a"></path>
+                <marker id="arrowhead-tcn" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+                  <path d="M0,0 L10,4 L0,8 Z"></path>
                 </marker>
               </defs>
               <g transform="translate(70 26)">
-                <text x="0" y="22" font-size="18" fill="#60727a">Layer 3</text>
+                <text class="svg-label" x="0" y="22">Layer 3</text>
                 <circle class="svg-red" cx="250" cy="22" r="18"></circle>
-                <text x="0" y="112" font-size="18" fill="#60727a">Layer 2</text>
+                <text class="svg-label" x="0" y="112">Layer 2</text>
                 <circle class="svg-orange" cx="190" cy="112" r="18"></circle>
                 <circle class="svg-orange" cx="310" cy="112" r="18"></circle>
-                <text x="0" y="202" font-size="18" fill="#60727a">Layer 1</text>
-                <circle class="svg-accent" cx="130" cy="202" r="18"></circle>
-                <circle class="svg-accent" cx="250" cy="202" r="18"></circle>
-                <circle class="svg-accent" cx="370" cy="202" r="18"></circle>
-                <text x="0" y="292" font-size="18" fill="#60727a">Input</text>
-                <g fill="#ffffff" stroke="#d7e4e8" stroke-width="2">
-                  <rect x="70" y="270" width="32" height="32" rx="5"></rect>
-                  <rect x="130" y="270" width="32" height="32" rx="5"></rect>
-                  <rect x="190" y="270" width="32" height="32" rx="5"></rect>
-                  <rect x="250" y="270" width="32" height="32" rx="5"></rect>
-                  <rect x="310" y="270" width="32" height="32" rx="5"></rect>
-                  <rect x="370" y="270" width="32" height="32" rx="5"></rect>
-                  <rect x="430" y="270" width="32" height="32" rx="5"></rect>
+                <text class="svg-label" x="0" y="202">Layer 1</text>
+                <circle class="svg-accent-circle" cx="130" cy="202" r="18"></circle>
+                <circle class="svg-accent-circle" cx="250" cy="202" r="18"></circle>
+                <circle class="svg-accent-circle" cx="370" cy="202" r="18"></circle>
+                <text class="svg-label" x="0" y="292">Input</text>
+                <g>
+                  <rect class="svg-box" x="70" y="270" width="32" height="32"></rect>
+                  <rect class="svg-box" x="130" y="270" width="32" height="32"></rect>
+                  <rect class="svg-box" x="190" y="270" width="32" height="32"></rect>
+                  <rect class="svg-box" x="250" y="270" width="32" height="32"></rect>
+                  <rect class="svg-box" x="310" y="270" width="32" height="32"></rect>
+                  <rect class="svg-box" x="370" y="270" width="32" height="32"></rect>
+                  <rect class="svg-box" x="430" y="270" width="32" height="32"></rect>
                 </g>
-                <g stroke="#60727a" stroke-width="2" fill="none" marker-end="url(#arrowhead2)">
+                <g class="svg-lines" marker-end="url(#arrowhead-tcn)">
                   <line x1="86" y1="270" x2="122" y2="220"></line>
                   <line x1="146" y1="270" x2="130" y2="222"></line>
                   <line x1="206" y1="270" x2="242" y2="220"></line>
@@ -428,37 +456,36 @@
                 <li class="fragment">Residual blocks make deep temporal filters trainable.</li>
               </ul>
               <p class="callout fragment">
-                A TCN keeps the window intuition while escaping one fixed,
-                shallow window size.
+                A TCN keeps the window intuition while escaping one fixed, shallow window size.
               </p>
             </div>
           </div>
         </section>
 
         <section>
-          <div class="kicker">Analogy</div>
-          <h2>Classic windows vs temporal convolutions</h2>
+          <div class="kicker">Remote-sensing fit</div>
+          <h2>Temporal filters detect local motifs</h2>
           <span class="rule"></span>
           <div class="two-col">
             <div class="card">
               <h3>Classic window model</h3>
               <ul class="small">
                 <li>Explicit lag vector.</li>
-                <li>One predictor sees the full chosen window.</li>
+                <li>One predictor sees the full chosen context.</li>
                 <li>The window length is an input-design decision.</li>
               </ul>
             </div>
             <div class="card fragment">
-              <h3>1-D convolutional model</h3>
+              <h3>TCN model</h3>
               <ul class="small">
-                <li>Small learned filters scan the series.</li>
-                <li>Depth composes local temporal motifs.</li>
+                <li>Small learned filters scan the season.</li>
+                <li>Depth composes emergence, peak, and decline patterns.</li>
                 <li>The receptive field grows by architecture.</li>
               </ul>
             </div>
           </div>
           <p class="source">
-            See Bai, Kolter, and Koltun, 2018, for a broad empirical comparison of TCNs and recurrent networks.
+            TCNs have been used directly for satellite image time-series classification, e.g. Pelletier, Webb, and Petitjean, 2019.
           </p>
         </section>
 
@@ -482,7 +509,7 @@
             </div>
             <svg class="diagram" viewBox="0 0 650 340" role="img" aria-label="Attention between time steps">
               <g transform="translate(42 60)">
-                <text x="0" y="-24" font-size="20" fill="#60727a">tokens in time</text>
+                <text class="svg-label" x="0" y="-24">tokens in time</text>
                 <g>
                   <rect class="svg-box" x="0" y="0" width="68" height="46"></rect>
                   <rect class="svg-box" x="86" y="0" width="68" height="46"></rect>
@@ -490,21 +517,21 @@
                   <rect class="svg-accent" x="258" y="0" width="68" height="46"></rect>
                   <rect class="svg-box" x="344" y="0" width="68" height="46"></rect>
                   <rect class="svg-box" x="430" y="0" width="68" height="46"></rect>
-                  <text x="18" y="30" font-size="20">t-5</text>
-                  <text x="104" y="30" font-size="20">t-4</text>
-                  <text x="190" y="30" font-size="20">t-3</text>
-                  <text x="276" y="30" font-size="20">t-2</text>
-                  <text x="362" y="30" font-size="20">t-1</text>
-                  <text x="454" y="30" font-size="20">t</text>
+                  <text x="17" y="30">t-5</text>
+                  <text x="103" y="30">t-4</text>
+                  <text x="189" y="30">t-3</text>
+                  <text x="275" y="30">t-2</text>
+                  <text x="361" y="30">t-1</text>
+                  <text x="454" y="30">t</text>
                 </g>
-                <g stroke="#007aa3" stroke-width="3" fill="none" opacity="0.9">
+                <g class="attention-lines">
                   <path d="M292 48 C292 118 34 118 34 48"></path>
                   <path d="M292 48 C292 142 206 142 206 48"></path>
                   <path d="M292 48 C292 118 464 118 464 48"></path>
                 </g>
-                <g transform="translate(110 184)">
-                  <rect class="svg-green" x="0" y="0" width="300" height="56"></rect>
-                  <text x="28" y="35" font-size="20">weighted temporal context</text>
+                <g transform="translate(108 184)">
+                  <rect class="svg-green" x="0" y="0" width="310" height="56"></rect>
+                  <text x="28" y="35">weighted temporal context</text>
                 </g>
               </g>
             </svg>
@@ -512,8 +539,8 @@
         </section>
 
         <section>
-          <div class="kicker">Tradeoffs</div>
-          <h2>Why transformers changed sequence modeling</h2>
+          <div class="kicker">Transformers</div>
+          <h2>Why attention changed sequence modeling</h2>
           <span class="rule"></span>
           <div class="two-col">
             <div class="card soft">
@@ -521,7 +548,7 @@
               <ul class="small">
                 <li>Direct long-range interactions.</li>
                 <li>High parallelism during training.</li>
-                <li>Flexible conditioning on positional encodings, calendar features, metadata, and masks.</li>
+                <li>Flexible conditioning on dates, masks, metadata, and covariates.</li>
               </ul>
             </div>
             <div class="card fragment">
@@ -539,28 +566,143 @@
         </section>
 
         <section>
-          <div class="kicker">Satellite image time series</div>
-          <h2>Pixels, parcels, and repeated acquisitions</h2>
+          <div class="kicker">Satellite sequences</div>
+          <h2>Attention can use dates, masks, and metadata</h2>
           <span class="rule"></span>
           <div class="two-col wide-left">
             <div>
               <p>
-                A satellite image time series observes the same area over months
-                or years, often through multiple spectral bands.
+                Satellite time series rarely arrive as clean daily grids. The
+                model often needs to know what was observed and when.
               </p>
               <ul>
-                <li class="fragment">Signals are seasonal, irregular, and cloud affected.</li>
-                <li class="fragment">Labels can be pixel-level, parcel-level, or region-level.</li>
-                <li class="fragment">Architecture choice decides how spectral, spatial, and temporal cues interact.</li>
+                <li class="fragment">Acquisition date can be encoded as day-of-year or positional features.</li>
+                <li class="fragment">Cloud and quality masks prevent missing pixels from pretending to be signal.</li>
+                <li class="fragment">Metadata such as sensor, orbit, or region can condition the sequence encoder.</li>
               </ul>
             </div>
+            <div class="card">
+              <h3>Example sequence</h3>
+              <div class="temporal-strip labeled" aria-label="Irregular satellite observations">
+                <span>Jan</span><span>Feb</span><span class="missing">cloud</span><span>Apr</span>
+                <span>May</span><span class="peak">Jun</span><span class="peak">Jul</span><span class="missing">cloud</span>
+                <span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+              </div>
+              <p class="small">Temporal self-attention has been used for satellite image time-series classification, including parcel-level crop mapping.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="kicker">State space models</div>
+          <h2>Continuous-time intuition, neural sequence model</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-left">
             <div>
-              <img class="media" src="assets/remote_sensing/esa_s2_mosaic.png" alt="Sentinel-2 dynamic mosaic and provenance image">
-              <p class="caption">
-                Sentinel-2 dynamic mosaic and provenance image. Source: ESA EO Science for Society.
+              <div class="equation">
+                \[
+                \dot{s}(t)=A s(t)+B u(t), \qquad y(t)=C s(t)+D u(t)
+                \]
+              </div>
+              <ul>
+                <li class="fragment">A latent state \(s(t)\) evolves under linear dynamics.</li>
+                <li class="fragment">Inputs drive the system, outputs read from the state.</li>
+                <li class="fragment">After discretization, the model becomes a recurrence or a long convolution kernel.</li>
+              </ul>
+            </div>
+            <div class="callout">
+              <p><strong>Why this lands for physics and CS</strong></p>
+              <p>
+                SSMs connect control-theory dynamics with trainable neural blocks
+                for long sequences.
               </p>
             </div>
           </div>
+        </section>
+
+        <section>
+          <div class="kicker">S4 and Mamba</div>
+          <h2>State updates can be scanned efficiently</h2>
+          <span class="rule"></span>
+          <div class="two-col wide-right">
+            <div>
+              <ul>
+                <li><strong>S4</strong> parameterizes SSMs so very long dependencies become practical.</li>
+                <li class="fragment"><strong>Mamba</strong> makes SSM parameters input-dependent, so the model can selectively keep or forget information.</li>
+                <li class="fragment">The practical promise: RNN-like streaming with long-context efficiency closer to convolution or scan operations.</li>
+              </ul>
+            </div>
+            <svg class="diagram" viewBox="0 0 660 390" role="img" aria-label="Selective state space scan">
+              <defs>
+                <marker id="arrowhead-ssm" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+                  <path d="M0,0 L10,4 L0,8 Z"></path>
+                </marker>
+              </defs>
+              <g transform="translate(36 48)">
+                <text class="svg-label" x="0" y="-18">input sequence</text>
+                <rect class="svg-box" x="0" y="0" width="58" height="42"></rect>
+                <rect class="svg-box" x="72" y="0" width="58" height="42"></rect>
+                <rect class="svg-box" x="144" y="0" width="58" height="42"></rect>
+                <rect class="svg-box" x="216" y="0" width="58" height="42"></rect>
+                <rect class="svg-box" x="288" y="0" width="58" height="42"></rect>
+                <text x="17" y="27">x1</text>
+                <text x="89" y="27">x2</text>
+                <text x="161" y="27">x3</text>
+                <text x="233" y="27">x4</text>
+                <text x="305" y="27">x5</text>
+
+                <g class="svg-lines strong" marker-end="url(#arrowhead-ssm)">
+                  <line x1="29" y1="48" x2="29" y2="92"></line>
+                  <line x1="101" y1="48" x2="101" y2="92"></line>
+                  <line x1="173" y1="48" x2="173" y2="92"></line>
+                  <line x1="245" y1="48" x2="245" y2="92"></line>
+                  <line x1="317" y1="48" x2="317" y2="92"></line>
+                </g>
+
+                <text class="svg-label" x="0" y="122">selective state update</text>
+                <rect class="svg-accent" x="0" y="140" width="58" height="46"></rect>
+                <rect class="svg-accent" x="72" y="140" width="58" height="46"></rect>
+                <rect class="svg-accent" x="144" y="140" width="58" height="46"></rect>
+                <rect class="svg-accent" x="216" y="140" width="58" height="46"></rect>
+                <rect class="svg-accent" x="288" y="140" width="58" height="46"></rect>
+                <text x="18" y="169">s1</text>
+                <text x="90" y="169">s2</text>
+                <text x="162" y="169">s3</text>
+                <text x="234" y="169">s4</text>
+                <text x="306" y="169">s5</text>
+                <g class="svg-lines strong" marker-end="url(#arrowhead-ssm)">
+                  <line x1="58" y1="163" x2="70" y2="163"></line>
+                  <line x1="130" y1="163" x2="142" y2="163"></line>
+                  <line x1="202" y1="163" x2="214" y2="163"></line>
+                  <line x1="274" y1="163" x2="286" y2="163"></line>
+                </g>
+
+                <g transform="translate(420 18)">
+                  <rect class="svg-green" x="0" y="0" width="188" height="64"></rect>
+                  <text x="24" y="26">scan kernel</text>
+                  <text class="svg-small" x="24" y="47">parallel training</text>
+                </g>
+                <g transform="translate(420 124)">
+                  <rect class="svg-orange" x="0" y="0" width="188" height="64"></rect>
+                  <text x="18" y="26">selective gates</text>
+                  <text class="svg-small" x="18" y="47">input-dependent</text>
+                  <text class="svg-small" x="18" y="61">memory</text>
+                </g>
+
+                <g class="svg-lines" marker-end="url(#arrowhead-ssm)">
+                  <line x1="346" y1="28" x2="414" y2="44"></line>
+                  <line x1="346" y1="163" x2="414" y2="156"></line>
+                </g>
+
+                <text class="svg-label" x="0" y="250">output sequence</text>
+                <rect class="svg-green" x="0" y="268" width="346" height="48"></rect>
+                <text x="60" y="298">forecasting / classification</text>
+              </g>
+            </svg>
+          </div>
+          <p class="source">
+            S4: Gu et al., 2021. Mamba: Gu and Dao, 2023.
+          </p>
         </section>
 
         <section>
@@ -568,10 +710,9 @@
           <h2>Crop mapping reads temporal signatures</h2>
           <span class="rule"></span>
           <div>
-            <img class="media wide" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
+            <img class="media wide image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
             <p class="caption">
-              Monthly NDVI images from Sentinel-2 composites. Black areas lack cloud-free pixels.
-              Source: ESA EO Science for Society.
+              Monthly NDVI images from Sentinel-2 composites. Source: ESA EO Science for Society.
             </p>
           </div>
           <div class="three-col">
@@ -584,8 +725,8 @@
               <p class="small">Detect local phenological motifs with seasonal receptive fields.</p>
             </div>
             <div class="card fragment">
-              <h3>Transformer</h3>
-              <p class="small">Attend over useful dates and mask cloudy acquisitions.</p>
+              <h3>Transformer/SSM</h3>
+              <p class="small">Use long context while handling masks, dates, and metadata.</p>
             </div>
           </div>
         </section>
@@ -596,11 +737,11 @@
           <span class="rule"></span>
           <div class="media-row">
             <div>
-              <img class="media tall" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
+              <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
               <p class="caption">Before: March 23, 2015</p>
             </div>
             <div>
-              <img class="media tall" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
+              <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
               <p class="caption">After: May 26, 2015</p>
             </div>
           </div>
@@ -611,13 +752,13 @@
 
         <section>
           <div class="kicker">Architecture map</div>
-          <h2>Which model bias helps which EO problem?</h2>
+          <h2>Which memory mechanism fits which problem?</h2>
           <span class="rule"></span>
           <table class="comparison">
             <thead>
               <tr>
                 <th>Architecture</th>
-                <th>Temporal memory</th>
+                <th>Memory mechanism</th>
                 <th>Parallelism</th>
                 <th>Good fit</th>
                 <th>Watch out</th>
@@ -628,21 +769,21 @@
                 <td><strong>Window + MLP</strong></td>
                 <td>Fixed explicit lags</td>
                 <td>High</td>
-                <td>Small tabular forecasting baselines</td>
+                <td>Baselines, small tabular forecasting, engineered EO features</td>
                 <td>Choosing \(P\); weak long memory</td>
               </tr>
               <tr>
                 <td><strong>RNN/GRU/LSTM</strong></td>
                 <td>Learned recurrent state</td>
                 <td>Low across time</td>
-                <td>Streaming data; compact sequence encoders</td>
+                <td>Streaming data, compact encoders, latent stage tracking</td>
                 <td>Optimization and long sequences</td>
               </tr>
               <tr>
                 <td><strong>Reservoir/ESN</strong></td>
                 <td>Random dynamical features</td>
                 <td>Medium</td>
-                <td>Fast training; limited labels; readout experiments</td>
+                <td>Fast training, limited labels, readout experiments</td>
                 <td>Hyperparameter sensitivity</td>
               </tr>
               <tr>
@@ -656,8 +797,15 @@
                 <td><strong>Transformer</strong></td>
                 <td>Direct attention over observed dates</td>
                 <td>High</td>
-                <td>Irregular/multimodal SITS; masked observations</td>
+                <td>Irregular observations, masks, multimodal covariates</td>
                 <td>Data and memory cost</td>
+              </tr>
+              <tr>
+                <td><strong>SSM/Mamba</strong></td>
+                <td>State space scan with selective memory</td>
+                <td>High in training, streaming in inference</td>
+                <td>Long EO sequences, efficient context, physics-friendly framing</td>
+                <td>Newer ecosystem; less standard for many EO workflows</td>
               </tr>
             </tbody>
           </table>
@@ -677,12 +825,12 @@
               <p class="small">Temporal convolutions learn local windows and compose them into large receptive fields.</p>
             </div>
             <div class="card fragment">
-              <h3>Attention</h3>
-              <p class="small">Transformers select useful time steps directly, especially with masks and metadata.</p>
+              <h3>Select</h3>
+              <p class="small">Attention and selective SSMs decide which time steps or state components matter.</p>
             </div>
           </div>
           <p class="quote fragment">
-            For temporal data, architecture is a theory of what kind of past matters.
+            For temporal data, architecture is a hypothesis about what kind of past matters.
           </p>
         </section>
 
@@ -690,13 +838,15 @@
           <div class="kicker">Sources and credits</div>
           <h2>References</h2>
           <span class="rule"></span>
-          <ul class="small">
+          <ul class="small references">
             <li>Notebook media and examples: <code>RNNs+Reservoir/nn-reservoir-computing.ipynb</code>.</li>
             <li>Visual style and selected schematics adapted from <code>tutorial_log_filippo</code>.</li>
             <li><a href="https://doi.org/10.1145/3533382">Benidis et al.</a>, "Deep Learning for Time Series Forecasting", ACM Computing Surveys, 2022.</li>
             <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
             <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
             <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a>, "Attention Is All You Need", NeurIPS, 2017.</li>
+            <li><a href="https://arxiv.org/abs/2111.00396">Gu et al.</a>, "Efficiently Modeling Long Sequences with Structured State Spaces", 2021.</li>
+            <li><a href="https://arxiv.org/abs/2312.00752">Gu and Dao</a>, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces", 2023.</li>
             <li><a href="https://www.mdpi.com/2072-4292/11/5/523">Pelletier, Webb, and Petitjean</a>, "Temporal Convolutional Neural Network for the Classification of Satellite Image Time Series", Remote Sensing, 2019.</li>
             <li><a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Garnot_Satellite_Image_Time_Series_Classification_With_Pixel-Set_Encoders_and_Temporal_CVPR_2020_paper.pdf">Garnot et al.</a>, "Satellite Image Time Series Classification with Pixel-Set Encoders and Temporal Self-Attention", CVPR, 2020.</li>
             <li><a href="https://eo4society.esa.int/2022/04/12/dynamic-sentinel-2-mosaic-service/">ESA EO Science for Society</a>, "Dynamic Sentinel-2 mosaic service", 2022.</li>
