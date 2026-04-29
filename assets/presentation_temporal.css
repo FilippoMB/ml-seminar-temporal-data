@@ -511,11 +511,37 @@
 .setup-equation {
   align-items: center;
   display: flex;
-  font-size: 0.8em;
   grid-column: 1;
   grid-row: 1;
   justify-content: center;
   min-height: 118px;
+}
+
+.setup-formula {
+  color: var(--temporal-ink);
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 1.18em;
+  line-height: 1;
+}
+
+.setup-formula .mathcal {
+  font-style: italic;
+  font-weight: 700;
+}
+
+.setup-formula sub {
+  font-size: 0.46em;
+}
+
+.formula-arrow {
+  color: var(--temporal-muted);
+  display: inline-block;
+  font-family: "Inter", "Aptos", "Segoe UI", Arial, sans-serif;
+  padding: 0 12px;
+}
+
+.yhat {
+  font-style: italic;
 }
 
 .setup-meta {
@@ -559,21 +585,35 @@
   padding: 18px 20px;
 }
 
+.memory-strip-label {
+  color: var(--temporal-green);
+  display: block;
+  font-size: 0.52em;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
 .memory-strip p {
   color: var(--temporal-primary-dark);
-  font-size: 1.04em;
+  font-size: 0.98em;
   font-weight: 800;
   line-height: 1.08;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
 }
 
-.memory-strip div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
+.memory-strip ul {
+  color: var(--temporal-ink);
+  font-size: 0.66em;
+  line-height: 1.2;
+  margin: 0 0 0 1em;
 }
 
-.memory-strip span,
+.memory-strip li + li {
+  margin-top: 0.35em;
+}
+
 .method-pills span {
   background: #ffffff;
   border: 1px solid var(--temporal-line);

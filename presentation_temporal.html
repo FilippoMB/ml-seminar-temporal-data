@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
-    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-memorybottom">
+    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-setupmove">
   </head>
   <body>
     <div class="reveal">
@@ -60,6 +60,36 @@
             </div>
           </section>
 
+          <section class="setup-slide">
+            <div class="kicker">Formal setup</div>
+            <h2>Sequence learning setup</h2>
+            <span class="rule"></span>
+            <div class="setup-layout">
+              <div class="equation setup-equation">
+                <div class="setup-formula">
+                  <span class="mathcal">F</span><sub>&theta;</sub>(<em>x</em><sub>t-W:t</sub>, <em>u</em><sub>t</sub>)
+                  <span class="formula-arrow">&rarr;</span>
+                  <span class="yhat">&#375;</span>
+                </div>
+              </div>
+              <div class="setup-meta">
+                <div><strong><em>x</em><sub>t</sub></strong><span>observations</span></div>
+                <div><strong><em>u</em><sub>t</sub></strong><span>context + masks</span></div>
+                <div><strong><em>W</em></strong><span>history</span></div>
+              </div>
+              <div class="memory-strip">
+                <span class="memory-strip-label">Design question</span>
+                <p>How should the model summarize the past?</p>
+                <ul>
+                  <li>keep a fixed window</li>
+                  <li>update a hidden state</li>
+                  <li>filter local patterns</li>
+                  <li>select or scan long context</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
           <section class="eo-sequence-slide">
             <div class="kicker">Earth observation</div>
             <h2>Remote sensing turns places into sequences</h2>
@@ -76,34 +106,6 @@
               <div class="card figure-card eo-wide-figure">
                 <img class="media" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
                 <p class="caption">Monthly NDVI from Sentinel-2 composites. Source: ESA EO Science for Society.</p>
-              </div>
-            </div>
-          </section>
-
-          <section class="setup-slide">
-            <div class="kicker">Formal setup</div>
-            <h2>Sequence learning setup</h2>
-            <span class="rule"></span>
-            <div class="setup-layout">
-              <div class="equation setup-equation">
-                  \[
-                  \mathcal{F}_{\theta}\left(x_{t-W:t}, u_t\right)
-                  \longrightarrow \hat{y}
-                  \]
-              </div>
-              <div class="setup-meta">
-                <div><strong>\(x_t\)</strong><span>observations</span></div>
-                <div><strong>\(u_t\)</strong><span>context + masks</span></div>
-                <div><strong>\(W\)</strong><span>history</span></div>
-              </div>
-              <div class="memory-strip">
-                <p>How does information move?</p>
-                <div>
-                  <span>state</span>
-                  <span>filter</span>
-                  <span>attention</span>
-                  <span>scan</span>
-                </div>
               </div>
             </div>
           </section>
