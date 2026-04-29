@@ -1,0 +1,1 @@
+The link to the presentation is [here](https://filippomb.github.io/ml-seminar-temporal-data/presentation_temporal.html).
