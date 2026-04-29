@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
-    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-eobottom">
+    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-memorybottom">
   </head>
   <body>
     <div class="reveal">
@@ -181,16 +181,13 @@
             <p class="caption">Load consumption profile on a backbone of the electricity network of Rome.</p>
           </section>
 
-          <section>
+          <section class="memory-choice-slide">
             <div class="kicker">Limitation</div>
-            <h2>What should \(P\) be?</h2>
+            <h2>What should <em>P</em> be?</h2>
             <span class="rule"></span>
-            <div class="two-col">
-              <div>
-                <img class="media image-frame" src="assets/figures/sequence-media/word_pred.gif" alt="Different sentences require different memory lengths">
-              </div>
-              <div>
-                <ul>
+            <div class="memory-choice-layout">
+              <div class="memory-choice-text">
+                <ul class="memory-choice-list">
                   <li class="fragment">Too short: miss evidence</li>
                   <li class="fragment">Too long: add noise</li>
                   <li class="fragment">Memory becomes hand-designed</li>
@@ -198,6 +195,9 @@
                 <p class="callout fragment">
                   Can the model learn its own memory?
                 </p>
+              </div>
+              <div class="card figure-card memory-choice-figure">
+                <img class="media" src="assets/figures/sequence-media/word_pred.gif" alt="Different sentences require different memory lengths">
               </div>
             </div>
           </section>
