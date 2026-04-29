@@ -528,9 +528,6 @@
 }
 
 .title-visual img {
-  border: 1px solid var(--temporal-line);
-  border-radius: 8px;
-  box-shadow: var(--temporal-shadow);
   height: 426px;
   object-fit: cover;
   width: 100%;
