@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
-    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-card">
+    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-eobottom">
   </head>
   <body>
     <div class="reveal">
@@ -60,21 +60,21 @@
             </div>
           </section>
 
-          <section>
+          <section class="eo-sequence-slide">
             <div class="kicker">Earth observation</div>
             <h2>Remote sensing turns places into sequences</h2>
             <span class="rule"></span>
-            <div class="two-col wide-left">
-              <div>
+            <div class="eo-sequence-layout">
+              <div class="eo-text-row">
                 <p class="lead">Pixels, parcels, and regions become temporal signals.</p>
-                <ul>
+                <ul class="compact-list">
                   <li class="fragment">Seasonal phenology</li>
                   <li class="fragment">Cloud gaps and irregular dates</li>
                   <li class="fragment">Crop, land-cover, hazard labels</li>
                 </ul>
               </div>
-              <div>
-                <img class="media image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
+              <div class="card figure-card eo-wide-figure">
+                <img class="media" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
                 <p class="caption">Monthly NDVI from Sentinel-2 composites. Source: ESA EO Science for Society.</p>
               </div>
             </div>
