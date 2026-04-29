@@ -7,6 +7,10 @@ Icon?
 Thumbs.db
 Desktop.ini
 
+ext-resources/
+RNNs+Reservoir/
+tutorial_log_filippo/
+
 # Editor and IDE files
 .idea/
 .vscode/
@@ -80,4 +84,3 @@ build-latex/
 *.tar
 *.tar.gz
 *.tgz
-
