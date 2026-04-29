@@ -278,6 +278,15 @@
   width: 100%;
 }
 
+.electricity-figure {
+  max-height: 430px;
+  width: 100%;
+}
+
+.electricity-slide .caption {
+  margin-top: 6px;
+}
+
 .image-frame {
   background: #fff;
   border: 1px solid var(--temporal-line);
@@ -1405,8 +1414,16 @@
 }
 
 .reveal .slide-number {
-  color: var(--temporal-muted);
+  background: rgba(251, 252, 250, 0.92);
+  border: 1px solid var(--temporal-line);
+  border-radius: 5px;
+  bottom: 12px;
+  box-shadow: 0 6px 16px rgba(20, 54, 66, 0.08);
+  color: var(--temporal-ink);
   font-size: 15px;
+  padding: 3px 7px;
+  right: 96px;
+  z-index: 40;
 }
 
 .reveal pre {

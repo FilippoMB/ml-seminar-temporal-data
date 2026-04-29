@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
-    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-ssmcolor">
+    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-slide8fix">
   </head>
   <body>
     <div class="reveal">
@@ -15,18 +15,12 @@
         <section class="title-slide">
           <div class="title-layout">
             <div class="title-copy">
-              <div class="kicker">Temporal data lecture</div>
-              <h1>Deep Learning for Temporal Data</h1>
+              <div class="kicker">Machine Learning seminars</div>
+              <h2>Deep Learning for Temporal Data</h2>
               <span class="rule"></span>
               <p class="subtitle">
                 How neural networks remember, filter, and select the past.
               </p>
-              <div class="tag-row" aria-label="Lecture themes">
-                <span class="tag primary">remote sensing</span>
-                <span class="tag">memory</span>
-                <span class="tag">forecasting</span>
-                <span class="tag">classification</span>
-              </div>
             </div>
             <div class="title-visual">
               <img src="assets/remote_sensing/esa_s2_mosaic.png" alt="Sentinel-2 mosaic used as an Earth observation signal example">
@@ -42,1002 +36,1004 @@
           </div>
         </section>
 
-        <section>
-          <div class="kicker">Motivation</div>
-          <h2>Temporal data asks for memory</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left">
-            <div>
-              <p class="lead">
-                The useful signal is often not in one observation, but in how observations change.
-              </p>
-              <ul>
-                <li class="fragment">Forecast the future</li>
-                <li class="fragment">Classify a sequence</li>
-                <li class="fragment">Detect change</li>
-                <li class="fragment">Fill gaps</li>
-              </ul>
-            </div>
-            <div>
-              <img class="media" src="assets/figures/mts-forecasting.png" alt="Multi-step time-series forecasting schematic">
-              <p class="caption">Past context to future output.</p>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Earth observation</div>
-          <h2>Remote sensing turns places into sequences</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left">
-            <div>
-              <p class="lead">Pixels, parcels, and regions become temporal signals.</p>
-              <ul>
-                <li class="fragment">Seasonal phenology</li>
-                <li class="fragment">Cloud gaps and irregular dates</li>
-                <li class="fragment">Crop, land-cover, hazard labels</li>
-              </ul>
-            </div>
-            <div>
-              <img class="media image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
-              <p class="caption">Monthly NDVI from Sentinel-2 composites. Source: ESA EO Science for Society.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="setup-slide">
-          <div class="kicker">Formal setup</div>
-          <h2>Sequence learning setup</h2>
-          <span class="rule"></span>
-          <div class="setup-layout">
-            <div class="equation setup-equation">
-                \[
-                \mathcal{F}_{\theta}\left(x_{t-W:t}, u_t\right)
-                \longrightarrow \hat{y}
-                \]
-            </div>
-            <div class="setup-meta">
-              <div><strong>\(x_t\)</strong><span>observations</span></div>
-              <div><strong>\(u_t\)</strong><span>context + masks</span></div>
-              <div><strong>\(W\)</strong><span>history</span></div>
-            </div>
-            <div class="memory-strip">
-              <p>How does information move?</p>
+        <section class="chapter-stack" data-section="problem-framing" aria-label="Problem framing">
+          <section>
+            <div class="kicker">Motivation</div>
+            <h2>Temporal data asks for memory</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left">
               <div>
-                <span>state</span>
-                <span>filter</span>
-                <span>attention</span>
-                <span>scan</span>
+                <p class="lead">
+                  The useful signal is often not in one observation, but in how observations change.
+                </p>
+                <ul>
+                  <li class="fragment">Forecast the future</li>
+                  <li class="fragment">Classify a sequence</li>
+                  <li class="fragment">Detect change</li>
+                  <li class="fragment">Fill gaps</li>
+                </ul>
+              </div>
+              <div>
+                <img class="media" src="assets/figures/mts-forecasting.png" alt="Multi-step time-series forecasting schematic">
+                <p class="caption">Past context to future output.</p>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section>
-          <div class="kicker">Learning across collections</div>
-          <h2>Local and global predictors</h2>
-          <span class="rule"></span>
-          <div class="two-col model-compare">
-            <div class="card model-card">
-              <h3>Local models</h3>
-              <img class="media short" src="assets/figures/generic-local-model.png" alt="Local model schematic">
-              <p class="small">Tailored, data inefficient.</p>
-              <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t};\theta^i)\)</p>
-            </div>
-            <div class="card model-card fragment">
-              <h3>Global models</h3>
-              <img class="media short" src="assets/figures/generic-global-model.png" alt="Global model schematic">
-              <p class="small">Shared, scalable.</p>
-              <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t}, a^i;\theta)\)</p>
-            </div>
-          </div>
-          <p class="note fragment">Remote sensing usually favors global models.</p>
-        </section>
-
-        <section class="window-slide" data-auto-animate>
-          <div class="kicker">Fixed windows</div>
-          <h2>Sliding windows</h2>
-          <span class="rule"></span>
-          <div class="window-layout">
-            <div class="window-text">
-              <div class="equation compact window-equation">
-                \[
-                \hat{y}_{t+\tau}=g\left([x_{t-P},\ldots,x_{t-1},x_t]\right)
-                \]
+          <section>
+            <div class="kicker">Earth observation</div>
+            <h2>Remote sensing turns places into sequences</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left">
+              <div>
+                <p class="lead">Pixels, parcels, and regions become temporal signals.</p>
+                <ul>
+                  <li class="fragment">Seasonal phenology</li>
+                  <li class="fragment">Cloud gaps and irregular dates</li>
+                  <li class="fragment">Crop, land-cover, hazard labels</li>
+                </ul>
               </div>
-              <div class="method-pills">
-                <span class="fragment">Linear AR</span>
-                <span class="fragment">Trees</span>
-                <span class="fragment">SVMs</span>
-                <span class="fragment">MLPs</span>
+              <div>
+                <img class="media image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
+                <p class="caption">Monthly NDVI from Sentinel-2 composites. Source: ESA EO Science for Society.</p>
               </div>
             </div>
-            <div class="window-visual">
-              <img class="media image-frame" src="RNNs+Reservoir/media/sin.gif" alt="Animated sliding window over a sinusoidal time series">
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section>
-          <div class="kicker">Nonlinear windows</div>
-          <h2>An MLP is a learned window operator</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-right">
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/mlp_windowed.png" alt="MLP windowed forecasting schematic">
-            </div>
-            <div>
-              <ul>
-                <li class="fragment">Fixed-size input</li>
-                <li class="fragment">Nonlinear lag interactions</li>
-                <li class="fragment">Many examples from one long series</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Baseline example</div>
-          <h2>Electricity demand: nonlinear and seasonal</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/load_vs_temp.png" alt="Electricity demand versus temperature">
-              <p class="caption">Nonlinear load-temperature relation.</p>
-            </div>
-            <div>
-              <ul>
-                <li class="fragment">Temperature</li>
-                <li class="fragment">Calendar rhythm</li>
-                <li class="fragment">Strong simple baselines</li>
-              </ul>
-              <p class="note fragment">First beat the simple baseline.</p>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Limitation</div>
-          <h2>What should \(P\) be?</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/word_pred.gif" alt="Different sentences require different memory lengths">
-            </div>
-            <div>
-              <ul>
-                <li class="fragment">Too short: miss evidence</li>
-                <li class="fragment">Too long: add noise</li>
-                <li class="fragment">Memory becomes hand-designed</li>
-              </ul>
-              <p class="callout fragment">
-                Can the model learn its own memory?
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section class="rnn-slide">
-          <div class="kicker">RNN idea</div>
-          <h2>A hidden state carries context</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-right">
-            <div>
-              <ul>
-                <li class="fragment">Read one step</li>
-                <li class="fragment">Update state</li>
-                <li class="fragment">Predict from memory</li>
-              </ul>
-              <div class="equation rnn-equation fragment">
-                \[
-                \begin{aligned}
-                h_t&=\phi(W_x x_t + W_h h_{t-1})\\
-                y_t&=W_o h_t
-                \end{aligned}
-                \]
+          <section class="setup-slide">
+            <div class="kicker">Formal setup</div>
+            <h2>Sequence learning setup</h2>
+            <span class="rule"></span>
+            <div class="setup-layout">
+              <div class="equation setup-equation">
+                  \[
+                  \mathcal{F}_{\theta}\left(x_{t-W:t}, u_t\right)
+                  \longrightarrow \hat{y}
+                  \]
+              </div>
+              <div class="setup-meta">
+                <div><strong>\(x_t\)</strong><span>observations</span></div>
+                <div><strong>\(u_t\)</strong><span>context + masks</span></div>
+                <div><strong>\(W\)</strong><span>history</span></div>
+              </div>
+              <div class="memory-strip">
+                <p>How does information move?</p>
+                <div>
+                  <span>state</span>
+                  <span>filter</span>
+                  <span>attention</span>
+                  <span>scan</span>
+                </div>
               </div>
             </div>
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/RNN.gif" alt="Animated recurrent neural network">
-              <p class="caption">One update, reused through time.</p>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section>
-          <div class="kicker">Training</div>
-          <h2>Backpropagation through time</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/bptt.png" alt="Backpropagation through time diagram">
-            </div>
-            <div>
-              <ul>
-                <li class="fragment">Unroll in time</li>
-                <li class="fragment">Share weights</li>
-                <li class="fragment">Backpropagate through the chain</li>
-              </ul>
-              <p class="callout fragment">
-                Memory helps, but training can be hard.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Gated recurrence</div>
-          <h2>LSTMs and GRUs learn what to keep</h2>
-          <span class="rule"></span>
-          <div class="three-col">
-            <div class="card">
-              <h3>Write</h3>
-              <p class="small">Add new evidence</p>
-            </div>
-            <div class="card fragment">
-              <h3>Forget</h3>
-              <p class="small">Drop stale memory</p>
-            </div>
-            <div class="card fragment">
-              <h3>Read</h3>
-              <p class="small">Expose useful state</p>
-            </div>
-          </div>
-          <p class="note fragment">Crop mapping view: latent growth stage.</p>
-        </section>
-
-        <section class="reservoir-slide">
-          <div class="kicker">Reservoir computing</div>
-          <h2>An Echo State Network trains only the readout</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-right">
-            <div>
-              <ul>
-                <li class="fragment">Random recurrent dynamics</li>
-                <li class="fragment">Rich temporal features</li>
-                <li class="fragment">Train only the readout</li>
-              </ul>
-              <div class="equation recurrent-equation fragment">
-                \[
-                \begin{aligned}
-                h_t&=\tanh(W_i x_t + W_h h_{t-1})\\
-                \hat{y}_{t+\tau}&=W_o h_t
-                \end{aligned}
-                \]
+          <section>
+            <div class="kicker">Learning across collections</div>
+            <h2>Local and global predictors</h2>
+            <span class="rule"></span>
+            <div class="two-col model-compare">
+              <div class="card model-card">
+                <h3>Local models</h3>
+                <img class="media short" src="assets/figures/generic-local-model.png" alt="Local model schematic">
+                <p class="small">Tailored, data inefficient.</p>
+                <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t};\theta^i)\)</p>
+              </div>
+              <div class="card model-card fragment">
+                <h3>Global models</h3>
+                <img class="media short" src="assets/figures/generic-global-model.png" alt="Global model schematic">
+                <p class="small">Shared, scalable.</p>
+                <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t}, a^i;\theta)\)</p>
               </div>
             </div>
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/Reservoir.gif" alt="Animated reservoir computing schematic">
-            </div>
-          </div>
+            <p class="note fragment">Remote sensing usually favors global models.</p>
+          </section>
         </section>
 
-        <section>
-          <div class="kicker">Reservoir practice</div>
-          <h2>Useful when training recurrence is expensive</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div>
-              <img class="media image-frame" src="RNNs+Reservoir/media/dynamics.png" alt="Reservoir dynamics under different spectral radii">
-            </div>
-            <div>
-              <ul>
-                <li class="fragment"><strong>Spectral radius</strong>: memory</li>
-                <li class="fragment"><strong>Input scaling</strong>: nonlinearity</li>
-                <li class="fragment"><strong>Ridge readout</strong>: overfitting control</li>
-              </ul>
-              <p class="callout fragment">
-                Useful when recurrent training is too expensive.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section data-auto-animate>
-          <div class="kicker">Convolution</div>
-          <h2>A filter is a sliding learned window</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left">
-            <div>
-              <p class="lead">Apply the same small temporal kernel everywhere.</p>
-              <div class="equation">
-                \[
-                z_t=\sum_{k=0}^{K-1} w_k x_{t-k}
-                \]
+        <section class="chapter-stack" data-section="fixed-windows" aria-label="Fixed windows and baselines">
+          <section class="window-slide" data-auto-animate>
+            <div class="kicker">Fixed windows</div>
+            <h2>Sliding windows</h2>
+            <span class="rule"></span>
+            <div class="window-layout">
+              <div class="window-text">
+                <div class="equation compact window-equation">
+                  \[
+                  \hat{y}_{t+\tau}=g\left([x_{t-P},\ldots,x_{t-1},x_t]\right)
+                  \]
+                </div>
+                <div class="method-pills">
+                  <span class="fragment">Linear AR</span>
+                  <span class="fragment">Trees</span>
+                  <span class="fragment">SVMs</span>
+                  <span class="fragment">MLPs</span>
+                </div>
               </div>
-              <ul>
-                <li class="fragment">Local lag features</li>
-                <li class="fragment">Stacked nonlinear channels</li>
-                <li class="fragment">Parallel over time</li>
-              </ul>
+              <div class="window-visual">
+                <img class="media image-frame" src="RNNs+Reservoir/media/sin.gif" alt="Animated sliding window over a sinusoidal time series">
+              </div>
             </div>
-            <svg class="diagram conv-diagram" viewBox="0 0 620 310" role="img" aria-label="A temporal convolution filter sliding across indexed observations">
-              <defs>
-                <marker id="conv-arrow-1" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
-                </marker>
-                <marker id="conv-arrow-2" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#2b92ac"></path>
-                </marker>
-                <marker id="conv-arrow-3" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#b77719"></path>
-                </marker>
-              </defs>
-              <g transform="translate(52 68)">
-                <text class="svg-label" x="184" y="-20">kernel K = 3</text>
-                <g class="conv-sequence">
-                  <rect class="svg-box" x="0" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="52" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="104" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="156" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="208" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="260" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="312" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="364" y="0" width="44" height="44"></rect>
-                  <text x="22" y="29">t<tspan baseline-shift="sub" font-size="11">1</tspan></text>
-                  <text x="74" y="29">t<tspan baseline-shift="sub" font-size="11">2</tspan></text>
-                  <text x="126" y="29">t<tspan baseline-shift="sub" font-size="11">3</tspan></text>
-                  <text x="178" y="29">t<tspan baseline-shift="sub" font-size="11">4</tspan></text>
-                  <text x="230" y="29">t<tspan baseline-shift="sub" font-size="11">5</tspan></text>
-                  <text x="282" y="29">t<tspan baseline-shift="sub" font-size="11">6</tspan></text>
-                  <text x="334" y="29">t<tspan baseline-shift="sub" font-size="11">7</tspan></text>
-                  <text x="386" y="29">t<tspan baseline-shift="sub" font-size="11">8</tspan></text>
-                </g>
+          </section>
 
-                <g class="conv-window">
-                  <animateTransform attributeName="transform" type="translate" values="0 0;260 0;0 0" dur="7s" repeatCount="indefinite"></animateTransform>
-                  <rect class="conv-tap tap-1" x="0" y="0" width="44" height="44"></rect>
-                  <rect class="conv-tap tap-2" x="52" y="0" width="44" height="44"></rect>
-                  <rect class="conv-tap tap-3" x="104" y="0" width="44" height="44"></rect>
-                  <g class="conv-paths">
-                    <path class="tap-line tap-1" marker-end="url(#conv-arrow-1)" d="M22 56 C24 82 40 100 63 118"></path>
-                    <path class="tap-line tap-2" marker-end="url(#conv-arrow-2)" d="M74 56 C74 80 74 96 74 114"></path>
-                    <path class="tap-line tap-3" marker-end="url(#conv-arrow-3)" d="M126 56 C124 82 108 100 85 118"></path>
+          <section>
+            <div class="kicker">Nonlinear windows</div>
+            <h2>An MLP is a learned window operator</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-right">
+              <div>
+                <img class="media image-frame" src="RNNs+Reservoir/media/mlp_windowed.png" alt="MLP windowed forecasting schematic">
+              </div>
+              <div>
+                <ul>
+                  <li class="fragment">Fixed-size input</li>
+                  <li class="fragment">Nonlinear lag interactions</li>
+                  <li class="fragment">Many examples from one long series</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="electricity-slide">
+            <div class="kicker">Baseline example</div>
+            <h2>First baseline: copy the same hour yesterday</h2>
+            <span class="rule"></span>
+            <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
+            <p class="caption">Load consumption profile on a backbone of the electricity network of Rome.</p>
+          </section>
+
+          <section>
+            <div class="kicker">Limitation</div>
+            <h2>What should \(P\) be?</h2>
+            <span class="rule"></span>
+            <div class="two-col">
+              <div>
+                <img class="media image-frame" src="RNNs+Reservoir/media/word_pred.gif" alt="Different sentences require different memory lengths">
+              </div>
+              <div>
+                <ul>
+                  <li class="fragment">Too short: miss evidence</li>
+                  <li class="fragment">Too long: add noise</li>
+                  <li class="fragment">Memory becomes hand-designed</li>
+                </ul>
+                <p class="callout fragment">
+                  Can the model learn its own memory?
+                </p>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="chapter-stack" data-section="recurrent-state" aria-label="Recurrent state and reservoir computing">
+          <section class="rnn-slide">
+            <div class="kicker">RNN idea</div>
+            <h2>A hidden state carries context</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-right">
+              <div>
+                <ul>
+                  <li class="fragment">Read one step</li>
+                  <li class="fragment">Update state</li>
+                  <li class="fragment">Predict from memory</li>
+                </ul>
+                <div class="equation rnn-equation fragment">
+                  \[
+                  \begin{aligned}
+                  h_t&=\phi(W_x x_t + W_h h_{t-1})\\
+                  y_t&=W_o h_t
+                  \end{aligned}
+                  \]
+                </div>
+              </div>
+              <div>
+                <img class="media image-frame" src="RNNs+Reservoir/media/RNN.gif" alt="Animated recurrent neural network">
+                <p class="caption">One update, reused through time.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="kicker">Training</div>
+            <h2>Backpropagation through time</h2>
+            <span class="rule"></span>
+            <div class="two-col">
+              <div>
+                <img class="media image-frame" src="RNNs+Reservoir/media/bptt.png" alt="Backpropagation through time diagram">
+              </div>
+              <div>
+                <ul>
+                  <li class="fragment">Unroll in time</li>
+                  <li class="fragment">Share weights</li>
+                  <li class="fragment">Backpropagate through the chain</li>
+                </ul>
+                <p class="callout fragment">
+                  Memory helps, but training can be hard.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="kicker">Gated recurrence</div>
+            <h2>LSTMs and GRUs learn what to keep</h2>
+            <span class="rule"></span>
+            <div class="three-col">
+              <div class="card">
+                <h3>Write</h3>
+                <p class="small">Add new evidence</p>
+              </div>
+              <div class="card fragment">
+                <h3>Forget</h3>
+                <p class="small">Drop stale memory</p>
+              </div>
+              <div class="card fragment">
+                <h3>Read</h3>
+                <p class="small">Expose useful state</p>
+              </div>
+            </div>
+            <p class="note fragment">Crop mapping view: latent growth stage.</p>
+          </section>
+
+          <section class="reservoir-slide">
+            <div class="kicker">Reservoir computing</div>
+            <h2>An Echo State Network trains only the readout</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-right">
+              <div>
+                <ul>
+                  <li class="fragment">Random recurrent dynamics</li>
+                  <li class="fragment">Rich temporal features</li>
+                  <li class="fragment">Train only the readout</li>
+                </ul>
+                <div class="equation recurrent-equation fragment">
+                  \[
+                  \begin{aligned}
+                  h_t&=\tanh(W_i x_t + W_h h_{t-1})\\
+                  \hat{y}_{t+\tau}&=W_o h_t
+                  \end{aligned}
+                  \]
+                </div>
+              </div>
+              <div>
+                <img class="media image-frame" src="RNNs+Reservoir/media/Reservoir.gif" alt="Animated reservoir computing schematic">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="kicker">Reservoir practice</div>
+            <h2>Useful when training recurrence is expensive</h2>
+            <span class="rule"></span>
+            <div class="two-col">
+              <div>
+                <img class="media image-frame" src="RNNs+Reservoir/media/dynamics.png" alt="Reservoir dynamics under different spectral radii">
+              </div>
+              <div>
+                <ul>
+                  <li class="fragment"><strong>Spectral radius</strong>: memory</li>
+                  <li class="fragment"><strong>Input scaling</strong>: nonlinearity</li>
+                  <li class="fragment"><strong>Ridge readout</strong>: overfitting control</li>
+                </ul>
+                <p class="callout fragment">
+                  Useful when recurrent training is too expensive.
+                </p>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="chapter-stack" data-section="temporal-convolutions" aria-label="Temporal convolutions">
+          <section data-auto-animate>
+            <div class="kicker">Convolution</div>
+            <h2>A filter is a sliding learned window</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left">
+              <div>
+                <p class="lead">Apply the same small temporal kernel everywhere.</p>
+                <div class="equation">
+                  \[
+                  z_t=\sum_{k=0}^{K-1} w_k x_{t-k}
+                  \]
+                </div>
+                <ul>
+                  <li class="fragment">Local lag features</li>
+                  <li class="fragment">Stacked nonlinear channels</li>
+                  <li class="fragment">Parallel over time</li>
+                </ul>
+              </div>
+              <svg class="diagram conv-diagram" viewBox="0 0 620 310" role="img" aria-label="A temporal convolution filter sliding across indexed observations">
+                <defs>
+                  <marker id="conv-arrow-1" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
+                  </marker>
+                  <marker id="conv-arrow-2" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#2b92ac"></path>
+                  </marker>
+                  <marker id="conv-arrow-3" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#b77719"></path>
+                  </marker>
+                </defs>
+                <g transform="translate(52 68)">
+                  <text class="svg-label" x="184" y="-20">kernel K = 3</text>
+                  <g class="conv-sequence">
+                    <rect class="svg-box" x="0" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="52" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="104" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="156" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="208" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="260" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="312" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="364" y="0" width="44" height="44"></rect>
+                    <text x="22" y="29">t<tspan baseline-shift="sub" font-size="11">1</tspan></text>
+                    <text x="74" y="29">t<tspan baseline-shift="sub" font-size="11">2</tspan></text>
+                    <text x="126" y="29">t<tspan baseline-shift="sub" font-size="11">3</tspan></text>
+                    <text x="178" y="29">t<tspan baseline-shift="sub" font-size="11">4</tspan></text>
+                    <text x="230" y="29">t<tspan baseline-shift="sub" font-size="11">5</tspan></text>
+                    <text x="282" y="29">t<tspan baseline-shift="sub" font-size="11">6</tspan></text>
+                    <text x="334" y="29">t<tspan baseline-shift="sub" font-size="11">7</tspan></text>
+                    <text x="386" y="29">t<tspan baseline-shift="sub" font-size="11">8</tspan></text>
                   </g>
-                  <rect class="svg-green conv-output" x="20" y="140" width="108" height="50"></rect>
-                  <text class="conv-output-label" x="74" y="172">z<tspan baseline-shift="sub" font-size="11">i</tspan></text>
-                </g>
 
-                <g class="conv-legend" transform="translate(442 0)">
-                  <line class="tap-line tap-1" x1="0" y1="12" x2="34" y2="12"></line>
-                  <line class="tap-line tap-2" x1="0" y1="38" x2="34" y2="38"></line>
-                  <line class="tap-line tap-3" x1="0" y1="64" x2="34" y2="64"></line>
-                  <text x="52" y="18">w1</text>
-                  <text x="52" y="44">w2</text>
-                  <text x="52" y="70">w3</text>
-                </g>
-              </g>
-            </svg>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Temporal convolutional networks</div>
-          <h2>Depth and dilation expand the receptive field</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left">
-            <svg class="diagram tcn-diagram" viewBox="0 0 660 420" role="img" aria-label="Temporal convolution receptive field expands with depth">
-              <defs>
-                <marker id="arrowhead-tcn-purple" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
-                </marker>
-                <marker id="arrowhead-tcn-orange" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#b77719"></path>
-                </marker>
-                <marker id="arrowhead-tcn-red" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#ad5b58"></path>
-                </marker>
-              </defs>
-              <g transform="translate(36 24)">
-                <text class="svg-label" x="0" y="38">Layer 3</text>
-                <text class="svg-label" x="0" y="126">Layer 2</text>
-                <text class="svg-label" x="0" y="214">Layer 1</text>
-                <text class="svg-label" x="0" y="294">Input</text>
-
-                <g class="tcn-field-bars">
-                  <rect class="field-bar field-1" x="128" y="328" width="100" height="10"></rect>
-                  <rect class="field-bar field-1" x="248" y="328" width="100" height="10"></rect>
-                  <rect class="field-bar field-1" x="368" y="328" width="100" height="10"></rect>
-                  <rect class="field-bar field-1" x="488" y="328" width="100" height="10"></rect>
-                  <rect class="field-bar field-2" x="128" y="352" width="220" height="10"></rect>
-                  <rect class="field-bar field-2" x="368" y="352" width="220" height="10"></rect>
-                  <rect class="field-bar field-3" x="128" y="378" width="460" height="10"></rect>
-                </g>
-
-                <g class="tcn-input-row">
-                  <rect class="svg-box" x="132" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="192" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="252" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="312" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="372" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="432" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="492" y="270" width="40" height="36"></rect>
-                  <rect class="svg-box" x="552" y="270" width="40" height="36"></rect>
-                  <text x="152" y="294">x1</text>
-                  <text x="212" y="294">x2</text>
-                  <text x="272" y="294">x3</text>
-                  <text x="332" y="294">x4</text>
-                  <text x="392" y="294">x5</text>
-                  <text x="452" y="294">x6</text>
-                  <text x="512" y="294">x7</text>
-                  <text x="572" y="294">x8</text>
-                </g>
-
-                <g class="tcn-links layer-1" marker-end="url(#arrowhead-tcn-purple)">
-                  <line x1="152" y1="262" x2="165" y2="239"></line>
-                  <line x1="212" y1="262" x2="194" y2="238"></line>
-                  <line x1="272" y1="262" x2="285" y2="239"></line>
-                  <line x1="332" y1="262" x2="314" y2="238"></line>
-                  <line x1="392" y1="262" x2="405" y2="239"></line>
-                  <line x1="452" y1="262" x2="434" y2="238"></line>
-                  <line x1="512" y1="262" x2="525" y2="239"></line>
-                  <line x1="572" y1="262" x2="554" y2="238"></line>
-                </g>
-                <g class="tcn-links layer-2" marker-end="url(#arrowhead-tcn-orange)">
-                  <line x1="178" y1="186" x2="217" y2="147"></line>
-                  <line x1="298" y1="186" x2="259" y2="147"></line>
-                  <line x1="418" y1="186" x2="457" y2="147"></line>
-                  <line x1="538" y1="186" x2="499" y2="147"></line>
-                </g>
-                <g class="tcn-links layer-3" marker-end="url(#arrowhead-tcn-red)">
-                  <line x1="238" y1="98" x2="333" y2="51"></line>
-                  <line x1="478" y1="98" x2="383" y2="51"></line>
-                </g>
-
-                <g class="tcn-nodes layer-1">
-                  <circle class="svg-accent-circle" cx="178" cy="214" r="22"></circle>
-                  <circle class="svg-accent-circle" cx="298" cy="214" r="22"></circle>
-                  <circle class="svg-accent-circle" cx="418" cy="214" r="22"></circle>
-                  <circle class="svg-accent-circle" cx="538" cy="214" r="22"></circle>
-                  <text x="178" y="221">2</text>
-                  <text x="298" y="221">2</text>
-                  <text x="418" y="221">2</text>
-                  <text x="538" y="221">2</text>
-                </g>
-                <g class="tcn-nodes layer-2">
-                  <circle class="svg-orange" cx="238" cy="126" r="22"></circle>
-                  <circle class="svg-orange" cx="478" cy="126" r="22"></circle>
-                  <text x="238" y="133">4</text>
-                  <text x="478" y="133">4</text>
-                </g>
-                <g class="tcn-nodes layer-3">
-                  <circle class="svg-red" cx="358" cy="38" r="23"></circle>
-                  <text x="358" y="45">8</text>
-                </g>
-              </g>
-            </svg>
-            <div>
-              <ul>
-                <li class="fragment">Local filters compose</li>
-                <li class="fragment">Dilation skips positions</li>
-                <li class="fragment">Depth grows context</li>
-              </ul>
-              <p class="callout fragment">
-                Receptive field is about how much history can influence a representation.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Causal convolution</div>
-          <h2>Causal padding keeps the future hidden</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left">
-            <div>
-              <p class="lead">For forecasting, the output at time t uses only current and earlier observations.</p>
-              <ul>
-                <li class="fragment">Pad on the left</li>
-                <li class="fragment">Align output with current time</li>
-                <li class="fragment">Slide the same kernel forward</li>
-              </ul>
-            </div>
-            <svg class="diagram causal-diagram" viewBox="0 0 650 330" role="img" aria-label="Causal convolution with left padding">
-              <defs>
-                <marker id="causal-arrow-1" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
-                </marker>
-                <marker id="causal-arrow-2" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#2b92ac"></path>
-                </marker>
-                <marker id="causal-arrow-3" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
-                  <path d="M0,0 L5,2.5 L0,5 Z" fill="#b77719"></path>
-                </marker>
-              </defs>
-              <g transform="translate(58 68)">
-                <text class="svg-label" x="190" y="-24">causal kernel K = 3</text>
-                <g class="causal-sequence">
-                  <rect class="causal-pad" x="0" y="0" width="44" height="44"></rect>
-                  <rect class="causal-pad" x="52" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="104" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="156" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="208" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="260" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="312" y="0" width="44" height="44"></rect>
-                  <rect class="svg-box" x="364" y="0" width="44" height="44"></rect>
-                  <rect class="future-box" x="416" y="0" width="44" height="44"></rect>
-                  <text x="22" y="29">0</text>
-                  <text x="74" y="29">0</text>
-                  <text x="126" y="29">t<tspan baseline-shift="sub" font-size="11">1</tspan></text>
-                  <text x="178" y="29">t<tspan baseline-shift="sub" font-size="11">2</tspan></text>
-                  <text x="230" y="29">t<tspan baseline-shift="sub" font-size="11">3</tspan></text>
-                  <text x="282" y="29">t<tspan baseline-shift="sub" font-size="11">4</tspan></text>
-                  <text x="334" y="29">t<tspan baseline-shift="sub" font-size="11">5</tspan></text>
-                  <text x="386" y="29">t<tspan baseline-shift="sub" font-size="11">6</tspan></text>
-                  <text x="438" y="29">t<tspan baseline-shift="sub" font-size="11">7</tspan></text>
-                </g>
-                <g class="causal-window">
-                  <animateTransform attributeName="transform" type="translate" values="0 0;260 0;0 0" dur="7s" repeatCount="indefinite"></animateTransform>
-                  <rect class="conv-tap tap-1" x="0" y="0" width="44" height="44"></rect>
-                  <rect class="conv-tap tap-2" x="52" y="0" width="44" height="44"></rect>
-                  <rect class="conv-tap tap-3" x="104" y="0" width="44" height="44"></rect>
-                  <g class="causal-paths">
-                    <path class="tap-line tap-1" marker-end="url(#causal-arrow-1)" d="M22 56 C38 84 74 104 106 122"></path>
-                    <path class="tap-line tap-2" marker-end="url(#causal-arrow-2)" d="M74 56 C88 82 104 101 114 118"></path>
-                    <path class="tap-line tap-3" marker-end="url(#causal-arrow-3)" d="M126 56 C126 80 126 99 126 116"></path>
+                  <g class="conv-window">
+                    <animateTransform attributeName="transform" type="translate" values="0 0;260 0;0 0" dur="7s" repeatCount="indefinite"></animateTransform>
+                    <rect class="conv-tap tap-1" x="0" y="0" width="44" height="44"></rect>
+                    <rect class="conv-tap tap-2" x="52" y="0" width="44" height="44"></rect>
+                    <rect class="conv-tap tap-3" x="104" y="0" width="44" height="44"></rect>
+                    <g class="conv-paths">
+                      <path class="tap-line tap-1" marker-end="url(#conv-arrow-1)" d="M22 56 C24 82 40 100 63 118"></path>
+                      <path class="tap-line tap-2" marker-end="url(#conv-arrow-2)" d="M74 56 C74 80 74 96 74 114"></path>
+                      <path class="tap-line tap-3" marker-end="url(#conv-arrow-3)" d="M126 56 C124 82 108 100 85 118"></path>
+                    </g>
+                    <rect class="svg-green conv-output" x="20" y="140" width="108" height="50"></rect>
+                    <text class="conv-output-label" x="74" y="172">z<tspan baseline-shift="sub" font-size="11">i</tspan></text>
                   </g>
-                  <rect class="svg-green causal-output" x="74" y="140" width="104" height="48"></rect>
-                  <text class="conv-output-label" x="126" y="171">z<tspan baseline-shift="sub" font-size="11">t</tspan></text>
+
+                  <g class="conv-legend" transform="translate(442 0)">
+                    <line class="tap-line tap-1" x1="0" y1="12" x2="34" y2="12"></line>
+                    <line class="tap-line tap-2" x1="0" y1="38" x2="34" y2="38"></line>
+                    <line class="tap-line tap-3" x1="0" y1="64" x2="34" y2="64"></line>
+                    <text x="52" y="18">w1</text>
+                    <text x="52" y="44">w2</text>
+                    <text x="52" y="70">w3</text>
+                  </g>
                 </g>
-                <text class="causal-note" x="438" y="72">future not used</text>
-              </g>
-            </svg>
-          </div>
-        </section>
+              </svg>
+            </div>
+          </section>
 
-        <section>
-          <div class="kicker">Remote-sensing fit</div>
-          <h2>Temporal filters detect local motifs</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div class="card">
-              <h3>Classic window model</h3>
-              <ul class="small">
-                <li>Explicit lags</li>
-                <li>Chosen context</li>
-                <li>Hand-set \(P\)</li>
-              </ul>
-            </div>
-            <div class="card fragment">
-              <h3>TCN model</h3>
-              <ul class="small">
-                <li>Learned filters</li>
-                <li>Seasonal motifs</li>
-                <li>Growing receptive field</li>
-              </ul>
-            </div>
-          </div>
-          <p class="source">
-            Satellite image time-series classification: Pelletier, Webb, and Petitjean, 2019.
-          </p>
-        </section>
+          <section>
+            <div class="kicker">Temporal convolutional networks</div>
+            <h2>Depth and dilation expand the receptive field</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left">
+              <svg class="diagram tcn-diagram" viewBox="0 0 660 420" role="img" aria-label="Temporal convolution receptive field expands with depth">
+                <defs>
+                  <marker id="arrowhead-tcn-purple" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
+                  </marker>
+                  <marker id="arrowhead-tcn-orange" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#b77719"></path>
+                  </marker>
+                  <marker id="arrowhead-tcn-red" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#ad5b58"></path>
+                  </marker>
+                </defs>
+                <g transform="translate(36 24)">
+                  <text class="svg-label" x="0" y="38">Layer 3</text>
+                  <text class="svg-label" x="0" y="126">Layer 2</text>
+                  <text class="svg-label" x="0" y="214">Layer 1</text>
+                  <text class="svg-label" x="0" y="294">Input</text>
 
-        <section>
-          <div class="kicker">Self-attention</div>
-          <h2>Content-addressable memory over time</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left attention-layout">
-            <div>
-              <div class="equation">
-                \[
-                \mathrm{Attn}(Q,K,V)
-                =\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d}}\right)V
-                \]
-              </div>
-              <ul>
-                <li class="fragment">Query, key, value</li>
-                <li class="fragment">Learned relevance weights</li>
-                <li class="fragment">Multiple relation types</li>
-              </ul>
-            </div>
-            <svg class="diagram attention-diagram" viewBox="0 0 650 340" role="img" aria-label="Attention weights between time steps">
-              <defs>
-                <marker id="attn-arrow-low" markerWidth="7" markerHeight="7" refX="5.6" refY="3.5" orient="auto">
-                  <path d="M0,0 L7,3.5 L0,7 Z" fill="#79bed1"></path>
-                </marker>
-                <marker id="attn-arrow-mid" markerWidth="8" markerHeight="8" refX="6.4" refY="4" orient="auto">
-                  <path d="M0,0 L8,4 L0,8 Z" fill="#2b92ac"></path>
-                </marker>
-                <marker id="attn-arrow-high" markerWidth="9" markerHeight="9" refX="7.2" refY="4.5" orient="auto">
-                  <path d="M0,0 L9,4.5 L0,9 Z" fill="#07546a"></path>
-                </marker>
-              </defs>
-              <g transform="translate(56 54)">
-                <text class="svg-label" x="0" y="-18">tokens in time</text>
-                <text class="attention-target-label" x="311" y="-18">weights into t-2</text>
-                <g class="attention-token-row">
-                  <rect class="svg-box" x="0" y="0" width="70" height="46"></rect>
-                  <rect class="svg-box" x="92" y="0" width="70" height="46"></rect>
-                  <rect class="svg-box" x="184" y="0" width="70" height="46"></rect>
-                  <rect class="svg-accent" x="276" y="0" width="70" height="46"></rect>
-                  <rect class="svg-box" x="368" y="0" width="70" height="46"></rect>
-                  <rect class="svg-box" x="460" y="0" width="70" height="46"></rect>
-                  <text x="35" y="30">t-5</text>
-                  <text x="127" y="30">t-4</text>
-                  <text x="219" y="30">t-3</text>
-                  <text x="311" y="30">t-2</text>
-                  <text x="403" y="30">t-1</text>
-                  <text x="495" y="30">t</text>
+                  <g class="tcn-field-bars">
+                    <rect class="field-bar field-1" x="128" y="328" width="100" height="10"></rect>
+                    <rect class="field-bar field-1" x="248" y="328" width="100" height="10"></rect>
+                    <rect class="field-bar field-1" x="368" y="328" width="100" height="10"></rect>
+                    <rect class="field-bar field-1" x="488" y="328" width="100" height="10"></rect>
+                    <rect class="field-bar field-2" x="128" y="352" width="220" height="10"></rect>
+                    <rect class="field-bar field-2" x="368" y="352" width="220" height="10"></rect>
+                    <rect class="field-bar field-3" x="128" y="378" width="460" height="10"></rect>
+                  </g>
+
+                  <g class="tcn-input-row">
+                    <rect class="svg-box" x="132" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="192" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="252" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="312" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="372" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="432" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="492" y="270" width="40" height="36"></rect>
+                    <rect class="svg-box" x="552" y="270" width="40" height="36"></rect>
+                    <text x="152" y="294">x1</text>
+                    <text x="212" y="294">x2</text>
+                    <text x="272" y="294">x3</text>
+                    <text x="332" y="294">x4</text>
+                    <text x="392" y="294">x5</text>
+                    <text x="452" y="294">x6</text>
+                    <text x="512" y="294">x7</text>
+                    <text x="572" y="294">x8</text>
+                  </g>
+
+                  <g class="tcn-links layer-1" marker-end="url(#arrowhead-tcn-purple)">
+                    <line x1="152" y1="262" x2="165" y2="239"></line>
+                    <line x1="212" y1="262" x2="194" y2="238"></line>
+                    <line x1="272" y1="262" x2="285" y2="239"></line>
+                    <line x1="332" y1="262" x2="314" y2="238"></line>
+                    <line x1="392" y1="262" x2="405" y2="239"></line>
+                    <line x1="452" y1="262" x2="434" y2="238"></line>
+                    <line x1="512" y1="262" x2="525" y2="239"></line>
+                    <line x1="572" y1="262" x2="554" y2="238"></line>
+                  </g>
+                  <g class="tcn-links layer-2" marker-end="url(#arrowhead-tcn-orange)">
+                    <line x1="178" y1="186" x2="217" y2="147"></line>
+                    <line x1="298" y1="186" x2="259" y2="147"></line>
+                    <line x1="418" y1="186" x2="457" y2="147"></line>
+                    <line x1="538" y1="186" x2="499" y2="147"></line>
+                  </g>
+                  <g class="tcn-links layer-3" marker-end="url(#arrowhead-tcn-red)">
+                    <line x1="238" y1="98" x2="333" y2="51"></line>
+                    <line x1="478" y1="98" x2="383" y2="51"></line>
+                  </g>
+
+                  <g class="tcn-nodes layer-1">
+                    <circle class="svg-accent-circle" cx="178" cy="214" r="22"></circle>
+                    <circle class="svg-accent-circle" cx="298" cy="214" r="22"></circle>
+                    <circle class="svg-accent-circle" cx="418" cy="214" r="22"></circle>
+                    <circle class="svg-accent-circle" cx="538" cy="214" r="22"></circle>
+                    <text x="178" y="221">2</text>
+                    <text x="298" y="221">2</text>
+                    <text x="418" y="221">2</text>
+                    <text x="538" y="221">2</text>
+                  </g>
+                  <g class="tcn-nodes layer-2">
+                    <circle class="svg-orange" cx="238" cy="126" r="22"></circle>
+                    <circle class="svg-orange" cx="478" cy="126" r="22"></circle>
+                    <text x="238" y="133">4</text>
+                    <text x="478" y="133">4</text>
+                  </g>
+                  <g class="tcn-nodes layer-3">
+                    <circle class="svg-red" cx="358" cy="38" r="23"></circle>
+                    <text x="358" y="45">8</text>
+                  </g>
                 </g>
-                <g class="attention-lines">
-                  <path class="attn-weight low" d="M35 50 C35 130 311 130 311 63"></path>
-                  <path class="attn-weight high" d="M219 50 C219 154 311 154 311 63"></path>
-                  <path class="attn-weight mid" d="M495 50 C495 126 311 126 311 63"></path>
-                  <text class="weight-label low" x="116" y="119">0.18</text>
-                  <text class="weight-label high" x="258" y="153">0.62</text>
-                  <text class="weight-label mid" x="386" y="122">0.31</text>
-                  <circle class="attn-flow low" r="4">
-                    <animateMotion dur="3.2s" repeatCount="indefinite" path="M35 50 C35 130 311 130 311 63"></animateMotion>
-                  </circle>
-                  <circle class="attn-flow high" r="5.5">
-                    <animateMotion dur="3.2s" begin="0.35s" repeatCount="indefinite" path="M219 50 C219 154 311 154 311 63"></animateMotion>
-                  </circle>
-                  <circle class="attn-flow mid" r="4.7">
-                    <animateMotion dur="3.2s" begin="0.7s" repeatCount="indefinite" path="M495 50 C495 126 311 126 311 63"></animateMotion>
-                  </circle>
-                  <path class="attention-target-arrow" d="M298 79 L311 52 L324 79 Z"></path>
-                </g>
-                <g class="attention-context" transform="translate(117 202)">
-                  <rect class="svg-green" x="0" y="0" width="300" height="56"></rect>
-                  <text x="150" y="35">weighted temporal context</text>
-                </g>
-              </g>
-            </svg>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">Transformers</div>
-          <h2>Why attention changed sequence modeling</h2>
-          <span class="rule"></span>
-          <div class="two-col">
-            <div class="card soft">
-              <h3>Strengths</h3>
-              <ul class="small">
-                <li>Long-range links</li>
-                <li>Parallel training</li>
-                <li>Dates, masks, metadata</li>
-              </ul>
-            </div>
-            <div class="card fragment">
-              <h3>Costs</h3>
-              <ul class="small">
-                <li>Quadratic memory</li>
-                <li>Weak locality bias</li>
-                <li>Data hungry</li>
-              </ul>
-            </div>
-          </div>
-          <p class="source">
-            Transformer architecture: Vaswani et al., 2017.
-          </p>
-        </section>
-
-        <section>
-          <div class="kicker">Satellite sequences</div>
-          <h2>Attention can use dates, masks, and metadata</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-left">
-            <div>
-              <p class="lead">Satellite time series are rarely clean grids.</p>
-              <ul>
-                <li class="fragment">Acquisition dates</li>
-                <li class="fragment">Cloud / quality masks</li>
-                <li class="fragment">Sensor and orbit metadata</li>
-              </ul>
-            </div>
-            <div class="card sequence-card">
-              <h3>Example sequence</h3>
-              <div class="temporal-strip labeled attention-sequence" aria-label="Satellite observations with cloud masks and peak-season signal">
-                <span class="usable">Jan</span><span class="usable">Feb</span><span class="missing"><strong>Mar</strong><em>cloud</em></span><span class="usable">Apr</span>
-                <span class="usable">May</span><span class="peak peak-a"><strong>Jun</strong><em>peak</em></span><span class="peak peak-b"><strong>Jul</strong><em>peak</em></span><span class="missing"><strong>Aug</strong><em>cloud</em></span>
-                <span class="usable">Sep</span><span class="usable">Oct</span><span class="usable">Nov</span><span class="usable">Dec</span>
-              </div>
-              <div class="sequence-legend" aria-hidden="true">
-                <span><i class="usable"></i>clean</span>
-                <span><i class="peak"></i>peak signal</span>
-                <span><i class="missing"></i>masked</span>
-              </div>
-              <p class="small">Use the mask to skip clouds; keep the seasonal peak.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="ssm-intro-slide">
-          <div class="kicker">State space models</div>
-          <h2>Continuous-time intuition, neural sequence model</h2>
-          <span class="rule"></span>
-          <div class="ssm-intro-layout">
-            <div>
-              <div class="equation ssm-equation">
-                \[
-                \begin{aligned}
-                \dot{s}(t)&=A s(t)+B u(t)\\
-                y(t)&=C s(t)+D u(t)
-                \end{aligned}
-                \]
+              </svg>
+              <div>
+                <ul>
+                  <li class="fragment">Local filters compose</li>
+                  <li class="fragment">Dilation skips positions</li>
+                  <li class="fragment">Depth grows context</li>
+                </ul>
+                <p class="callout fragment">
+                  Receptive field is about how much history can influence a representation.
+                </p>
               </div>
             </div>
-            <div class="ssm-cards">
+          </section>
+
+          <section>
+            <div class="kicker">Causal convolution</div>
+            <h2>Causal padding keeps the future hidden</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left">
+              <div>
+                <p class="lead">For forecasting, the output at time t uses only current and earlier observations.</p>
+                <ul>
+                  <li class="fragment">Pad on the left</li>
+                  <li class="fragment">Align output with current time</li>
+                  <li class="fragment">Slide the same kernel forward</li>
+                </ul>
+              </div>
+              <svg class="diagram causal-diagram" viewBox="0 0 650 330" role="img" aria-label="Causal convolution with left padding">
+                <defs>
+                  <marker id="causal-arrow-1" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
+                  </marker>
+                  <marker id="causal-arrow-2" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#2b92ac"></path>
+                  </marker>
+                  <marker id="causal-arrow-3" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                    <path d="M0,0 L5,2.5 L0,5 Z" fill="#b77719"></path>
+                  </marker>
+                </defs>
+                <g transform="translate(58 68)">
+                  <text class="svg-label" x="190" y="-24">causal kernel K = 3</text>
+                  <g class="causal-sequence">
+                    <rect class="causal-pad" x="0" y="0" width="44" height="44"></rect>
+                    <rect class="causal-pad" x="52" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="104" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="156" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="208" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="260" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="312" y="0" width="44" height="44"></rect>
+                    <rect class="svg-box" x="364" y="0" width="44" height="44"></rect>
+                    <rect class="future-box" x="416" y="0" width="44" height="44"></rect>
+                    <text x="22" y="29">0</text>
+                    <text x="74" y="29">0</text>
+                    <text x="126" y="29">t<tspan baseline-shift="sub" font-size="11">1</tspan></text>
+                    <text x="178" y="29">t<tspan baseline-shift="sub" font-size="11">2</tspan></text>
+                    <text x="230" y="29">t<tspan baseline-shift="sub" font-size="11">3</tspan></text>
+                    <text x="282" y="29">t<tspan baseline-shift="sub" font-size="11">4</tspan></text>
+                    <text x="334" y="29">t<tspan baseline-shift="sub" font-size="11">5</tspan></text>
+                    <text x="386" y="29">t<tspan baseline-shift="sub" font-size="11">6</tspan></text>
+                    <text x="438" y="29">t<tspan baseline-shift="sub" font-size="11">7</tspan></text>
+                  </g>
+                  <g class="causal-window">
+                    <animateTransform attributeName="transform" type="translate" values="0 0;260 0;0 0" dur="7s" repeatCount="indefinite"></animateTransform>
+                    <rect class="conv-tap tap-1" x="0" y="0" width="44" height="44"></rect>
+                    <rect class="conv-tap tap-2" x="52" y="0" width="44" height="44"></rect>
+                    <rect class="conv-tap tap-3" x="104" y="0" width="44" height="44"></rect>
+                    <g class="causal-paths">
+                      <path class="tap-line tap-1" marker-end="url(#causal-arrow-1)" d="M22 56 C38 84 74 104 106 122"></path>
+                      <path class="tap-line tap-2" marker-end="url(#causal-arrow-2)" d="M74 56 C88 82 104 101 114 118"></path>
+                      <path class="tap-line tap-3" marker-end="url(#causal-arrow-3)" d="M126 56 C126 80 126 99 126 116"></path>
+                    </g>
+                    <rect class="svg-green causal-output" x="74" y="140" width="104" height="48"></rect>
+                    <text class="conv-output-label" x="126" y="171">z<tspan baseline-shift="sub" font-size="11">t</tspan></text>
+                  </g>
+                  <text class="causal-note" x="438" y="72">future not used</text>
+                </g>
+              </svg>
+            </div>
+          </section>
+
+          <section>
+            <div class="kicker">Remote-sensing fit</div>
+            <h2>Temporal filters detect local motifs</h2>
+            <span class="rule"></span>
+            <div class="two-col">
+              <div class="card">
+                <h3>Classic window model</h3>
+                <ul class="small">
+                  <li>Explicit lags</li>
+                  <li>Chosen context</li>
+                  <li>Hand-set \(P\)</li>
+                </ul>
+              </div>
               <div class="card fragment">
-                <h3>State</h3>
-                <p class="small">latent dynamics</p>
-              </div>
-              <div class="card fragment">
-                <h3>Input</h3>
-                <p class="small">drives system</p>
-              </div>
-              <div class="card fragment">
-                <h3>Output</h3>
-                <p class="small">reads state</p>
+                <h3>TCN model</h3>
+                <ul class="small">
+                  <li>Learned filters</li>
+                  <li>Seasonal motifs</li>
+                  <li>Growing receptive field</li>
+                </ul>
               </div>
             </div>
-            <div class="ssm-callout">
-              <strong>Control-theory intuition</strong>
-              <span>Trainable dynamics for long sequences</span>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="kicker">S4 and Mamba</div>
-          <h2>State updates can be scanned efficiently</h2>
-          <span class="rule"></span>
-          <div class="two-col wide-right">
-            <div>
-              <ul>
-                <li><strong>S4</strong>: long memory</li>
-                <li class="fragment"><strong>Mamba</strong>: selective memory</li>
-                <li class="fragment">Streaming + efficient scans</li>
-              </ul>
-            </div>
-            <svg class="diagram mamba-diagram" viewBox="0 0 700 390" role="img" aria-label="Selective state space scan">
-              <defs>
-                <marker id="arrowhead-ssm-blue" markerWidth="5.5" markerHeight="5.5" refX="4.5" refY="2.75" orient="auto" markerUnits="userSpaceOnUse">
-                  <path d="M0,0 L5.5,2.75 L0,5.5 Z" fill="#0b7896"></path>
-                </marker>
-                <marker id="arrowhead-ssm-muted" markerWidth="5.5" markerHeight="5.5" refX="4.5" refY="2.75" orient="auto" markerUnits="userSpaceOnUse">
-                  <path d="M0,0 L5.5,2.75 L0,5.5 Z" fill="#5f7482"></path>
-                </marker>
-              </defs>
-              <g transform="translate(38 40)">
-                <text class="svg-label" x="0" y="-10">selective state-space scan</text>
-                <text class="svg-small" x="0" y="14">Each input chooses how much memory to pass forward.</text>
-
-                <g class="mamba-inputs">
-                  <rect class="svg-box step-1" x="42" y="44" width="50" height="38"></rect>
-                  <rect class="svg-box step-2" x="142" y="44" width="50" height="38"></rect>
-                  <rect class="svg-box step-3" x="242" y="44" width="50" height="38"></rect>
-                  <rect class="svg-box step-4" x="342" y="44" width="50" height="38"></rect>
-                  <rect class="svg-box step-5" x="442" y="44" width="50" height="38"></rect>
-                  <text x="67" y="69">x1</text>
-                  <text x="167" y="69">x2</text>
-                  <text x="267" y="69">x3</text>
-                  <text x="367" y="69">x4</text>
-                  <text x="467" y="69">x5</text>
-                </g>
-
-                <g class="mamba-gates">
-                  <circle class="gate step-1" cx="67" cy="130" r="19"></circle>
-                  <circle class="gate step-2" cx="167" cy="130" r="19"></circle>
-                  <circle class="gate step-3" cx="267" cy="130" r="19"></circle>
-                  <circle class="gate step-4" cx="367" cy="130" r="19"></circle>
-                  <circle class="gate step-5" cx="467" cy="130" r="19"></circle>
-                  <text x="67" y="137">g</text>
-                  <text x="167" y="137">g</text>
-                  <text x="267" y="137">g</text>
-                  <text x="367" y="137">g</text>
-                  <text x="467" y="137">g</text>
-                </g>
-
-                <g class="svg-lines strong mamba-input-arrows" marker-end="url(#arrowhead-ssm-blue)">
-                  <line class="step-1" x1="67" y1="89" x2="67" y2="102"></line>
-                  <line class="step-2" x1="167" y1="89" x2="167" y2="102"></line>
-                  <line class="step-3" x1="267" y1="89" x2="267" y2="102"></line>
-                  <line class="step-4" x1="367" y1="89" x2="367" y2="102"></line>
-                  <line class="step-5" x1="467" y1="89" x2="467" y2="102"></line>
-                </g>
-
-                <g class="mamba-states">
-                  <rect class="state-box" x="0" y="200" width="54" height="42"></rect>
-                  <rect class="state-box step-1" x="100" y="200" width="54" height="42"></rect>
-                  <rect class="state-box step-2" x="200" y="200" width="54" height="42"></rect>
-                  <rect class="state-box step-3" x="300" y="200" width="54" height="42"></rect>
-                  <rect class="state-box step-4" x="400" y="200" width="54" height="42"></rect>
-                  <rect class="state-box step-5" x="500" y="200" width="54" height="42"></rect>
-                  <text x="27" y="227">s0</text>
-                  <text x="127" y="227">s1</text>
-                  <text x="227" y="227">s2</text>
-                  <text x="327" y="227">s3</text>
-                  <text x="427" y="227">s4</text>
-                  <text x="527" y="227">s5</text>
-                </g>
-
-                <g class="svg-lines strong mamba-state-arrows" marker-end="url(#arrowhead-ssm-blue)">
-                  <line class="step-1" x1="56" y1="221" x2="94" y2="221"></line>
-                  <line class="step-2" x1="156" y1="221" x2="194" y2="221"></line>
-                  <line class="step-3" x1="256" y1="221" x2="294" y2="221"></line>
-                  <line class="step-4" x1="356" y1="221" x2="394" y2="221"></line>
-                  <line class="step-5" x1="456" y1="221" x2="494" y2="221"></line>
-                </g>
-
-                <g class="svg-lines mamba-gate-arrows" marker-end="url(#arrowhead-ssm-muted)">
-                  <line class="step-1" x1="76" y1="157" x2="108" y2="190"></line>
-                  <line class="step-2" x1="176" y1="157" x2="208" y2="190"></line>
-                  <line class="step-3" x1="276" y1="157" x2="308" y2="190"></line>
-                  <line class="step-4" x1="376" y1="157" x2="408" y2="190"></line>
-                  <line class="step-5" x1="476" y1="157" x2="508" y2="190"></line>
-                </g>
-
-                <g class="svg-lines strong mamba-readout" marker-end="url(#arrowhead-ssm-blue)">
-                  <line x1="554" y1="221" x2="584" y2="221"></line>
-                </g>
-                <rect class="svg-green mamba-output" x="590" y="192" width="48" height="58"></rect>
-                <text x="614" y="227">y</text>
-
-                <g transform="translate(0 294)">
-                  <rect class="svg-green" x="0" y="0" width="225" height="46"></rect>
-                  <text class="mamba-chip-text" x="18" y="29">parallel scan in training</text>
-                </g>
-                <g transform="translate(260 294)">
-                  <rect class="svg-orange" x="0" y="0" width="250" height="46"></rect>
-                  <text class="mamba-chip-text" x="18" y="29">input-dependent gates</text>
-                </g>
-              </g>
-            </svg>
-          </div>
-          <p class="source">
-            S4: Gu et al., 2021. Mamba: Gu and Dao, 2023.
-          </p>
-        </section>
-
-        <section>
-          <div class="kicker">Phenology</div>
-          <h2>Crop mapping reads temporal signatures</h2>
-          <span class="rule"></span>
-          <div>
-            <img class="media wide image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
-            <p class="caption">
-              Monthly NDVI images from Sentinel-2 composites. Source: ESA EO Science for Society.
+            <p class="source">
+              Satellite image time-series classification: Pelletier, Webb, and Petitjean, 2019.
             </p>
-          </div>
-          <div class="three-col">
-            <div class="card fragment">
-              <h3>RNN/LSTM</h3>
-              <p class="small">Growth stage</p>
-            </div>
-            <div class="card fragment">
-              <h3>TCN</h3>
-              <p class="small">Phenology motifs</p>
-            </div>
-            <div class="card fragment">
-              <h3>Transformer/SSM</h3>
-              <p class="small">Long context</p>
-            </div>
-          </div>
+          </section>
         </section>
 
-        <section>
-          <div class="kicker">Change and events</div>
-          <h2>Flood mapping is a before/after temporal task</h2>
-          <span class="rule"></span>
-          <div class="media-row">
+        <section class="chapter-stack" data-section="attention-transformers" aria-label="Attention and transformers">
+          <section>
+            <div class="kicker">Self-attention</div>
+            <h2>Content-addressable memory over time</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left attention-layout">
+              <div>
+                <div class="equation">
+                  \[
+                  \mathrm{Attn}(Q,K,V)
+                  =\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d}}\right)V
+                  \]
+                </div>
+                <ul>
+                  <li class="fragment">Query, key, value</li>
+                  <li class="fragment">Learned relevance weights</li>
+                  <li class="fragment">Multiple relation types</li>
+                </ul>
+              </div>
+              <svg class="diagram attention-diagram" viewBox="0 0 650 340" role="img" aria-label="Attention weights between time steps">
+                <defs>
+                  <marker id="attn-arrow-low" markerWidth="7" markerHeight="7" refX="5.6" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="#79bed1"></path>
+                  </marker>
+                  <marker id="attn-arrow-mid" markerWidth="8" markerHeight="8" refX="6.4" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#2b92ac"></path>
+                  </marker>
+                  <marker id="attn-arrow-high" markerWidth="9" markerHeight="9" refX="7.2" refY="4.5" orient="auto">
+                    <path d="M0,0 L9,4.5 L0,9 Z" fill="#07546a"></path>
+                  </marker>
+                </defs>
+                <g transform="translate(56 54)">
+                  <text class="svg-label" x="0" y="-18">tokens in time</text>
+                  <text class="attention-target-label" x="311" y="-18">weights into t-2</text>
+                  <g class="attention-token-row">
+                    <rect class="svg-box" x="0" y="0" width="70" height="46"></rect>
+                    <rect class="svg-box" x="92" y="0" width="70" height="46"></rect>
+                    <rect class="svg-box" x="184" y="0" width="70" height="46"></rect>
+                    <rect class="svg-accent" x="276" y="0" width="70" height="46"></rect>
+                    <rect class="svg-box" x="368" y="0" width="70" height="46"></rect>
+                    <rect class="svg-box" x="460" y="0" width="70" height="46"></rect>
+                    <text x="35" y="30">t-5</text>
+                    <text x="127" y="30">t-4</text>
+                    <text x="219" y="30">t-3</text>
+                    <text x="311" y="30">t-2</text>
+                    <text x="403" y="30">t-1</text>
+                    <text x="495" y="30">t</text>
+                  </g>
+                  <g class="attention-lines">
+                    <path class="attn-weight low" d="M35 50 C35 130 311 130 311 63"></path>
+                    <path class="attn-weight high" d="M219 50 C219 154 311 154 311 63"></path>
+                    <path class="attn-weight mid" d="M495 50 C495 126 311 126 311 63"></path>
+                    <text class="weight-label low" x="116" y="119">0.18</text>
+                    <text class="weight-label high" x="258" y="153">0.62</text>
+                    <text class="weight-label mid" x="386" y="122">0.31</text>
+                    <circle class="attn-flow low" r="4">
+                      <animateMotion dur="3.2s" repeatCount="indefinite" path="M35 50 C35 130 311 130 311 63"></animateMotion>
+                    </circle>
+                    <circle class="attn-flow high" r="5.5">
+                      <animateMotion dur="3.2s" begin="0.35s" repeatCount="indefinite" path="M219 50 C219 154 311 154 311 63"></animateMotion>
+                    </circle>
+                    <circle class="attn-flow mid" r="4.7">
+                      <animateMotion dur="3.2s" begin="0.7s" repeatCount="indefinite" path="M495 50 C495 126 311 126 311 63"></animateMotion>
+                    </circle>
+                    <path class="attention-target-arrow" d="M298 79 L311 52 L324 79 Z"></path>
+                  </g>
+                  <g class="attention-context" transform="translate(117 202)">
+                    <rect class="svg-green" x="0" y="0" width="300" height="56"></rect>
+                    <text x="150" y="35">weighted temporal context</text>
+                  </g>
+                </g>
+              </svg>
+            </div>
+          </section>
+
+          <section>
+            <div class="kicker">Transformers</div>
+            <h2>Why attention changed sequence modeling</h2>
+            <span class="rule"></span>
+            <div class="two-col">
+              <div class="card soft">
+                <h3>Strengths</h3>
+                <ul class="small">
+                  <li>Long-range links</li>
+                  <li>Parallel training</li>
+                  <li>Dates, masks, metadata</li>
+                </ul>
+              </div>
+              <div class="card fragment">
+                <h3>Costs</h3>
+                <ul class="small">
+                  <li>Quadratic memory</li>
+                  <li>Weak locality bias</li>
+                  <li>Data hungry</li>
+                </ul>
+              </div>
+            </div>
+            <p class="source">
+              Transformer architecture: Vaswani et al., 2017.
+            </p>
+          </section>
+
+          <section>
+            <div class="kicker">Satellite sequences</div>
+            <h2>Attention can use dates, masks, and metadata</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-left">
+              <div>
+                <p class="lead">Satellite time series are rarely clean grids.</p>
+                <ul>
+                  <li class="fragment">Acquisition dates</li>
+                  <li class="fragment">Cloud / quality masks</li>
+                  <li class="fragment">Sensor and orbit metadata</li>
+                </ul>
+              </div>
+              <div class="card sequence-card">
+                <h3>Example sequence</h3>
+                <div class="temporal-strip labeled attention-sequence" aria-label="Satellite observations with cloud masks and peak-season signal">
+                  <span class="usable">Jan</span><span class="usable">Feb</span><span class="missing"><strong>Mar</strong><em>cloud</em></span><span class="usable">Apr</span>
+                  <span class="usable">May</span><span class="peak peak-a"><strong>Jun</strong><em>peak</em></span><span class="peak peak-b"><strong>Jul</strong><em>peak</em></span><span class="missing"><strong>Aug</strong><em>cloud</em></span>
+                  <span class="usable">Sep</span><span class="usable">Oct</span><span class="usable">Nov</span><span class="usable">Dec</span>
+                </div>
+                <div class="sequence-legend" aria-hidden="true">
+                  <span><i class="usable"></i>clean</span>
+                  <span><i class="peak"></i>peak signal</span>
+                  <span><i class="missing"></i>masked</span>
+                </div>
+                <p class="small">Use the mask to skip clouds; keep the seasonal peak.</p>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="chapter-stack" data-section="state-space-models" aria-label="State space models">
+          <section class="ssm-intro-slide">
+            <div class="kicker">State space models</div>
+            <h2>Continuous-time intuition, neural sequence model</h2>
+            <span class="rule"></span>
+            <div class="ssm-intro-layout">
+              <div>
+                <div class="equation ssm-equation">
+                  \[
+                  \begin{aligned}
+                  \dot{s}(t)&=A s(t)+B u(t)\\
+                  y(t)&=C s(t)+D u(t)
+                  \end{aligned}
+                  \]
+                </div>
+              </div>
+              <div class="ssm-cards">
+                <div class="card fragment">
+                  <h3>State</h3>
+                  <p class="small">latent dynamics</p>
+                </div>
+                <div class="card fragment">
+                  <h3>Input</h3>
+                  <p class="small">drives system</p>
+                </div>
+                <div class="card fragment">
+                  <h3>Output</h3>
+                  <p class="small">reads state</p>
+                </div>
+              </div>
+              <div class="ssm-callout">
+                <strong>Control-theory intuition</strong>
+                <span>Trainable dynamics for long sequences</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="kicker">S4 and Mamba</div>
+            <h2>State updates can be scanned efficiently</h2>
+            <span class="rule"></span>
+            <div class="two-col wide-right">
+              <div>
+                <ul>
+                  <li><strong>S4</strong>: long memory</li>
+                  <li class="fragment"><strong>Mamba</strong>: selective memory</li>
+                  <li class="fragment">Streaming + efficient scans</li>
+                </ul>
+              </div>
+              <svg class="diagram mamba-diagram" viewBox="0 0 700 390" role="img" aria-label="Selective state space scan">
+                <defs>
+                  <marker id="arrowhead-ssm-blue" markerWidth="5.5" markerHeight="5.5" refX="4.5" refY="2.75" orient="auto" markerUnits="userSpaceOnUse">
+                    <path d="M0,0 L5.5,2.75 L0,5.5 Z" fill="#0b7896"></path>
+                  </marker>
+                  <marker id="arrowhead-ssm-muted" markerWidth="5.5" markerHeight="5.5" refX="4.5" refY="2.75" orient="auto" markerUnits="userSpaceOnUse">
+                    <path d="M0,0 L5.5,2.75 L0,5.5 Z" fill="#5f7482"></path>
+                  </marker>
+                </defs>
+                <g transform="translate(38 40)">
+                  <text class="svg-label" x="0" y="-10">selective state-space scan</text>
+                  <text class="svg-small" x="0" y="14">Each input chooses how much memory to pass forward.</text>
+
+                  <g class="mamba-inputs">
+                    <rect class="svg-box step-1" x="42" y="44" width="50" height="38"></rect>
+                    <rect class="svg-box step-2" x="142" y="44" width="50" height="38"></rect>
+                    <rect class="svg-box step-3" x="242" y="44" width="50" height="38"></rect>
+                    <rect class="svg-box step-4" x="342" y="44" width="50" height="38"></rect>
+                    <rect class="svg-box step-5" x="442" y="44" width="50" height="38"></rect>
+                    <text x="67" y="69">x1</text>
+                    <text x="167" y="69">x2</text>
+                    <text x="267" y="69">x3</text>
+                    <text x="367" y="69">x4</text>
+                    <text x="467" y="69">x5</text>
+                  </g>
+
+                  <g class="mamba-gates">
+                    <circle class="gate step-1" cx="67" cy="130" r="19"></circle>
+                    <circle class="gate step-2" cx="167" cy="130" r="19"></circle>
+                    <circle class="gate step-3" cx="267" cy="130" r="19"></circle>
+                    <circle class="gate step-4" cx="367" cy="130" r="19"></circle>
+                    <circle class="gate step-5" cx="467" cy="130" r="19"></circle>
+                    <text x="67" y="137">g</text>
+                    <text x="167" y="137">g</text>
+                    <text x="267" y="137">g</text>
+                    <text x="367" y="137">g</text>
+                    <text x="467" y="137">g</text>
+                  </g>
+
+                  <g class="svg-lines strong mamba-input-arrows" marker-end="url(#arrowhead-ssm-blue)">
+                    <line class="step-1" x1="67" y1="89" x2="67" y2="102"></line>
+                    <line class="step-2" x1="167" y1="89" x2="167" y2="102"></line>
+                    <line class="step-3" x1="267" y1="89" x2="267" y2="102"></line>
+                    <line class="step-4" x1="367" y1="89" x2="367" y2="102"></line>
+                    <line class="step-5" x1="467" y1="89" x2="467" y2="102"></line>
+                  </g>
+
+                  <g class="mamba-states">
+                    <rect class="state-box" x="0" y="200" width="54" height="42"></rect>
+                    <rect class="state-box step-1" x="100" y="200" width="54" height="42"></rect>
+                    <rect class="state-box step-2" x="200" y="200" width="54" height="42"></rect>
+                    <rect class="state-box step-3" x="300" y="200" width="54" height="42"></rect>
+                    <rect class="state-box step-4" x="400" y="200" width="54" height="42"></rect>
+                    <rect class="state-box step-5" x="500" y="200" width="54" height="42"></rect>
+                    <text x="27" y="227">s0</text>
+                    <text x="127" y="227">s1</text>
+                    <text x="227" y="227">s2</text>
+                    <text x="327" y="227">s3</text>
+                    <text x="427" y="227">s4</text>
+                    <text x="527" y="227">s5</text>
+                  </g>
+
+                  <g class="svg-lines strong mamba-state-arrows" marker-end="url(#arrowhead-ssm-blue)">
+                    <line class="step-1" x1="56" y1="221" x2="94" y2="221"></line>
+                    <line class="step-2" x1="156" y1="221" x2="194" y2="221"></line>
+                    <line class="step-3" x1="256" y1="221" x2="294" y2="221"></line>
+                    <line class="step-4" x1="356" y1="221" x2="394" y2="221"></line>
+                    <line class="step-5" x1="456" y1="221" x2="494" y2="221"></line>
+                  </g>
+
+                  <g class="svg-lines mamba-gate-arrows" marker-end="url(#arrowhead-ssm-muted)">
+                    <line class="step-1" x1="76" y1="157" x2="108" y2="190"></line>
+                    <line class="step-2" x1="176" y1="157" x2="208" y2="190"></line>
+                    <line class="step-3" x1="276" y1="157" x2="308" y2="190"></line>
+                    <line class="step-4" x1="376" y1="157" x2="408" y2="190"></line>
+                    <line class="step-5" x1="476" y1="157" x2="508" y2="190"></line>
+                  </g>
+
+                  <g class="svg-lines strong mamba-readout" marker-end="url(#arrowhead-ssm-blue)">
+                    <line x1="554" y1="221" x2="584" y2="221"></line>
+                  </g>
+                  <rect class="svg-green mamba-output" x="590" y="192" width="48" height="58"></rect>
+                  <text x="614" y="227">y</text>
+
+                  <g transform="translate(0 294)">
+                    <rect class="svg-green" x="0" y="0" width="225" height="46"></rect>
+                    <text class="mamba-chip-text" x="18" y="29">parallel scan in training</text>
+                  </g>
+                  <g transform="translate(260 294)">
+                    <rect class="svg-orange" x="0" y="0" width="250" height="46"></rect>
+                    <text class="mamba-chip-text" x="18" y="29">input-dependent gates</text>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <p class="source">
+              S4: Gu et al., 2021. Mamba: Gu and Dao, 2023.
+            </p>
+          </section>
+        </section>
+
+        <section class="chapter-stack" data-section="remote-sensing-synthesis" aria-label="Remote-sensing examples and synthesis">
+          <section>
+            <div class="kicker">Phenology</div>
+            <h2>Crop mapping reads temporal signatures</h2>
+            <span class="rule"></span>
             <div>
-              <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
-              <p class="caption">Before: March 23, 2015</p>
+              <img class="media wide image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
+              <p class="caption">
+                Monthly NDVI images from Sentinel-2 composites. Source: ESA EO Science for Society.
+              </p>
             </div>
-            <div>
-              <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
-              <p class="caption">After: May 26, 2015</p>
+            <div class="three-col">
+              <div class="card fragment">
+                <h3>RNN/LSTM</h3>
+                <p class="small">Growth stage</p>
+              </div>
+              <div class="card fragment">
+                <h3>TCN</h3>
+                <p class="small">Phenology motifs</p>
+              </div>
+              <div class="card fragment">
+                <h3>Transformer/SSM</h3>
+                <p class="small">Long context</p>
+              </div>
             </div>
-          </div>
-          <p class="source">
-            NASA Earth Observatory images by Joshua Stevens, using Landsat data from the U.S. Geological Survey.
-          </p>
-        </section>
+          </section>
 
-        <section>
-          <div class="kicker">Architecture map</div>
-          <h2>Which memory mechanism fits which problem?</h2>
-          <span class="rule"></span>
-          <table class="comparison">
-            <thead>
-              <tr>
-                <th>Architecture</th>
-                <th>Memory mechanism</th>
-                <th>Parallelism</th>
-                <th>Good fit</th>
-                <th>Watch out</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Window + MLP</strong></td>
-                <td>Fixed explicit lags</td>
-                <td>High</td>
-                <td>Baselines; engineered features</td>
-                <td>Choosing \(P\)</td>
-              </tr>
-              <tr>
-                <td><strong>RNN/GRU/LSTM</strong></td>
-                <td>Learned recurrent state</td>
-                <td>Low across time</td>
-                <td>Streaming; latent stages</td>
-                <td>Hard long training</td>
-              </tr>
-              <tr>
-                <td><strong>Reservoir/ESN</strong></td>
-                <td>Random dynamical features</td>
-                <td>Medium</td>
-                <td>Limited labels; fast readouts</td>
-                <td>Tuning sensitive</td>
-              </tr>
-              <tr>
-                <td><strong>TCN</strong></td>
-                <td>Receptive field by depth/dilation</td>
-                <td>High</td>
-                <td>Phenology; local motifs</td>
-                <td>Context by design</td>
-              </tr>
-              <tr>
-                <td><strong>Transformer</strong></td>
-                <td>Direct attention over observed dates</td>
-                <td>High</td>
-                <td>Irregular dates; masks</td>
-                <td>Memory cost</td>
-              </tr>
-              <tr>
-                <td><strong>SSM/Mamba</strong></td>
-                <td>State space scan with selective memory</td>
-                <td>High / streaming</td>
-                <td>Long sequences; efficient context</td>
-                <td>Newer ecosystem</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+          <section>
+            <div class="kicker">Change and events</div>
+            <h2>Flood mapping is a before/after temporal task</h2>
+            <span class="rule"></span>
+            <div class="media-row">
+              <div>
+                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
+                <p class="caption">Before: March 23, 2015</p>
+              </div>
+              <div>
+                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
+                <p class="caption">After: May 26, 2015</p>
+              </div>
+            </div>
+            <p class="source">
+              NASA Earth Observatory images by Joshua Stevens, using Landsat data from the U.S. Geological Survey.
+            </p>
+          </section>
 
-        <section>
-          <div class="kicker">Takeaways</div>
-          <h2>Same question, different memory mechanisms</h2>
-          <span class="rule"></span>
-          <div class="three-col">
-            <div class="card">
-              <h3>State</h3>
-              <p class="small">Compress the past.</p>
-            </div>
-            <div class="card fragment">
-              <h3>Filter</h3>
-              <p class="small">Scan temporal motifs.</p>
-            </div>
-            <div class="card fragment">
-              <h3>Select</h3>
-              <p class="small">Choose useful context.</p>
-            </div>
-          </div>
-          <p class="quote fragment">
-            For temporal data, architecture is a hypothesis about what kind of past matters.
-          </p>
-        </section>
+          <section>
+            <div class="kicker">Architecture map</div>
+            <h2>Which memory mechanism fits which problem?</h2>
+            <span class="rule"></span>
+            <table class="comparison">
+              <thead>
+                <tr>
+                  <th>Architecture</th>
+                  <th>Memory mechanism</th>
+                  <th>Parallelism</th>
+                  <th>Good fit</th>
+                  <th>Watch out</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Window + MLP</strong></td>
+                  <td>Fixed explicit lags</td>
+                  <td>High</td>
+                  <td>Baselines; engineered features</td>
+                  <td>Choosing \(P\)</td>
+                </tr>
+                <tr>
+                  <td><strong>RNN/GRU/LSTM</strong></td>
+                  <td>Learned recurrent state</td>
+                  <td>Low across time</td>
+                  <td>Streaming; latent stages</td>
+                  <td>Hard long training</td>
+                </tr>
+                <tr>
+                  <td><strong>Reservoir/ESN</strong></td>
+                  <td>Random dynamical features</td>
+                  <td>Medium</td>
+                  <td>Limited labels; fast readouts</td>
+                  <td>Tuning sensitive</td>
+                </tr>
+                <tr>
+                  <td><strong>TCN</strong></td>
+                  <td>Receptive field by depth/dilation</td>
+                  <td>High</td>
+                  <td>Phenology; local motifs</td>
+                  <td>Context by design</td>
+                </tr>
+                <tr>
+                  <td><strong>Transformer</strong></td>
+                  <td>Direct attention over observed dates</td>
+                  <td>High</td>
+                  <td>Irregular dates; masks</td>
+                  <td>Memory cost</td>
+                </tr>
+                <tr>
+                  <td><strong>SSM/Mamba</strong></td>
+                  <td>State space scan with selective memory</td>
+                  <td>High / streaming</td>
+                  <td>Long sequences; efficient context</td>
+                  <td>Newer ecosystem</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
 
-        <section>
-          <div class="kicker">Sources and credits</div>
-          <h2>References</h2>
-          <span class="rule"></span>
-          <ul class="small references">
-            <li>Notebook media and examples: <code>RNNs+Reservoir/nn-reservoir-computing.ipynb</code>.</li>
-            <li>Visual style and selected schematics adapted from <code>tutorial_log_filippo</code>.</li>
-            <li><a href="https://doi.org/10.1145/3533382">Benidis et al.</a>, "Deep Learning for Time Series Forecasting", ACM Computing Surveys, 2022.</li>
-            <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
-            <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
-            <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a>, "Attention Is All You Need", NeurIPS, 2017.</li>
-            <li><a href="https://arxiv.org/abs/2111.00396">Gu et al.</a>, "Efficiently Modeling Long Sequences with Structured State Spaces", 2021.</li>
-            <li><a href="https://arxiv.org/abs/2312.00752">Gu and Dao</a>, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces", 2023.</li>
-            <li><a href="https://www.mdpi.com/2072-4292/11/5/523">Pelletier, Webb, and Petitjean</a>, "Temporal Convolutional Neural Network for the Classification of Satellite Image Time Series", Remote Sensing, 2019.</li>
-            <li><a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Garnot_Satellite_Image_Time_Series_Classification_With_Pixel-Set_Encoders_and_Temporal_CVPR_2020_paper.pdf">Garnot et al.</a>, "Satellite Image Time Series Classification with Pixel-Set Encoders and Temporal Self-Attention", CVPR, 2020.</li>
-            <li><a href="https://eo4society.esa.int/2022/04/12/dynamic-sentinel-2-mosaic-service/">ESA EO Science for Society</a>, "Dynamic Sentinel-2 mosaic service", 2022.</li>
-            <li><a href="https://earthobservatory.nasa.gov/images/85959/flooding-of-the-red-river">NASA Earth Observatory</a>, "Flooding of The Red River", 2015.</li>
-          </ul>
+          <section>
+            <div class="kicker">Takeaways</div>
+            <h2>Same question, different memory mechanisms</h2>
+            <span class="rule"></span>
+            <div class="three-col">
+              <div class="card">
+                <h3>State</h3>
+                <p class="small">Compress the past.</p>
+              </div>
+              <div class="card fragment">
+                <h3>Filter</h3>
+                <p class="small">Scan temporal motifs.</p>
+              </div>
+              <div class="card fragment">
+                <h3>Select</h3>
+                <p class="small">Choose useful context.</p>
+              </div>
+            </div>
+            <p class="quote fragment">
+              For temporal data, architecture is a hypothesis about what kind of past matters.
+            </p>
+          </section>
+
+          <section>
+            <div class="kicker">Sources and credits</div>
+            <h2>References</h2>
+            <span class="rule"></span>
+            <ul class="small references">
+              <li>Notebook media and examples: <code>RNNs+Reservoir/nn-reservoir-computing.ipynb</code>.</li>
+              <li>Visual style and selected schematics adapted from <code>tutorial_log_filippo</code>.</li>
+              <li><a href="https://doi.org/10.1145/3533382">Benidis et al.</a>, "Deep Learning for Time Series Forecasting", ACM Computing Surveys, 2022.</li>
+              <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
+              <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
+              <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a>, "Attention Is All You Need", NeurIPS, 2017.</li>
+              <li><a href="https://arxiv.org/abs/2111.00396">Gu et al.</a>, "Efficiently Modeling Long Sequences with Structured State Spaces", 2021.</li>
+              <li><a href="https://arxiv.org/abs/2312.00752">Gu and Dao</a>, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces", 2023.</li>
+              <li><a href="https://www.mdpi.com/2072-4292/11/5/523">Pelletier, Webb, and Petitjean</a>, "Temporal Convolutional Neural Network for the Classification of Satellite Image Time Series", Remote Sensing, 2019.</li>
+              <li><a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Garnot_Satellite_Image_Time_Series_Classification_With_Pixel-Set_Encoders_and_Temporal_CVPR_2020_paper.pdf">Garnot et al.</a>, "Satellite Image Time Series Classification with Pixel-Set Encoders and Temporal Self-Attention", CVPR, 2020.</li>
+              <li><a href="https://eo4society.esa.int/2022/04/12/dynamic-sentinel-2-mosaic-service/">ESA EO Science for Society</a>, "Dynamic Sentinel-2 mosaic service", 2022.</li>
+              <li><a href="https://earthobservatory.nasa.gov/images/85959/flooding-of-the-red-river">NASA Earth Observatory</a>, "Flooding of The Red River", 2015.</li>
+            </ul>
+          </section>
         </section>
       </div>
     </div>
