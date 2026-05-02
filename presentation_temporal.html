@@ -191,7 +191,6 @@
               </div>
             </div>
             <div class="memory-strip fragment">
-              <span class="memory-strip-label">Architecture question</span>
               <p>How should the model represent the past?</p>
               <ul>
                 <li>fixed lags or windows</li>
@@ -769,7 +768,7 @@
                 </ul>
 
                 <p class="callout fragment">
-                  Good fit when local temporal shapes are informative and transferable across parcels.
+                  Good fit when local temporal shapes are informative and transferable across locations.
                 </p>
               </div>
 
@@ -850,10 +849,6 @@
                   <li class="fragment"><strong>Value:</strong> information to retrieve</li>
                   <li class="fragment"><strong>Mask:</strong> hide clouds or future steps</li>
                 </ul>
-
-                <p class="callout fragment">
-                  Attention selects observations by content; time encodings tell it when they occurred.
-                </p>
               </div>
 
               <svg class="diagram attention-diagram" viewBox="0 0 650 340" role="img" aria-label="Attention weights from past observations into the current time step">
@@ -918,6 +913,10 @@
                 </g>
               </svg>
             </div>
+
+            <p class="callout attention-callout fragment">
+              Attention selects observations by content; time encodings tell it when they occurred.
+            </p>
 
             <aside class="notes">
               Spend little time on the full Transformer architecture. The important idea here is retrieval.
@@ -1138,7 +1137,8 @@
             <div class="two-col wide-left ssm-discrete-layout">
               <div>
                 <p class="lead">
-                  Observe the continuous system only at times \(t_i\). The elapsed time
+                  Observe the continuous system only at times \(t_i\).<br>
+                  The elapsed time
                   \(\Delta t_i=t_i-t_{i-1}\) determines how far the state evolves.
                 </p>
 
@@ -1412,10 +1412,6 @@
                 </g>
               </svg>
             </div>
-
-            <p class="callout fragment">
-              RNNs carry state, Transformers retrieve from tokens, and modern SSMs propagate information through a compact state efficiently.
-            </p>
 
             <p class="source">
               S4: Gu, Goel, and Ré, 2021. Mamba: Gu and Dao, 2023.

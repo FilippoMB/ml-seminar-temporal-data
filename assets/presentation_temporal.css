@@ -278,13 +278,15 @@
 }
 
 .ndvi-explainer .lead {
-  background: var(--temporal-panel-soft);
+  background: #fff;
+  border: 1px solid var(--temporal-line);
   border-left: 5px solid var(--temporal-green);
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
+  box-shadow: none;
   font-size: 15.5pt;
   line-height: 1.2;
   margin: 0;
-  padding: 13px 16px;
+  padding: 13px 16px 13px 15px;
 }
 
 .ndvi-signal-grid {
@@ -296,8 +298,10 @@
 .ndvi-signal-grid div {
   background: #ffffff;
   border: 1px solid var(--temporal-line);
+  border-left: 5px solid var(--temporal-green);
   border-radius: 8px;
-  padding: 10px 12px;
+  box-shadow: none;
+  padding: 10px 12px 10px 13px;
 }
 
 .ndvi-signal-grid strong,
@@ -364,17 +368,24 @@
   grid-template-columns: 1.28fr 0.72fr;
 }
 
-.memory-choice-list {
-  columns: 2;
-  column-gap: 34px;
+.reveal .memory-choice-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
   font-size: 16pt;
+  list-style: none;
   margin-bottom: 0;
   margin-top: 0;
+  padding-left: 0;
 }
 
-.memory-choice-list li {
-  break-inside: avoid;
+.reveal .memory-choice-list li {
   font-size: inherit;
+  list-style: none;
+}
+
+.reveal .memory-choice-list li::marker {
+  content: "";
 }
 
 .memory-choice-text .callout {
@@ -388,7 +399,7 @@
   display: flex;
   justify-content: center;
   justify-self: stretch;
-  min-height: 330px;
+  min-height: 295px;
   overflow: hidden;
 }
 
@@ -485,6 +496,17 @@
   border-left: 5px solid var(--temporal-green);
   border-radius: 8px;
   padding: 11px 14px 12px;
+}
+
+.setup-meta div,
+.method-pills span,
+.memory-choice-list li {
+  background: #fff;
+  border: 1px solid var(--temporal-line);
+  border-left: 5px solid var(--temporal-green);
+  border-radius: 8px;
+  box-sizing: border-box;
+  box-shadow: none;
 }
 
 .rnn-step strong {
@@ -725,8 +747,8 @@
 
 .reveal .conv-concept-list li {
   color: var(--temporal-ink);
-  font-size: 11.5pt;
-  line-height: 1.18;
+  font-size: 13.5pt;
+  line-height: 1.14;
   margin: 0;
 }
 
@@ -1040,10 +1062,7 @@
 }
 
 .setup-meta div {
-  background: #ffffff;
-  border: 1px solid var(--temporal-line);
-  border-radius: 8px;
-  padding: 10px 12px;
+  padding: 10px 12px 10px 13px;
 }
 
 .setup-meta strong {
@@ -1085,7 +1104,7 @@
 
 .memory-strip p {
   color: var(--temporal-primary-dark);
-  font-size: 18pt;
+  font-size: 16pt;
   font-weight: 800;
   grid-column: 1;
   line-height: 1.08;
@@ -1111,14 +1130,18 @@
 }
 
 .method-pills span {
-  background: #ffffff;
-  border: 1px solid var(--temporal-line);
-  border-radius: 999px;
   color: var(--temporal-primary-dark);
   display: inline-flex;
   font-size: 12pt;
   font-weight: 800;
-  padding: 7px 12px;
+  padding: 8px 13px 8px 12px;
+}
+
+.memory-choice-list li {
+  color: var(--temporal-ink);
+  font-weight: 650;
+  line-height: 1.16;
+  padding: 10px 12px 10px 13px;
 }
 
 .window-layout {
@@ -1420,7 +1443,7 @@
 .continuous-equation {
   font-size: 15.5pt;
   margin-bottom: 24px;
-  padding: 0 12px;
+  padding: 9px 12px;
 }
 
 .continuous-equation mjx-container[display="true"] {
@@ -1446,6 +1469,11 @@
 
 .ssm-discrete-layout {
   align-items: stretch;
+}
+
+.reveal #ssm-intuition .lead {
+  font-size: 21pt;
+  line-height: 1.18;
 }
 
 .ssm-discrete-layout .card {
@@ -1482,18 +1510,20 @@
   text-transform: uppercase;
 }
 
-.ssm-parameter-card {
-  background: var(--temporal-panel);
+.reveal .ssm-parameter-card {
+  background: #fff;
   border: 1px solid var(--temporal-line);
+  border-left: 5px solid var(--temporal-green);
   border-radius: 8px;
-  box-shadow: var(--temporal-shadow-soft);
+  box-shadow: none;
   box-sizing: border-box;
   color: var(--temporal-muted);
-  font-size: 12pt;
+  font-size: 16.2pt;
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.12;
   margin: 18px 0 0;
-  padding: 11px 16px;
+  padding: 8px 12px 8px 12px;
+  white-space: nowrap;
   width: 100%;
 }
 
@@ -2240,7 +2270,25 @@
 }
 
 .attention-layout .attention-diagram {
-  margin-top: -18px;
+  margin-top: 6px;
+}
+
+#self-attention-memory .equation {
+  font-size: 17pt;
+  padding: 7px 14px;
+}
+
+#self-attention-memory .equation mjx-container[display="true"] {
+  margin: 0.15em 0;
+}
+
+#self-attention-memory p.attention-callout {
+  box-sizing: border-box;
+  font-size: 16.5pt;
+  font-weight: 560;
+  line-height: 1.15;
+  margin: 8px 0 0;
+  width: 100%;
 }
 
 .attention-diagram .svg-label {
@@ -2297,6 +2345,11 @@
 
 .attention-lines .attn-flow.high {
   fill: #07546a;
+}
+
+.attention-context .svg-green {
+  fill: #e8f7fb;
+  stroke: #2b92ac;
 }
 
 .attention-target-arrow {
@@ -2379,7 +2432,7 @@
     filter: none;
   }
   58%, 78% {
-    filter: drop-shadow(0 0 6px rgba(79, 138, 91, 0.35));
+    filter: drop-shadow(0 0 6px rgba(43, 146, 172, 0.35));
   }
 }
 

@@ -558,7 +558,7 @@ def draw_static_lstm(canvas: Canvas, t: float, animation: str) -> None:
 
     canvas.math_label((66, top_y - 30), "C", "t-1", size=27, anchor="lm")
     canvas.math_label((66, hidden_y - 31), "h", "t-1", size=26, anchor="lm")
-    canvas.math_label((162, 462), "x", "t", size=26)
+    canvas.math_label((118, 424), "x", "t", size=26)
     canvas.math_label((864, top_y - 30), "C", "t", size=27)
     canvas.math_label((864, hidden_y + 31), "h", "t", size=27)
 
