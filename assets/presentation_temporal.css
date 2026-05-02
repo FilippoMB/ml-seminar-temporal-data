@@ -1403,6 +1403,16 @@
   width: 100%;
 }
 
+.token-layout {
+  align-items: start;
+}
+
+.token-time-callout {
+  box-sizing: border-box;
+  margin: 22px 0 0;
+  width: 100%;
+}
+
 .motif-diagram {
   background: transparent;
   border: 0;

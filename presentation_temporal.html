@@ -806,23 +806,38 @@
         <section class="chapter-stack" data-section="attention-transformers" aria-label="Attention and transformers">
           <section id="self-attention-memory">
             <div class="kicker">Self-attention</div>
-            <h2>Content-addressable memory over time</h2>
+            <h2>Attention retrieves from the observed past</h2>
             <span class="rule"></span>
+
             <div class="two-col wide-left attention-layout">
               <div>
+                <p class="lead">
+                  Each token asks which other observations are relevant.
+                </p>
+
                 <div class="equation">
                   \[
-                  \mathrm{Attn}(Q,K,V)
-                  =\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d}}\right)V
+                  \mathrm{Attn}(Q,K,V;M)
+                  =
+                  \mathrm{softmax}
+                  \left(
+                    \frac{QK^\top}{\sqrt{d}} + M
+                  \right)V
                   \]
                 </div>
+
                 <ul>
-                  <li class="fragment">Query, key, value</li>
-                  <li class="fragment">Learned relevance weights</li>
-                  <li class="fragment">Multiple relation types</li>
+                  <li class="fragment"><strong>Query/key:</strong> score relevance</li>
+                  <li class="fragment"><strong>Value:</strong> information to retrieve</li>
+                  <li class="fragment"><strong>Mask:</strong> hide clouds or future steps</li>
                 </ul>
+
+                <p class="callout fragment">
+                  Attention selects observations by content; time encodings tell it when they occurred.
+                </p>
               </div>
-              <svg class="diagram attention-diagram" viewBox="0 0 650 340" role="img" aria-label="Attention weights between time steps">
+
+              <svg class="diagram attention-diagram" viewBox="0 0 650 340" role="img" aria-label="Attention weights from past observations into the current time step">
                 <defs>
                   <marker id="attn-arrow-low" markerWidth="7" markerHeight="7" refX="5.6" refY="3.5" orient="auto">
                     <path d="M0,0 L7,3.5 L0,7 Z" fill="#79bed1"></path>
@@ -834,16 +849,19 @@
                     <path d="M0,0 L9,4.5 L0,9 Z" fill="#07546a"></path>
                   </marker>
                 </defs>
+
                 <g transform="translate(56 54)">
                   <text class="svg-label" x="0" y="-18">tokens in time</text>
-                  <text class="attention-target-label" x="311" y="-18">weights into t-2</text>
+                  <text class="attention-target-label" x="430" y="-18">context for t</text>
+
                   <g class="attention-token-row">
                     <rect class="svg-box" x="0" y="0" width="70" height="46"></rect>
                     <rect class="svg-box" x="92" y="0" width="70" height="46"></rect>
                     <rect class="svg-box" x="184" y="0" width="70" height="46"></rect>
-                    <rect class="svg-accent" x="276" y="0" width="70" height="46"></rect>
+                    <rect class="svg-box" x="276" y="0" width="70" height="46"></rect>
                     <rect class="svg-box" x="368" y="0" width="70" height="46"></rect>
-                    <rect class="svg-box" x="460" y="0" width="70" height="46"></rect>
+                    <rect class="svg-accent" x="460" y="0" width="70" height="46"></rect>
+
                     <text x="35" y="30">t-5</text>
                     <text x="127" y="30">t-4</text>
                     <text x="219" y="30">t-3</text>
@@ -851,88 +869,155 @@
                     <text x="403" y="30">t-1</text>
                     <text x="495" y="30">t</text>
                   </g>
+
                   <g class="attention-lines">
-                    <path class="attn-weight low" d="M35 50 C35 130 311 130 311 63"></path>
-                    <path class="attn-weight high" d="M219 50 C219 154 311 154 311 63"></path>
-                    <path class="attn-weight mid" d="M495 50 C495 126 311 126 311 63"></path>
-                    <text class="weight-label low" x="116" y="119">0.18</text>
-                    <text class="weight-label high" x="258" y="153">0.62</text>
-                    <text class="weight-label mid" x="386" y="122">0.31</text>
+                    <path class="attn-weight low" d="M35 50 C80 124 420 132 495 63"></path>
+                    <path class="attn-weight high" d="M219 50 C260 154 430 154 495 63"></path>
+                    <path class="attn-weight mid" d="M403 50 C420 122 478 122 495 63"></path>
+
+                    <text class="weight-label low" x="160" y="119">0.20</text>
+                    <text class="weight-label high" x="325" y="153">0.55</text>
+                    <text class="weight-label mid" x="438" y="138">0.25</text>
+
                     <circle class="attn-flow low" r="4">
-                      <animateMotion dur="3.2s" repeatCount="indefinite" path="M35 50 C35 130 311 130 311 63"></animateMotion>
+                      <animateMotion dur="3.2s" repeatCount="indefinite" path="M35 50 C80 124 420 132 495 63"></animateMotion>
                     </circle>
+
                     <circle class="attn-flow high" r="5.5">
-                      <animateMotion dur="3.2s" begin="0.35s" repeatCount="indefinite" path="M219 50 C219 154 311 154 311 63"></animateMotion>
+                      <animateMotion dur="3.2s" begin="0.35s" repeatCount="indefinite" path="M219 50 C260 154 430 154 495 63"></animateMotion>
                     </circle>
+
                     <circle class="attn-flow mid" r="4.7">
-                      <animateMotion dur="3.2s" begin="0.7s" repeatCount="indefinite" path="M495 50 C495 126 311 126 311 63"></animateMotion>
+                      <animateMotion dur="3.2s" begin="0.7s" repeatCount="indefinite" path="M403 50 C420 122 478 122 495 63"></animateMotion>
                     </circle>
-                    <path class="attention-target-arrow" d="M298 79 L311 52 L324 79 Z"></path>
                   </g>
+
                   <g class="attention-context" transform="translate(117 202)">
-                    <rect class="svg-green" x="0" y="0" width="300" height="56"></rect>
-                    <text x="150" y="35">weighted temporal context</text>
+                    <rect class="svg-green" x="0" y="0" width="340" height="56"></rect>
+                    <text x="170" y="35">weighted temporal context</text>
                   </g>
                 </g>
               </svg>
             </div>
+
+            <aside class="notes">
+              Spend little time on the full Transformer architecture. The important idea here is retrieval.
+              A token computes scores against other tokens, normalizes those scores, and combines the values.
+              For forecasting, the mask must remove future observations. For sequence classification, the model
+              may be allowed to attend bidirectionally over the observed sequence.
+            </aside>
           </section>
 
           <section id="transformer-tradeoffs">
             <div class="kicker">Transformers</div>
-            <h2>Why attention changed sequence modeling</h2>
+            <h2>What changes relative to windows, RNNs, and TCNs?</h2>
             <span class="rule"></span>
-            <div class="two-col">
-              <div class="card soft">
-                <h3>Strengths</h3>
-                <ul class="small">
-                  <li>Long-range links</li>
-                  <li>Parallel training</li>
-                  <li>Dates, masks, metadata</li>
-                </ul>
-              </div>
-              <div class="card fragment">
-                <h3>Costs</h3>
-                <ul class="small">
-                  <li>Quadratic memory</li>
-                  <li>Weak locality bias</li>
-                  <li>Data hungry</li>
-                </ul>
-              </div>
-            </div>
+
+            <p class="lead">
+              A Transformer does not scan or compress the sequence first: it builds direct token-to-token links.
+            </p>
+
+            <table class="comparison architecture-table">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>How it uses the past</th>
+                  <th>Main limitation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>MLP window</strong></td>
+                  <td>Dense map from fixed lags</td>
+                  <td>Choose \(W\); lag positions are fixed</td>
+                </tr>
+                <tr>
+                  <td><strong>RNN / LSTM</strong></td>
+                  <td>Compress past into \(h_t\)</td>
+                  <td>Sequential bottleneck; long credit paths</td>
+                </tr>
+                <tr>
+                  <td><strong>TCN</strong></td>
+                  <td>Apply local filters over a receptive field</td>
+                  <td>Context set by depth and dilation</td>
+                </tr>
+                <tr>
+                  <td><strong>Transformer</strong></td>
+                  <td>Retrieve directly from allowed tokens</td>
+                  <td>\(T^2\) attention; needs time and masks</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="callout fragment">
+              Best fit: non-local dependencies, irregular observations, and tasks where different dates matter for different examples.
+            </p>
+
             <p class="source">
               Transformer architecture: Vaswani et al., 2017.
             </p>
+
+            <aside class="notes">
+              This is the main comparison slide. Do not say Transformers are always better.
+              Say that they change the inductive bias. MLPs assume a fixed window, RNNs assume
+              the past can be summarized in a state, and TCNs assume useful temporal motifs can be
+              detected locally and composed. Attention assumes that useful context can be selected
+              by learned pairwise relevance. The price is the pairwise attention matrix and the need
+              to encode time/order explicitly.
+            </aside>
           </section>
 
           <section id="satellite-attention-inputs">
-            <div class="kicker">Satellite sequences</div>
-            <h2>Attention can use dates, masks, and metadata</h2>
+            <div class="kicker">Irregular data</div>
+            <h2>Tokens need time and validity</h2>
             <span class="rule"></span>
-            <div class="two-col wide-left">
+
+            <div class="two-col wide-left token-layout">
               <div>
-                <p class="lead">Satellite time series are rarely clean grids.</p>
+                <p class="lead">
+                  Each observation becomes a token: what was measured, when it was observed, and whether attention may use it.
+                </p>
+
                 <ul>
-                  <li class="fragment">Acquisition dates</li>
-                  <li class="fragment">Cloud / quality masks</li>
-                  <li class="fragment">Sensor and orbit metadata</li>
+                  <li class="fragment"><strong>Signal:</strong> bands, indices, image features</li>
+                  <li class="fragment"><strong>Time:</strong> date, day-of-year, \(\Delta t\)</li>
+                  <li class="fragment"><strong>Mask:</strong> Unavailable regions and future information</li>
                 </ul>
               </div>
+
               <div class="card sequence-card">
                 <h3>Example sequence</h3>
+
                 <div class="temporal-strip labeled attention-sequence" aria-label="Satellite observations with cloud masks and peak-season signal">
-                  <span class="usable">Jan</span><span class="usable">Feb</span><span class="missing"><strong>Mar</strong><em>cloud</em></span><span class="usable">Apr</span>
-                  <span class="usable">May</span><span class="peak peak-a"><strong>Jun</strong><em>peak</em></span><span class="peak peak-b"><strong>Jul</strong><em>peak</em></span><span class="missing"><strong>Aug</strong><em>cloud</em></span>
-                  <span class="usable">Sep</span><span class="usable">Oct</span><span class="usable">Nov</span><span class="usable">Dec</span>
+                  <span class="usable">Jan</span>
+                  <span class="usable">Feb</span>
+                  <span class="missing"><strong>Mar</strong><em>cloud</em></span>
+                  <span class="usable">Apr</span>
+                  <span class="usable">May</span>
+                  <span class="peak peak-a"><strong>Jun</strong><em>peak</em></span>
+                  <span class="peak peak-b"><strong>Jul</strong><em>peak</em></span>
+                  <span class="missing"><strong>Aug</strong><em>cloud</em></span>
+                  <span class="usable">Sep</span>
+                  <span class="usable">Oct</span>
+                  <span class="usable">Nov</span>
+                  <span class="usable">Dec</span>
                 </div>
+
                 <div class="sequence-legend" aria-hidden="true">
                   <span><i class="usable"></i>clean</span>
                   <span><i class="peak"></i>peak signal</span>
                   <span><i class="missing"></i>masked</span>
                 </div>
-                <p class="small">Use the mask to skip clouds; keep the seasonal peak.</p>
+
+                <p class="small">
+                  Clean peak-season observations stay available; cloudy dates are masked.
+                </p>
               </div>
             </div>
+
+            <p class="callout token-time-callout fragment">
+              Without time encoding, attention sees a set of observations, not a temporal sequence.
+            </p>
           </section>
         </section>
 
