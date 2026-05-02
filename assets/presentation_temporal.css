@@ -526,6 +526,79 @@
   width: 108%;
 }
 
+.lstm-gates-slide .rule {
+  margin-bottom: 14px;
+}
+
+.lstm-gate-segments {
+  display: grid;
+  gap: 11px;
+}
+
+.lstm-gate-segment {
+  align-items: stretch;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 390px minmax(0, 1fr);
+}
+
+.lstm-gate-media {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--temporal-line);
+  border-radius: 8px;
+  box-shadow: var(--temporal-shadow-soft);
+  display: flex;
+  height: 162px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lstm-gate-media img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.lstm-gate-card {
+  align-content: center;
+  background: var(--temporal-panel-soft);
+  border: 1px solid var(--temporal-line);
+  border-left: 5px solid var(--temporal-green);
+  border-radius: 8px;
+  display: grid;
+  padding: 13px 17px 14px;
+}
+
+.lstm-gate-card h3 {
+  color: var(--temporal-primary-dark);
+  font-size: 15.5pt;
+  margin: 0 0 4px;
+}
+
+.lstm-gate-card p {
+  color: var(--temporal-ink);
+  font-size: 11.5pt;
+  font-weight: 560;
+  line-height: 1.14;
+  margin: 0;
+}
+
+.gate-formula {
+  color: var(--temporal-muted);
+  font-size: 10.7pt;
+  font-weight: 740;
+  line-height: 1.16;
+  margin-top: 6px;
+}
+
+.gate-formula span {
+  display: block;
+  margin-top: 2px;
+}
+
 .reservoir-callout {
   box-sizing: border-box;
   margin: 28px 0 0;
@@ -533,7 +606,7 @@
 }
 
 .conv-bridge-grid {
-  align-items: stretch;
+  align-items: start;
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -541,7 +614,7 @@
 
 .conv-card {
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto;
   min-height: 0;
   padding: 13px 15px 15px;
 }
@@ -560,13 +633,17 @@
 }
 
 .conv-card .diagram {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   box-shadow: none;
+  height: 245px;
   min-height: 0;
 }
 
 .conv-card .conv-diagram,
 .conv2d-diagram {
-  max-height: 270px;
+  max-height: 245px;
 }
 
 .conv2d-diagram text {
@@ -613,11 +690,48 @@
   animation: conv-output-pulse 7s ease-in-out infinite;
 }
 
-.conv-bridge-callout {
-  box-sizing: border-box;
-  font-size: 13pt;
-  margin: 16px 0 0;
-  width: 100%;
+.conv-concepts {
+  align-items: center;
+  background: var(--temporal-panel-soft);
+  border: 1px solid var(--temporal-line);
+  border-radius: 8px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 0.9fr 1.1fr;
+  margin-top: 12px;
+  padding: 10px 14px;
+}
+
+.reveal .conv-concepts .lead {
+  color: var(--temporal-muted);
+  font-size: 12pt;
+  font-weight: 700;
+  line-height: 1.16;
+  margin: 0 0 8px;
+}
+
+.conv-concepts .equation {
+  background: #fff;
+  font-size: 13.5pt;
+  padding: 7px 10px;
+}
+
+.conv-concept-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 24px;
+}
+
+.reveal .conv-concept-list li {
+  color: var(--temporal-ink);
+  font-size: 11.5pt;
+  line-height: 1.18;
+  margin: 0;
+}
+
+.reveal .conv-concept-list strong {
+  color: var(--temporal-primary-dark);
 }
 
 .tag-row {
@@ -1258,6 +1372,65 @@
 
 .tcn-diagram {
   max-height: 470px;
+}
+
+.tcn-layout {
+  align-items: start;
+}
+
+#tcn-receptive-field .equation.compact {
+  margin: 10px 0 18px;
+  padding: 4px 10px;
+}
+
+#tcn-receptive-field .equation.compact mjx-container[display="true"] {
+  margin: 0.25em 0;
+}
+
+.tcn-receptive-callout {
+  box-sizing: border-box;
+  margin: 18px 0 0;
+  width: 100%;
+}
+
+.causal-layout {
+  align-items: start;
+}
+
+.causal-leakage-callout {
+  box-sizing: border-box;
+  margin: 22px 0 0;
+  width: 100%;
+}
+
+.motif-diagram {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  min-height: 0;
+}
+
+.motif-diagram text {
+  font-size: 10pt !important;
+}
+
+.motif-diagram .svg-label {
+  font-size: 10pt !important;
+}
+
+.motif-diagram .motif-column-label {
+  text-anchor: middle;
+}
+
+.motif-diagram .motif-row-label {
+  fill: var(--temporal-muted) !important;
+  font-size: 9.5pt !important;
+  font-weight: 500;
+  text-anchor: middle;
+}
+
+.motif-diagram .motif-response-label {
+  font-size: 8.5pt !important;
 }
 
 .diagram text {

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate a clean LSTM forget-gate animation.
+"""Generate clean LSTM gate animations.
 
-The script redraws the reference forget-gate GIF as a compact, vector-style
-Pillow animation. It intentionally avoids matplotlib so the output can be
-regenerated in lightweight environments that have Pillow available.
+The script redraws the reference gate GIFs as compact, vector-style Pillow
+animations. It intentionally avoids matplotlib so the output can be regenerated
+in lightweight environments that have Pillow available.
 """
 
 from __future__ import annotations
@@ -475,7 +475,7 @@ def draw_token(
         canvas.text_box((lx, ly), label, family="serif_italic", size=15, fill=with_alpha(PALETTE["ink"], alpha))
 
 
-def draw_static_lstm(canvas: Canvas, t: float) -> None:
+def draw_static_lstm(canvas: Canvas, t: float, animation: str) -> None:
     ink = PALETTE["ink"]
 
     body = (128, 76, 790, 382)
@@ -509,10 +509,13 @@ def draw_static_lstm(canvas: Canvas, t: float) -> None:
     arrow(canvas, (735, 220), (735, 247), soft_ink, width=3.0, head=11)
     arrow(canvas, (735, 285), (735, hidden_y - 4), soft_ink, width=3.0, head=11)
 
-    draw_operator(canvas, forget_mul, "x", pulse=interval(t, 0.68, 0.78) * (1 - interval(t, 0.88, 0.98)))
+    forget_pulse = interval(t, 0.68, 0.78) * (1 - interval(t, 0.88, 0.98)) if animation == "forget" else 0.0
+    input_pulse = interval(t, 0.70, 0.82) * (1 - interval(t, 0.90, 1.0)) if animation == "input" else 0.0
+    output_pulse = interval(t, 0.64, 0.76) * (1 - interval(t, 0.86, 0.98)) if animation == "cell" else 0.0
+    draw_operator(canvas, forget_mul, "x", pulse=forget_pulse)
     draw_operator(canvas, add_node, "+", pulse=0.0)
-    draw_operator(canvas, input_mul, "x", pulse=0.0)
-    draw_operator(canvas, output_mul, "x", pulse=0.0)
+    draw_operator(canvas, input_mul, "x", pulse=input_pulse)
+    draw_operator(canvas, output_mul, "x", pulse=output_pulse)
 
     draw_gate(
         canvas,
@@ -520,7 +523,7 @@ def draw_static_lstm(canvas: Canvas, t: float) -> None:
         PALETTE["rose_fill"],
         PALETTE["rose_edge"],
         "f_t",
-        active=fade_between(t, 0.20, 0.42),
+        active=fade_between(t, 0.20, 0.42) if animation == "forget" else 0.0,
         label_offset=(-45, 53),
     )
     draw_gate(
@@ -529,7 +532,7 @@ def draw_static_lstm(canvas: Canvas, t: float) -> None:
         PALETTE["rose_soft"],
         PALETTE["rose_edge"],
         "i_t",
-        active=0.0,
+        active=fade_between(t, 0.54, 0.72) if animation == "input" else 0.0,
         label_offset=(-42, 53),
     )
     draw_gate(
@@ -538,7 +541,7 @@ def draw_static_lstm(canvas: Canvas, t: float) -> None:
         PALETTE["blue_fill"],
         PALETTE["blue_edge"],
         "g_t",
-        active=0.0,
+        active=fade_between(t, 0.54, 0.72) if animation == "input" else 0.0,
         kind="tanh",
         label_offset=(-42, 53),
     )
@@ -548,7 +551,7 @@ def draw_static_lstm(canvas: Canvas, t: float) -> None:
         PALETTE["rose_soft"],
         PALETTE["rose_edge"],
         "o_t",
-        active=0.0,
+        active=fade_between(t, 0.46, 0.64) if animation == "cell" else 0.0,
         label_offset=(-42, 53),
     )
     draw_gate(canvas, (735, 190), PALETTE["blue_fill"], PALETTE["blue_edge"], "", active=0.0, kind="tanh")
@@ -559,10 +562,11 @@ def draw_static_lstm(canvas: Canvas, t: float) -> None:
     canvas.math_label((864, top_y - 30), "C", "t", size=27)
     canvas.math_label((864, hidden_y + 31), "h", "t", size=27)
 
-    canvas.text((260, 105), "forget gate", family="sans_bold", size=17, fill=PALETTE["muted"])
+    title = {"cell": "cell state", "input": "input gate"}.get(animation, "forget gate")
+    canvas.text((260, 105), title, family="sans_bold", size=17, fill=PALETTE["muted"])
 
 
-def draw_animation_state(canvas: Canvas, t: float) -> None:
+def draw_forget_animation_state(canvas: Canvas, t: float) -> None:
     top_route = [(72, 146), (260, 146)]
     f_route = [(260, 266), (260, 146)]
     result_route = [(278, 146), (404, 146)]
@@ -627,19 +631,182 @@ def draw_animation_state(canvas: Canvas, t: float) -> None:
     )
 
 
-def render_frame(frame_index: int, frame_count: int, scale: int) -> Image.Image:
+def draw_input_animation_state(canvas: Canvas, t: float) -> None:
+    h_route = [(72, 344), (330, 344)]
+    x_route = [(162, 430), (162, 344), (330, 344)]
+    h_to_i_route = [(330, 334), (378, 334), (378, 276)]
+    x_to_i_route = [(330, 354), (398, 354), (398, 276)]
+    h_to_g_route = [(330, 334), (498, 334), (498, 276)]
+    x_to_g_route = [(330, 354), (518, 354), (518, 276)]
+    i_route = [(388, 266), (388, 206), (548, 206)]
+    g_route = [(508, 266), (508, 206), (548, 206)]
+    product_route = [(548, 206), (548, 146)]
+
+    h_progress = interval(t, 0.04, 0.26)
+    x_progress = interval(t, 0.07, 0.30)
+    draw_token(
+        canvas,
+        route_point(h_route, h_progress),
+        "h",
+        PALETTE["soft_gray"],
+        PALETTE["muted"],
+        radius=18,
+        alpha=int(205 * (1 - interval(t, 0.30, 0.40))),
+    )
+    draw_token(
+        canvas,
+        route_point(x_route, x_progress),
+        "x",
+        PALETTE["soft_gray"],
+        PALETTE["muted"],
+        radius=18,
+        alpha=int(205 * (1 - interval(t, 0.32, 0.42))),
+    )
+
+    pair_alpha = int(210 * interval(t, 0.32, 0.42) * (1 - interval(t, 0.58, 0.68)))
+    pair_progress = interval(t, 0.40, 0.62)
+    for label, route in (
+        ("h", h_to_i_route),
+        ("x", x_to_i_route),
+        ("h", h_to_g_route),
+        ("x", x_to_g_route),
+    ):
+        draw_token(
+            canvas,
+            route_point(route, pair_progress),
+            label,
+            PALETTE["soft_gray"],
+            PALETTE["muted"],
+            radius=16,
+            alpha=pair_alpha,
+        )
+
+    i_alpha = int(248 * interval(t, 0.64, 0.72) * (1 - interval(t, 0.82, 0.90)))
+    draw_token(
+        canvas,
+        route_point(i_route, interval(t, 0.70, 0.84)),
+        "i",
+        PALETTE["rose_fill"],
+        PALETTE["rose_edge"],
+        radius=19,
+        alpha=i_alpha,
+    )
+
+    g_alpha = int(248 * interval(t, 0.64, 0.72) * (1 - interval(t, 0.82, 0.90)))
+    draw_token(
+        canvas,
+        route_point(g_route, interval(t, 0.70, 0.84)),
+        "g",
+        PALETTE["blue_fill"],
+        PALETTE["blue_edge"],
+        radius=19,
+        alpha=g_alpha,
+    )
+
+    product_alpha = int(248 * interval(t, 0.88, 0.94) * (1 - interval(t, 0.98, 1.0)))
+    draw_token(
+        canvas,
+        route_point(product_route, interval(t, 0.88, 0.98)),
+        "Ĉ",
+        PALETTE["gold_fill"],
+        PALETTE["gold_edge"],
+        radius=19,
+        alpha=product_alpha,
+    )
+
+
+def draw_cell_animation_state(canvas: Canvas, t: float) -> None:
+    h_route = [(72, 344), (596, 344), (632, 308), (632, 278)]
+    x_route = [(162, 430), (162, 344), (616, 344), (652, 308), (652, 278)]
+    o_route = [(642, 266), (735, 266)]
+    cell_to_output_mul_route = [(548, 146), (735, 146), (735, 190), (735, 266)]
+    hidden_route = [(735, 285), (735, 344), (850, 344)]
+    cell_output_route = [(548, 146), (850, 146)]
+
+    h_progress = interval(t, 0.03, 0.48)
+    x_progress = interval(t, 0.06, 0.50)
+    draw_token(
+        canvas,
+        route_point(h_route, h_progress),
+        "h",
+        PALETTE["soft_gray"],
+        PALETTE["muted"],
+        radius=18,
+        alpha=int(205 * (1 - interval(t, 0.50, 0.60))),
+    )
+    draw_token(
+        canvas,
+        route_point(x_route, x_progress),
+        "x",
+        PALETTE["soft_gray"],
+        PALETTE["muted"],
+        radius=18,
+        alpha=int(205 * (1 - interval(t, 0.52, 0.62))),
+    )
+
+    o_alpha = int(248 * interval(t, 0.58, 0.66) * (1 - interval(t, 0.78, 0.86)))
+    draw_token(
+        canvas,
+        route_point(o_route, interval(t, 0.64, 0.80)),
+        "o",
+        PALETTE["rose_fill"],
+        PALETTE["rose_edge"],
+        radius=19,
+        alpha=o_alpha,
+    )
+
+    c_branch_alpha = int(248 * (1 - interval(t, 0.78, 0.86)))
+    draw_token(
+        canvas,
+        route_point(cell_to_output_mul_route, interval(t, 0.30, 0.80)),
+        "C",
+        PALETTE["gold_fill"],
+        PALETTE["gold_edge"],
+        radius=19,
+        alpha=c_branch_alpha,
+    )
+
+    hidden_alpha = int(248 * interval(t, 0.86, 0.92) * (1 - interval(t, 0.99, 1.0)))
+    draw_token(
+        canvas,
+        route_point(hidden_route, interval(t, 0.88, 0.99)),
+        "h",
+        PALETTE["soft_gray"],
+        PALETTE["muted"],
+        radius=18,
+        alpha=hidden_alpha,
+    )
+
+    cell_out_alpha = int(248 * interval(t, 0.82, 0.90) * (1 - interval(t, 0.99, 1.0)))
+    draw_token(
+        canvas,
+        route_point(cell_output_route, interval(t, 0.86, 0.99)),
+        "C",
+        PALETTE["gold_fill"],
+        PALETTE["gold_edge"],
+        radius=19,
+        alpha=cell_out_alpha,
+    )
+
+
+def render_frame(frame_index: int, frame_count: int, scale: int, animation: str) -> Image.Image:
     # Leave a short hold at the beginning/end so the GIF reads well in slides.
     raw = frame_index / max(1, frame_count - 1)
     t = clamp((raw - 0.035) / 0.93)
     canvas = Canvas(scale)
-    draw_static_lstm(canvas, t)
-    draw_animation_state(canvas, t)
+    draw_static_lstm(canvas, t, animation)
+    if animation == "cell":
+        draw_cell_animation_state(canvas, t)
+    elif animation == "input":
+        draw_input_animation_state(canvas, t)
+    else:
+        draw_forget_animation_state(canvas, t)
     return canvas.downsample()
 
 
-def render_gif(output: Path, frames: int, duration: int, scale: int) -> None:
+def render_gif(output: Path, frames: int, duration: int, scale: int, animation: str) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    images = [render_frame(i, frames, scale) for i in range(frames)]
+    images = [render_frame(i, frames, scale, animation) for i in range(frames)]
     images[0].save(
         output,
         save_all=True,
@@ -659,6 +826,12 @@ def main() -> None:
         type=Path,
         default=Path(__file__).with_name("forget-gate.gif"),
         help="Destination GIF path. Defaults to assets/animations/forget-gate.gif.",
+    )
+    parser.add_argument(
+        "--animation",
+        choices=("forget", "input", "cell"),
+        default=None,
+        help="Animation to render. Defaults from the output name when possible.",
     )
     parser.add_argument("--frames", type=int, default=DEFAULT_FRAMES, help="Number of animation frames.")
     parser.add_argument(
@@ -682,7 +855,17 @@ def main() -> None:
     if args.scale < 1:
         raise SystemExit("--scale must be at least 1.")
 
-    render_gif(args.output, args.frames, args.duration, args.scale)
+    animation = args.animation
+    if animation is None:
+        output_name = args.output.name
+        if "input" in output_name:
+            animation = "input"
+        elif "cell" in output_name:
+            animation = "cell"
+        else:
+            animation = "forget"
+
+    render_gif(args.output, args.frames, args.duration, args.scale, animation)
     print(f"Wrote {args.output}")
 
 
