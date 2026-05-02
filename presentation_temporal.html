@@ -365,22 +365,71 @@
         <section class="chapter-stack" data-section="temporal-convolutions" aria-label="Temporal convolutions">
           <section id="temporal-convolution-filter" data-auto-animate>
             <div class="kicker">Convolution</div>
-            <h2>A filter is a sliding learned window</h2>
+            <h2>From image kernels to temporal kernels</h2>
             <span class="rule"></span>
-            <div class="two-col wide-left">
-              <div>
-                <p class="lead">Apply the same small temporal kernel everywhere.</p>
-                <div class="equation">
-                  \[
-                  z_t=\sum_{k=0}^{K-1} w_k x_{t-k}
-                  \]
-                </div>
-                <ul>
-                  <li class="fragment">Local lag features</li>
-                  <li class="fragment">Stacked nonlinear channels</li>
-                  <li class="fragment">Parallel over time</li>
-                </ul>
+            <div class="conv-bridge-grid">
+              <div class="card conv-card">
+                <h3>2-D convolution</h3>
+                <p class="small">A small image kernel scans space to detect edges, blobs, or texture.</p>
+                <svg class="diagram conv2d-diagram" viewBox="0 0 420 250" role="img" aria-label="A 2-D convolution kernel scanning an image patch">
+                  <defs>
+                    <marker id="conv2d-arrow" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
+                      <path d="M0,0 L5,2.5 L0,5 Z" fill="#2b92ac"></path>
+                    </marker>
+                  </defs>
+                  <g transform="translate(34 34)">
+                    <text class="svg-label" x="70" y="-10">image patch</text>
+                    <g class="image-patch">
+                      <rect class="image-pixel pixel-a" x="0" y="0" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-b" x="38" y="0" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-c" x="76" y="0" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-b" x="114" y="0" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-b" x="0" y="38" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-d" x="38" y="38" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-a" x="76" y="38" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-c" x="114" y="38" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-c" x="0" y="76" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-a" x="38" y="76" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-d" x="76" y="76" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-b" x="114" y="76" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-a" x="0" y="114" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-c" x="38" y="114" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-b" x="76" y="114" width="34" height="34"></rect>
+                      <rect class="image-pixel pixel-d" x="114" y="114" width="34" height="34"></rect>
+                    </g>
+
+                    <g class="conv2d-window">
+                      <animateTransform attributeName="transform" type="translate" values="0 0;38 0;76 0;76 38;38 38;0 38;0 76;38 76;76 76;0 0" dur="7s" repeatCount="indefinite"></animateTransform>
+                      <rect class="conv-tap tap-1" x="0" y="0" width="34" height="34"></rect>
+                      <rect class="conv-tap tap-2" x="38" y="0" width="34" height="34"></rect>
+                      <rect class="conv-tap tap-2" x="0" y="38" width="34" height="34"></rect>
+                      <rect class="conv-tap tap-3" x="38" y="38" width="34" height="34"></rect>
+                    </g>
+
+                    <path class="tap-line tap-2 conv2d-link" marker-end="url(#conv2d-arrow)" d="M166 72 C196 72 212 72 236 72"></path>
+
+                    <g transform="translate(252 26)">
+                      <text class="svg-label" x="44" y="-10">feature map</text>
+                      <rect class="svg-box" x="0" y="0" width="36" height="36"></rect>
+                      <rect class="svg-box" x="42" y="0" width="36" height="36"></rect>
+                      <rect class="svg-box" x="84" y="0" width="36" height="36"></rect>
+                      <rect class="svg-box" x="0" y="42" width="36" height="36"></rect>
+                      <rect class="svg-box" x="42" y="42" width="36" height="36"></rect>
+                      <rect class="svg-box" x="84" y="42" width="36" height="36"></rect>
+                      <rect class="svg-box" x="0" y="84" width="36" height="36"></rect>
+                      <rect class="svg-box" x="42" y="84" width="36" height="36"></rect>
+                      <rect class="svg-box" x="84" y="84" width="36" height="36"></rect>
+                      <rect class="svg-green conv2d-output" x="0" y="0" width="36" height="36">
+                        <animate attributeName="x" values="0;42;84;84;42;0;0;42;84;0" dur="7s" repeatCount="indefinite"></animate>
+                        <animate attributeName="y" values="0;0;0;42;42;42;84;84;84;0" dur="7s" repeatCount="indefinite"></animate>
+                      </rect>
+                    </g>
+                  </g>
+                </svg>
               </div>
+              <div class="card conv-card fragment">
+                <h3>1-D temporal convolution</h3>
+                <p class="small">The same idea scans time to detect slopes, peaks, pulses, or changes.</p>
               <svg class="diagram conv-diagram" viewBox="0 0 620 310" role="img" aria-label="A temporal convolution filter sliding across indexed observations">
                 <defs>
                   <marker id="conv-arrow-1" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
@@ -438,7 +487,17 @@
                   </g>
                 </g>
               </svg>
+              </div>
             </div>
+            <p class="callout conv-bridge-callout fragment">
+              A convolution is not just a window: it is a reusable detector applied at every position.
+            </p>
+            <aside class="notes">
+              This is the conceptual bridge from CNNs to temporal CNNs. In images, the same kernel can detect
+              an edge at any pixel location. In a sequence, the same temporal kernel can detect a rise, fall,
+              peak, pulse, or local oscillation at any date. This weight sharing is the main difference from
+              a flattened fixed-window MLP.
+            </aside>
           </section>
 
           <section id="tcn-receptive-field">

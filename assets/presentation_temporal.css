@@ -532,6 +532,94 @@
   width: 100%;
 }
 
+.conv-bridge-grid {
+  align-items: stretch;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.conv-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  min-height: 0;
+  padding: 13px 15px 15px;
+}
+
+.reveal .conv-card h3 {
+  font-size: 18pt;
+  margin-bottom: 5px;
+}
+
+.reveal .conv-card .small {
+  color: var(--temporal-muted);
+  font-size: 10.5pt;
+  font-weight: 620;
+  line-height: 1.22;
+  margin: 0 0 10px;
+}
+
+.conv-card .diagram {
+  box-shadow: none;
+  min-height: 0;
+}
+
+.conv-card .conv-diagram,
+.conv2d-diagram {
+  max-height: 270px;
+}
+
+.conv2d-diagram text {
+  text-anchor: middle;
+}
+
+.conv2d-diagram .svg-label {
+  fill: var(--temporal-muted) !important;
+  font-size: 12pt !important;
+  font-weight: 800;
+}
+
+.image-pixel {
+  stroke: #cfd8dc;
+  stroke-width: 2;
+  rx: 7;
+}
+
+.pixel-a {
+  fill: #f8fafb;
+}
+
+.pixel-b {
+  fill: #e9eff2;
+}
+
+.pixel-c {
+  fill: #d7e0e4;
+}
+
+.pixel-d {
+  fill: #c0ccd1;
+}
+
+.conv2d-window {
+  animation: conv-window-glow 7s ease-in-out infinite;
+}
+
+.conv2d-link {
+  animation: conv-path-pulse 7s ease-in-out infinite;
+}
+
+.conv2d-output {
+  animation: conv-output-pulse 7s ease-in-out infinite;
+}
+
+.conv-bridge-callout {
+  box-sizing: border-box;
+  font-size: 13pt;
+  margin: 16px 0 0;
+  width: 100%;
+}
+
 .tag-row {
   display: flex;
   flex-wrap: wrap;
