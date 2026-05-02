@@ -19,7 +19,7 @@
               <h1><span>Deep Learning</span><span>for Temporal Data</span></h1>
               <span class="rule"></span>
               <p class="subtitle">
-                How neural networks remember, filter, and select the past.
+                How neural networks represent the past.
               </p>
             </div>
             <div class="title-visual">
@@ -39,81 +39,79 @@
         <section class="chapter-stack" data-section="problem-framing" aria-label="Problem framing">
           <section id="memory-motivation">
             <div class="kicker">Motivation</div>
-            <h2>Temporal data asks for memory</h2>
+            <h2>Temporal data is about usable memory</h2>
             <span class="rule"></span>
             <div class="two-col wide-left">
               <div>
                 <p class="lead">
-                  The useful signal is often not in one observation, but in how observations change.
+                  The signal is often not in one observation, but in how observations change.
                 </p>
                 <ul>
-                  <li class="fragment">Forecast the future</li>
-                  <li class="fragment">Classify a sequence</li>
-                  <li class="fragment">Detect change</li>
-                  <li class="fragment">Fill gaps</li>
+                  <li class="fragment"><strong>Horizon:</strong> what future or label?</li>
+                  <li class="fragment"><strong>Order:</strong> which past evidence matters?</li>
+                  <li class="fragment"><strong>Missingness:</strong> gaps, clouds, irregular dates</li>
+                  <li class="fragment"><strong>Leakage:</strong> keep future information hidden</li>
                 </ul>
               </div>
               <div class="card figure-card">
                 <img class="media" src="assets/figures/mts-forecasting.png" alt="Multi-step time-series forecasting schematic">
-                <p class="caption">Past context to future output.</p>
+                <p class="caption">
+                  Past context is useful only relative to a prediction horizon.
+                </p>
               </div>
             </div>
           </section>
 
           <section id="sequence-setup" class="setup-slide">
             <div class="kicker">Formal setup</div>
-            <h2>Sequence learning setup</h2>
+            <h2>Window and horizon setup</h2>
             <span class="rule"></span>
             <div class="setup-layout">
               <div class="equation setup-equation">
-                <div class="setup-formula">
-                  <span class="mathcal">F</span><sub>&theta;</sub>(<em>x</em><sub>t-W:t</sub>, <em>u</em><sub>t</sub>)
+                <div class="setup-formula-row">
+                  <span class="model-symbol">\(\mathcal{F}_{\theta}\)</span>
+                  <span class="formula-paren">(</span>
+                  <span>\(X_{t-W:t}\)</span>
+                  <span class="formula-comma">,</span>
+                  <span>\(m_{t-W:t}\)</span>
+                  <span class="formula-comma">,</span>
+                  <span>\(u_{t-W:t+H}\)</span>
+                  <span class="formula-comma">,</span>
+                  <span>\(a\)</span>
+                  <span class="formula-paren">)</span>
                   <span class="formula-arrow">&rarr;</span>
-                  <span class="yhat">&#375;</span>
+                  <span class="formula-output">\(\widehat{X}_{t:t+H}\)</span>
+                </div>
+                <div class="window-horizon-map">
+                  <div class="horizon-block history-window">
+                    <strong>Input window</strong>
+                    <span>\(X_{t-W:t}\)</span>
+                    <small>last <em>W</em> steps</small>
+                  </div>
+                  <span class="horizon-arrow">&rarr;</span>
+                  <div class="horizon-block forecast-window">
+                    <strong>Prediction horizon</strong>
+                    <span>\(\widehat{X}_{t:t+H}\)</span>
+                    <small>next <em>H</em> steps</small>
+                  </div>
                 </div>
               </div>
+
               <div class="setup-meta">
-                <div><strong><em>x</em><sub>t</sub></strong><span>observations</span></div>
-                <div><strong><em>u</em><sub>t</sub></strong><span>context + masks</span></div>
-                <div><strong><em>W</em></strong><span>history</span></div>
+                <div class="fragment" data-fragment-index="0"><strong><em>X</em><sub>t-W:t</sub></strong><span>observed window</span></div>
+                <div class="fragment" data-fragment-index="1"><strong><em>m</em><sub>t-W:t</sub></strong><span>validity / cloud mask</span></div>
+                <div class="fragment" data-fragment-index="2"><strong><em>u</em><sub>t-W:t+H</sub></strong><span>known covariates</span></div>
+                <div class="fragment" data-fragment-index="3"><strong><em>a</em></strong><span>static metadata</span></div>
               </div>
-              <div class="memory-strip">
-                <span class="memory-strip-label">Design question</span>
-                <p>How should the model summarize the past?</p>
+              <div class="memory-strip fragment" data-fragment-index="4">
+                <span class="memory-strip-label">Architecture question</span>
+                <p>How should the model represent the past?</p>
                 <ul>
-                  <li>keep a fixed window</li>
-                  <li>update a hidden state</li>
-                  <li>filter local patterns</li>
-                  <li>select or scan long context</li>
+                  <li>fixed lags or windows</li>
+                  <li>recurrent hidden state</li>
+                  <li>learned temporal filters</li>
+                  <li>attention or state-space scan</li>
                 </ul>
-              </div>
-            </div>
-          </section>
-
-          <section id="electricity-baselines" class="electricity-slide">
-            <div class="kicker">Motivating example</div>
-            <h2>Nonlinear relationships, simple baselines</h2>
-            <span class="rule"></span>
-            <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
-            <p class="caption">Load consumption profile on a backbone of the electricity network of Rome. The temperature-load relation is nonlinear; copying yesterday is the first baseline to beat.</p>
-          </section>
-
-          <section id="remote-sensing-sequences" class="eo-sequence-slide">
-            <div class="kicker">Earth observation</div>
-            <h2>Remote sensing turns places into sequences</h2>
-            <span class="rule"></span>
-            <div class="eo-sequence-layout">
-              <div class="eo-text-row">
-                <p class="lead">Pixels, parcels, and regions become temporal signals.</p>
-                <ul class="compact-list">
-                  <li class="fragment">Seasonal phenology</li>
-                  <li class="fragment">Cloud gaps and irregular dates</li>
-                  <li class="fragment">Crop, land-cover, hazard labels</li>
-                </ul>
-              </div>
-              <div class="card figure-card eo-wide-figure">
-                <img class="media" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="Monthly Sentinel-2 NDVI sequence">
-                <p class="caption">Monthly NDVI from Sentinel-2 composites. Source: ESA EO Science for Society.</p>
               </div>
             </div>
           </section>
@@ -127,17 +125,63 @@
                 <h3>Local models</h3>
                 <img class="media short" src="assets/figures/generic-local-model.png" alt="Local model schematic">
                 <p class="small">Tailored, data inefficient.</p>
-                <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t};\theta^i)\)</p>
+                <p class="equation compact">\(\widehat{X}^{\,i}_{t:t+H}=\mathcal{F}_{\theta^i}(X^{\,i}_{t-W:t})\)</p>
               </div>
               <div class="card model-card fragment">
                 <h3>Global models</h3>
                 <img class="media short" src="assets/figures/generic-global-model.png" alt="Global model schematic">
                 <p class="small">Shared, scalable.</p>
-                <p class="equation compact">\(\hat{y}^i_{t+h}=f(x^i_{t-W:t}, a^i;\theta)\)</p>
+                <p class="equation compact">\(\widehat{X}^{\,i}_{t:t+H}=\mathcal{F}_{\theta}(X^{\,i}_{t-W:t}, a^{\,i})\)</p>
               </div>
             </div>
             <p class="note fragment">Remote sensing usually favors global models.</p>
           </section>
+
+          <section id="electricity-baselines" class="electricity-slide">
+            <div class="kicker">Motivating example</div>
+            <h2>Nonlinear relationships, simple baselines</h2>
+            <span class="rule"></span>
+            <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
+            <p class="caption">Load consumption profile on a backbone of the electricity network of Rome. The temperature-load relation is nonlinear; copying yesterday is the first baseline to beat.</p>
+          </section>
+
+          <section id="remote-sensing-sequences" class="eo-sequence-slide">
+            <div class="kicker">Earth observation example</div>
+            <h2>NDVI time series</h2>
+            <span class="rule"></span>
+
+            <div class="ndvi-motivation-layout">
+              <div class="ndvi-explainer">
+                <p class="lead">
+                  <strong>Normalized Difference Vegetation Index (NDVI)</strong> quantifies vegetation by measuring the difference between near-infrared (which vegetation strongly reflects) and red light (which vegetation absorbs).
+                </p>
+
+                <div class="ndvi-signal-grid">
+                  <div><strong>Phenology</strong><span>green-up, peak season, senescence</span></div>
+                  <div><strong>Productivity</strong><span>vegetation vigor and seasonal amplitude</span></div>
+                  <div><strong>Agriculture</strong><span>crop calendars, management, illegal ploughing</span></div>
+                  <div><strong>Disturbance</strong><span>deforestation, wild fires, abrupt vegetation loss</span></div>
+                </div>
+              </div>
+
+              <div class="ndvi-example-grid">
+                <div class="card figure-card ndvi-example-card ndvi-series-card">
+                  <img class="media" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
+                  <p class="caption">
+                    NDVI time series reveal vegetation dynamics that single images miss.
+                  </p>
+                </div>
+
+                <div class="card figure-card ndvi-example-card ndvi-map-card">
+                  <img class="media" src="assets/remote_sensing/sa_modis.gif" alt="Animated MODIS NDVI change over South Africa across a single year">
+                  <p class="caption">
+                    NDVI change over South Africa across a single year.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
         </section>
 
         <section class="chapter-stack" data-section="fixed-windows" aria-label="Fixed windows">
@@ -147,11 +191,11 @@
             <span class="rule"></span>
             <div class="window-layout">
               <div class="window-text">
-                <div class="equation compact window-equation">
-                  \[
-                  \hat{y}_{t+\tau}=g\left([x_{t-P},\ldots,x_{t-1},x_t]\right)
-                  \]
-                </div>
+	                <div class="equation compact window-equation">
+	                  \[
+	                  \widehat{X}_{t:t+H}=\mathcal{F}_{\theta}\left(X_{t-W:t}\right)
+	                  \]
+	                </div>
                 <div class="method-pills">
                   <span class="fragment">Linear AR</span>
                   <span class="fragment">Trees</span>
