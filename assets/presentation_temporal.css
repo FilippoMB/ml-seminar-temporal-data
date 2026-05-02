@@ -526,6 +526,12 @@
   width: 108%;
 }
 
+.reservoir-callout {
+  box-sizing: border-box;
+  margin: 28px 0 0;
+  width: 100%;
+}
+
 .tag-row {
   display: flex;
   flex-wrap: wrap;

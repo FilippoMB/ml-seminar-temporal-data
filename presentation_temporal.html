@@ -323,33 +323,29 @@
 
           <section id="reservoir-readout" class="reservoir-slide">
             <div class="kicker">Reservoir computing</div>
-            <h2>An Echo State Network trains only the readout</h2>
+            <h2>Echo State Networks</h2>
             <span class="rule"></span>
             <div class="two-col wide-right">
               <div>
                 <ul>
-                  <li class="fragment">Random recurrent dynamics</li>
-                  <li class="fragment">Rich temporal features</li>
-                  <li class="fragment">Train only the readout</li>
+                  <li class="fragment" data-fragment-index="0">Random recurrent (\(W_h\)) and input (\(W_i\)) weights</li>
+                  <li class="fragment" data-fragment-index="1">Train only the readout</li>
+                  <li class="fragment" data-fragment-index="2">Large reservoir produces rich temporal features</li>
+                  <li class="fragment" data-fragment-index="3">Readout select only the features useful for the task</li>
                 </ul>
-                <div class="equation recurrent-equation fragment">
-                  \[
-                  \begin{aligned}
-                  h_t&=\tanh(W_i x_t + W_h h_{t-1})\\
-                  \hat{y}_{t+\tau}&=W_o h_t
-                  \end{aligned}
-                  \]
-                </div>
               </div>
               <div>
                 <img class="media image-frame" src="assets/figures/sequence-media/Reservoir.gif" alt="Animated reservoir computing schematic">
               </div>
             </div>
+            <p class="callout reservoir-callout fragment">
+              Useful when recurrent training is too expensive or when data are not enough.
+            </p>
           </section>
 
           <section id="reservoir-practice">
-            <div class="kicker">Reservoir practice</div>
-            <h2>Useful when training recurrence is expensive</h2>
+            <div class="kicker">Trade-offs: lack of training make hyperparameters critical</div>
+            <h2>Reservoir configuration</h2>
             <span class="rule"></span>
             <div class="two-col">
               <div>
@@ -357,13 +353,10 @@
               </div>
               <div>
                 <ul>
-                  <li class="fragment"><strong>Spectral radius</strong>: memory</li>
-                  <li class="fragment"><strong>Input scaling</strong>: nonlinearity</li>
-                  <li class="fragment"><strong>Ridge readout</strong>: overfitting control</li>
+                  <li class="fragment"><strong>Spectral radius</strong>: controls the internal dynamics of the Reservoir and the amount of memory</li>
+                  <li class="fragment"><strong>Low values</strong>: Contractive regime, short memory, no expressivity</li>
+                  <li class="fragment"><strong>High values</strong>: Chaotic regime, overfits and cannot generalize</li>
                 </ul>
-                <p class="callout fragment">
-                  Useful when recurrent training is too expensive.
-                </p>
               </div>
             </div>
           </section>
