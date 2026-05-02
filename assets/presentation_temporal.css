@@ -159,6 +159,7 @@
 .three-col > *,
 .four-col > *,
 .title-layout > *,
+.rnn-layout > *,
 .setup-layout > *,
 .window-layout > * {
   min-width: 0;
@@ -457,6 +458,72 @@
 .recurrent-equation {
   font-size: 16pt;
   padding: 10px 14px;
+}
+
+.rnn-layout {
+  align-items: start;
+  display: grid;
+  gap: 26px;
+  grid-template-columns: 0.86fr 1.14fr;
+}
+
+.rnn-explainer {
+  align-content: start;
+  display: grid;
+  gap: 14px;
+  grid-template-rows: auto auto;
+}
+
+.rnn-step-list {
+  display: grid;
+  gap: 11px;
+}
+
+.rnn-step {
+  background: #fff;
+  border: 1px solid var(--temporal-line);
+  border-left: 5px solid var(--temporal-green);
+  border-radius: 8px;
+  padding: 11px 14px 12px;
+}
+
+.rnn-step strong {
+  color: var(--temporal-primary-dark);
+  display: block;
+  font-size: 14pt;
+  font-weight: 820;
+}
+
+.rnn-step span {
+  color: var(--temporal-muted);
+  display: block;
+  font-size: 10.5pt;
+  font-weight: 650;
+  line-height: 1.2;
+  margin-top: 3px;
+}
+
+.reveal .rnn-summary {
+  color: var(--temporal-ink);
+  font-size: 13pt;
+  font-weight: 520;
+  line-height: 1.36;
+  margin: 4px 4px 0;
+}
+
+.rnn-figure-card {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 418px;
+  overflow: hidden;
+  padding: 16px 18px;
+}
+
+.rnn-figure-card .media {
+  max-height: 430px;
+  max-width: none;
+  width: 108%;
 }
 
 .tag-row {
@@ -1858,6 +1925,7 @@
   }
 
   .title-layout,
+  .rnn-layout,
   .two-col,
   .two-col.wide-left,
   .two-col.wide-right,

@@ -255,25 +255,26 @@
             <div class="kicker">Recurrent Neural Networks</div>
             <h2>A hidden state carries context</h2>
             <span class="rule"></span>
-            <div class="two-col wide-right">
-              <div>
-                <ul>
-                  <li class="fragment">Read one step</li>
-                  <li class="fragment">Update state</li>
-                  <li class="fragment">Predict from memory</li>
-                </ul>
-                <div class="equation rnn-equation fragment">
-                  \[
-                  \begin{aligned}
-                  h_t&=\phi(W_x x_t + W_h h_{t-1})\\
-                  y_t&=W_o h_t
-                  \end{aligned}
-                  \]
+            <div class="rnn-layout">
+              <div class="rnn-explainer">
+                <div class="rnn-step-list">
+                  <div class="rnn-step fragment">
+                    <strong>Read \(x_t\)</strong>
+                    <span>consume the next observation in the sequence</span>
+                  </div>
+                  <div class="rnn-step fragment">
+                    <strong>Update \(h_t\)</strong>
+                    <span>combine current input with the previous memory \(h_{t-1}\)</span>
+                  </div>
+                  <div class="rnn-step fragment">
+                    <strong>Predict \(y_t\)</strong>
+                    <span>decode the updated state into an output</span>
+                  </div>
                 </div>
+                <p class="rnn-summary fragment">A single update rule is shared across time. The hidden state \(h_t\) is the compact memory passed to the next step.</p>
               </div>
-              <div>
-                <img class="media image-frame" src="assets/figures/sequence-media/RNN.gif" alt="Animated recurrent neural network">
-                <p class="caption">One update, reused through time.</p>
+              <div class="card figure-card rnn-figure-card">
+                <img class="media" src="assets/figures/sequence-media/RNN.gif" alt="Animated recurrent neural network">
               </div>
             </div>
           </section>
