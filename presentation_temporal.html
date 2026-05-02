@@ -74,6 +74,25 @@
             </div>
           </section>
 
+          <section id="flood-change">
+            <div class="kicker">Change and events</div>
+            <h2>Flood mapping is a temporal task</h2>
+            <span class="rule"></span>
+            <div class="media-row paired-scenes">
+              <div>
+                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
+                <p class="caption">Before: March 23, 2015</p>
+              </div>
+              <div>
+                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
+                <p class="caption">After: May 26, 2015</p>
+              </div>
+            </div>
+            <p class="source">
+              NASA Earth Observatory images by Joshua Stevens, using Landsat data from the U.S. Geological Survey.
+            </p>
+          </section>
+
           <section id="electricity-baselines" class="electricity-slide">
             <div class="kicker">Motivating example</div>
             <h2>Nonlinear relationships, simple baselines</h2>
@@ -522,7 +541,7 @@
                 <p class="lead">
                   The same learned kernel is applied at every time step.
                 </p>
-                <div class="equation">
+                <div class="equation continuous-equation">
                   \[
                   z_t=\sum_{k=0}^{K-1} w_k\,x_{t-k}
                   \]
@@ -1022,204 +1041,403 @@
         </section>
 
         <section class="chapter-stack" data-section="state-space-models" aria-label="State space models">
-          <section id="ssm-intuition" class="ssm-intro-slide">
+          <section id="continuous-time-dynamics">
             <div class="kicker">State space models</div>
-            <h2>Continuous-time intuition, neural sequence model</h2>
+            <h2>Memory as continuous dynamics</h2>
             <span class="rule"></span>
-            <div class="ssm-intro-layout">
+
+            <div class="two-col wide-left continuous-layout">
               <div>
-                <div class="equation ssm-equation">
-                  \[
-                  \begin{aligned}
-                  \dot{s}(t)&=A s(t)+B u(t)\\
-                  y(t)&=C s(t)+D u(t)
-                  \end{aligned}
-                  \]
+                <p class="lead">
+                  Instead of storing a finite window, model a hidden state that evolves in continuous time.
+                </p>
+
+                <div class="equation continuous-equation">
+                  \(\frac{d s(t)}{dt}=f_{\theta}\!\left(s(t),u(t),t\right),
+                  \qquad y(t)=g_{\theta}\!\left(s(t)\right)\)
                 </div>
+
+                <ul>
+                  <li class="fragment"><strong>\(s(t)\):</strong> compact latent memory</li>
+                  <li class="fragment"><strong>\(f_\theta\):</strong> learned dynamics driven by input \(u(t)\)</li>
+                  <li class="fragment"><strong>\(g_\theta\):</strong> readout producing \(y(t)\) at observation times</li>
+                </ul>
               </div>
-              <div class="ssm-cards">
-                <div class="card fragment">
-                  <h3>State</h3>
-                  <p class="small">latent dynamics</p>
-                </div>
-                <div class="card fragment">
-                  <h3>Input</h3>
-                  <p class="small">drives system</p>
-                </div>
-                <div class="card fragment">
-                  <h3>Output</h3>
-                  <p class="small">reads state</p>
-                </div>
-              </div>
-              <div class="ssm-callout">
-                <strong>Control-theory intuition</strong>
-                <span>Trainable dynamics for long sequences</span>
+
+              <div class="card">
+                <h3>Continuous evolution, discrete observations</h3>
+
+                <svg class="diagram" viewBox="0 0 620 330" role="img" aria-label="Continuous latent state with irregular observations">
+                  <line x1="58" y1="260" x2="555" y2="260" stroke="#9aa3ad" stroke-width="2"></line>
+                  <line x1="58" y1="260" x2="58" y2="48" stroke="#9aa3ad" stroke-width="2"></line>
+
+                  <text x="538" y="288" font-size="16" fill="#5c6670" font-style="italic">t</text>
+                  <text x="20" y="58" font-size="16" fill="#5c6670" font-style="italic">s(t)</text>
+
+                  <path
+                    d="M70 218 C115 178 145 92 190 118 C235 145 260 230 312 180 C365 130 395 72 455 104 C505 130 520 190 548 150"
+                    fill="none"
+                    stroke="#2b92ac"
+                    stroke-width="5"
+                    stroke-linecap="round">
+                  </path>
+
+                  <circle r="7" fill="#07546a">
+                    <animateMotion
+                      dur="5s"
+                      repeatCount="indefinite"
+                      path="M70 218 C115 178 145 92 190 118 C235 145 260 230 312 180 C365 130 395 72 455 104 C505 130 520 190 548 150">
+                    </animateMotion>
+                  </circle>
+
+                  <g>
+                    <line x1="70" y1="260" x2="70" y2="218" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
+                    <circle cx="70" cy="218" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <text x="70" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₁</text>
+
+                    <line x1="190" y1="260" x2="190" y2="118" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
+                    <circle cx="190" cy="118" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <text x="190" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₂</text>
+
+                    <line x1="312" y1="260" x2="312" y2="180" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
+                    <circle cx="312" cy="180" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <text x="312" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₃</text>
+
+                    <line x1="455" y1="260" x2="455" y2="104" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
+                    <circle cx="455" cy="104" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <text x="455" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₄</text>
+                  </g>
+
+                  <g transform="translate(334 44)">
+                    <rect x="0" y="0" width="190" height="36" rx="10" fill="#f4f0ff" stroke="#75689b" stroke-width="2"></rect>
+                    <text x="95" y="24" text-anchor="middle" font-size="15" fill="#40375f">
+                      <tspan font-style="italic">f</tspan><tspan baseline-shift="sub" font-size="11">θ</tspan> predicts <tspan font-style="italic">ds/dt</tspan>
+                    </text>
+                  </g>
+                </svg>
               </div>
             </div>
+
+            <p class="callout continuous-callout fragment">
+              Continuous time makes irregular sampling and variable time gaps natural.
+            </p>
+
+            <aside class="notes">
+              For this audience, start from physics intuition. There is a latent state, and the state evolves
+              according to a differential equation. In a Neural ODE, the derivative is parameterized by a neural
+              network. Observations are available only at discrete times, possibly irregularly. The model can
+              evolve the state between observations, then read it out or update it when data arrives.
+            </aside>
+          </section>
+
+          <section id="ssm-intuition">
+            <div class="kicker">State space models</div>
+            <h2>Sampling turns dynamics into state updates</h2>
+            <span class="rule"></span>
+
+            <div class="two-col wide-left ssm-discrete-layout">
+              <div>
+                <p class="lead">
+                  Observe the continuous system only at times \(t_i\). The elapsed time
+                  \(\Delta t_i=t_i-t_{i-1}\) determines how far the state evolves.
+                </p>
+
+                <div class="equation compact ssm-bridge-equation">
+                  <div>
+                    <span>continuous dynamics</span>
+                    \(\dot{s}(t)=A s(t)+B u(t),\quad y(t)=C s(t)+D u(t)\)
+                  </div>
+                  <div class="fragment">
+                    <span>sampled update</span>
+                    \(s_i=\bar{A}(\Delta t_i)s_{i-1}+\bar{B}(\Delta t_i)u_i,\quad y_i=C s_i+D u_i\)
+                  </div>
+                </div>
+
+                <ul>
+                  <li class="fragment"><strong>\(\Delta t_i\):</strong> time since the previous observation</li>
+                  <li class="fragment"><strong>\(\bar{A}(\Delta t_i)\):</strong> state transition over that gap</li>
+                  <li class="fragment"><strong>\(\bar{B}(\Delta t_i)\):</strong> input effect accumulated over that gap</li>
+                </ul>
+
+              </div>
+
+              <div class="card ssm-scan-card">
+                <h3>Irregular observations: scan state at observed times</h3>
+
+                <svg class="diagram" viewBox="0 0 620 330" role="img" aria-label="Discretized state-space scan with variable time gaps">
+                  <defs>
+                    <marker id="ssm-scan-arrow" markerWidth="7" markerHeight="7" refX="5.8" refY="3.5" orient="auto">
+                      <path d="M0,0 L7,3.5 L0,7 Z" fill="#75689b"></path>
+                    </marker>
+                    <marker id="ssm-scan-input-arrow" markerWidth="7" markerHeight="7" refX="5.8" refY="3.5" orient="auto">
+                      <path d="M0,0 L7,3.5 L0,7 Z" fill="#2b92ac"></path>
+                    </marker>
+                    <marker id="ssm-scan-output-arrow" markerWidth="7" markerHeight="7" refX="5.8" refY="3.5" orient="auto">
+                      <path d="M0,0 L7,3.5 L0,7 Z" fill="#5a9b5a"></path>
+                    </marker>
+                  </defs>
+
+                  <g transform="translate(18 20)">
+
+                    <g stroke="#75689b" stroke-width="3" fill="none" marker-end="url(#ssm-scan-arrow)">
+                      <path d="M58 132 L128 132"></path>
+                      <path d="M182 132 L282 132"></path>
+                      <path d="M336 132 L410 132"></path>
+                      <path d="M464 132 L544 132"></path>
+                    </g>
+
+                    <g fill="#5c6670" font-size="15">
+                      <text x="94" y="112" text-anchor="middle">Δt₁</text>
+                      <text x="232" y="112" text-anchor="middle">Δt₂</text>
+                      <text x="374" y="112" text-anchor="middle">Δt₃</text>
+                      <text x="504" y="112" text-anchor="middle">Δt₄</text>
+                    </g>
+
+                    <g>
+                      <circle cx="32" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
+                      <circle cx="156" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
+                      <circle cx="310" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
+                      <circle cx="438" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
+                      <circle cx="570" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
+
+                      <text x="32" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₀</text>
+                      <text x="156" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₁</text>
+                      <text x="310" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₂</text>
+                      <text x="438" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₃</text>
+                      <text x="570" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₄</text>
+                    </g>
+
+                    <g fill="#5c6670" font-size="14" font-style="italic">
+                      <text x="32" y="178" text-anchor="middle">t₀</text>
+                      <text x="132" y="178" text-anchor="middle">t₁</text>
+                      <text x="286" y="178" text-anchor="middle">t₂</text>
+                      <text x="414" y="178" text-anchor="middle">t₃</text>
+                      <text x="546" y="178" text-anchor="middle">t₄</text>
+                    </g>
+
+                    <g stroke="#2b92ac" stroke-width="2.5" fill="none" marker-end="url(#ssm-scan-input-arrow)">
+                      <path d="M156 68 L156 104"></path>
+                      <path d="M310 68 L310 104"></path>
+                      <path d="M438 68 L438 104"></path>
+                      <path d="M570 68 L570 104"></path>
+                    </g>
+
+                    <g>
+                      <rect x="130" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
+                      <rect x="284" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
+                      <rect x="412" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
+                      <rect x="544" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
+
+                      <text x="156" y="51" text-anchor="middle" font-size="16" fill="#07546a">u₁</text>
+                      <text x="310" y="51" text-anchor="middle" font-size="16" fill="#07546a">u₂</text>
+                      <text x="438" y="51" text-anchor="middle" font-size="16" fill="#07546a">u₃</text>
+                      <text x="570" y="51" text-anchor="middle" font-size="16" fill="#07546a">u₄</text>
+                    </g>
+
+                    <g stroke="#5a9b5a" stroke-width="2.4" fill="none" marker-end="url(#ssm-scan-output-arrow)">
+                      <path d="M156 160 L156 218"></path>
+                      <path d="M310 160 L310 218"></path>
+                      <path d="M438 160 L438 218"></path>
+                      <path d="M570 160 L570 218"></path>
+                    </g>
+
+                    <g>
+                      <rect x="130" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
+                      <rect x="284" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
+                      <rect x="412" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
+                      <rect x="544" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
+
+                      <text x="156" y="247" text-anchor="middle" font-size="16" fill="#2f6f2f">y₁</text>
+                      <text x="310" y="247" text-anchor="middle" font-size="16" fill="#2f6f2f">y₂</text>
+                      <text x="438" y="247" text-anchor="middle" font-size="16" fill="#2f6f2f">y₃</text>
+                      <text x="570" y="247" text-anchor="middle" font-size="16" fill="#2f6f2f">y₄</text>
+                    </g>
+                  </g>
+                </svg>
+                <p class="small ssm-scan-caption fragment">
+                  After discretization, the sequence is processed by scanning \(s_0 \rightarrow s_1 \rightarrow \cdots\).
+                </p>
+              </div>
+            </div>
+
+            <p class="ssm-parameter-card fragment">
+              \(A,B,C,D\) define transition, input injection, readout, and skip connection; the layer learns these dynamics.
+            </p>
+
+            <aside class="notes">
+              This is the bridge slide. The continuous equation is familiar from control theory and physics.
+              Once sampled at observation times, it becomes a scan over states. If the time gaps are irregular,
+              the transition can depend on Δt. Compared with an RNN, the update has stronger dynamical-system
+              structure. Compared with a TCN, the long filter is generated by state dynamics rather than by
+              stacking many local kernels.
+            </aside>
           </section>
 
           <section id="mamba-scan">
             <div class="kicker">S4 and Mamba</div>
-            <h2>State updates can be scanned efficiently</h2>
+            <h2>Modern SSMs make state memory practical</h2>
             <span class="rule"></span>
-            <div class="two-col wide-right">
-              <div>
-                <ul>
-                  <li><strong>S4</strong>: long memory</li>
-                  <li class="fragment"><strong>Mamba</strong>: selective memory</li>
-                  <li class="fragment">Streaming + efficient scans</li>
-                </ul>
-              </div>
-              <svg class="diagram mamba-diagram" viewBox="0 0 700 390" role="img" aria-label="Selective state space scan">
+
+            <p class="lead">
+              All state-space models carry a compact hidden state.
+              S4 makes this efficient for long sequences; Mamba makes it selective.
+            </p>
+
+            <div class="card mamba-comparison-card">
+              <svg class="diagram mamba-comparison-diagram" viewBox="0 18 1200 352" role="img" aria-label="Didactic comparison of naive SSM, S4, and Mamba">
                 <defs>
-                  <marker id="arrowhead-ssm-blue" markerWidth="5.5" markerHeight="5.5" refX="4.5" refY="2.75" orient="auto" markerUnits="userSpaceOnUse">
-                    <path d="M0,0 L5.5,2.75 L0,5.5 Z" fill="#0b7896"></path>
+                  <marker id="arrow-purple" markerWidth="6" markerHeight="6" refX="5.1" refY="3" orient="auto">
+                    <path d="M0,0 L6,3 L0,6 Z" fill="#75689b"></path>
                   </marker>
-                  <marker id="arrowhead-ssm-muted" markerWidth="5.5" markerHeight="5.5" refX="4.5" refY="2.75" orient="auto" markerUnits="userSpaceOnUse">
-                    <path d="M0,0 L5.5,2.75 L0,5.5 Z" fill="#5f7482"></path>
+                  <marker id="arrow-blue" markerWidth="6" markerHeight="6" refX="5.1" refY="3" orient="auto">
+                    <path d="M0,0 L6,3 L0,6 Z" fill="#2b92ac"></path>
+                  </marker>
+                  <marker id="arrow-orange" markerWidth="6" markerHeight="6" refX="5.1" refY="3" orient="auto">
+                    <path d="M0,0 L6,3 L0,6 Z" fill="#b77719"></path>
                   </marker>
                 </defs>
-                <g transform="translate(38 40)">
-                  <text class="svg-label" x="0" y="-10">selective state-space scan</text>
-                  <text class="svg-small" x="0" y="14">Each input chooses how much memory to pass forward.</text>
 
-                  <g class="mamba-inputs">
-                    <rect class="svg-box step-1" x="42" y="44" width="50" height="38"></rect>
-                    <rect class="svg-box step-2" x="142" y="44" width="50" height="38"></rect>
-                    <rect class="svg-box step-3" x="242" y="44" width="50" height="38"></rect>
-                    <rect class="svg-box step-4" x="342" y="44" width="50" height="38"></rect>
-                    <rect class="svg-box step-5" x="442" y="44" width="50" height="38"></rect>
-                    <text x="67" y="69">x1</text>
-                    <text x="167" y="69">x2</text>
-                    <text x="267" y="69">x3</text>
-                    <text x="367" y="69">x4</text>
-                    <text x="467" y="69">x5</text>
-                  </g>
+                <g class="ssm-basic-group">
+                  <text x="205" y="54" text-anchor="middle" class="ssm-title">Basic SSM</text>
+                  <rect x="30" y="78" width="350" height="227" class="ssm-panel"></rect>
+                  <text x="205" y="104" text-anchor="middle" class="ssm-small">A compact state is updated step by step</text>
 
-                  <g class="mamba-gates">
-                    <circle class="gate step-1" cx="67" cy="130" r="19"></circle>
-                    <circle class="gate step-2" cx="167" cy="130" r="19"></circle>
-                    <circle class="gate step-3" cx="267" cy="130" r="19"></circle>
-                    <circle class="gate step-4" cx="367" cy="130" r="19"></circle>
-                    <circle class="gate step-5" cx="467" cy="130" r="19"></circle>
-                    <text x="67" y="137">g</text>
-                    <text x="167" y="137">g</text>
-                    <text x="267" y="137">g</text>
-                    <text x="367" y="137">g</text>
-                    <text x="467" y="137">g</text>
-                  </g>
+                  <rect x="70" y="128" width="52" height="34" class="ssm-input"></rect>
+                  <rect x="145" y="128" width="52" height="34" class="ssm-input"></rect>
+                  <rect x="220" y="128" width="52" height="34" class="ssm-input"></rect>
+                  <rect x="295" y="128" width="52" height="34" class="ssm-input"></rect>
+                  <text x="96" y="145" class="ssm-input-text">x₁</text>
+                  <text x="171" y="145" class="ssm-input-text">x₂</text>
+                  <text x="246" y="145" class="ssm-input-text">x₃</text>
+                  <text x="321" y="145" class="ssm-input-text">x₄</text>
 
-                  <g class="svg-lines strong mamba-input-arrows" marker-end="url(#arrowhead-ssm-blue)">
-                    <line class="step-1" x1="67" y1="89" x2="67" y2="102"></line>
-                    <line class="step-2" x1="167" y1="89" x2="167" y2="102"></line>
-                    <line class="step-3" x1="267" y1="89" x2="267" y2="102"></line>
-                    <line class="step-4" x1="367" y1="89" x2="367" y2="102"></line>
-                    <line class="step-5" x1="467" y1="89" x2="467" y2="102"></line>
-                  </g>
+                  <circle cx="96" cy="218" r="24" class="ssm-state"></circle>
+                  <circle cx="171" cy="218" r="24" class="ssm-state"></circle>
+                  <circle cx="246" cy="218" r="24" class="ssm-state"></circle>
+                  <circle cx="321" cy="218" r="24" class="ssm-state"></circle>
+                  <text x="96" y="218" class="ssm-state-text">s₁</text>
+                  <text x="171" y="218" class="ssm-state-text">s₂</text>
+                  <text x="246" y="218" class="ssm-state-text">s₃</text>
+                  <text x="321" y="218" class="ssm-state-text">s₄</text>
 
-                  <g class="mamba-states">
-                    <rect class="state-box" x="0" y="200" width="54" height="42"></rect>
-                    <rect class="state-box step-1" x="100" y="200" width="54" height="42"></rect>
-                    <rect class="state-box step-2" x="200" y="200" width="54" height="42"></rect>
-                    <rect class="state-box step-3" x="300" y="200" width="54" height="42"></rect>
-                    <rect class="state-box step-4" x="400" y="200" width="54" height="42"></rect>
-                    <rect class="state-box step-5" x="500" y="200" width="54" height="42"></rect>
-                    <text x="27" y="227">s0</text>
-                    <text x="127" y="227">s1</text>
-                    <text x="227" y="227">s2</text>
-                    <text x="327" y="227">s3</text>
-                    <text x="427" y="227">s4</text>
-                    <text x="527" y="227">s5</text>
-                  </g>
+                  <path d="M96 162 L96 190" class="ssm-blue-arrow"></path>
+                  <path d="M171 162 L171 190" class="ssm-blue-arrow"></path>
+                  <path d="M246 162 L246 190" class="ssm-blue-arrow"></path>
+                  <path d="M321 162 L321 190" class="ssm-blue-arrow"></path>
+                  <path d="M120 218 L143 218" class="ssm-purple-arrow"></path>
+                  <path d="M195 218 L218 218" class="ssm-purple-arrow"></path>
+                  <path d="M270 218 L293 218" class="ssm-purple-arrow"></path>
 
-                  <g class="svg-lines strong mamba-state-arrows" marker-end="url(#arrowhead-ssm-blue)">
-                    <line class="step-1" x1="56" y1="221" x2="94" y2="221"></line>
-                    <line class="step-2" x1="156" y1="221" x2="194" y2="221"></line>
-                    <line class="step-3" x1="256" y1="221" x2="294" y2="221"></line>
-                    <line class="step-4" x1="356" y1="221" x2="394" y2="221"></line>
-                    <line class="step-5" x1="456" y1="221" x2="494" y2="221"></line>
-                  </g>
+                  <text x="205" y="330" text-anchor="middle" class="ssm-caption-title">Good memory, but sequential</text>
+                  <text x="205" y="354" text-anchor="middle" class="ssm-caption-text">Training and inference follow one chain</text>
+                </g>
 
-                  <g class="svg-lines mamba-gate-arrows" marker-end="url(#arrowhead-ssm-muted)">
-                    <line class="step-1" x1="76" y1="157" x2="108" y2="190"></line>
-                    <line class="step-2" x1="176" y1="157" x2="208" y2="190"></line>
-                    <line class="step-3" x1="276" y1="157" x2="308" y2="190"></line>
-                    <line class="step-4" x1="376" y1="157" x2="408" y2="190"></line>
-                    <line class="step-5" x1="476" y1="157" x2="508" y2="190"></line>
-                  </g>
+                <g class="ssm-s4-group fragment">
+                  <text x="600" y="54" text-anchor="middle" class="ssm-title">S4</text>
+                  <rect x="425" y="78" width="350" height="227" class="ssm-panel"></rect>
+                  <text x="600" y="104" text-anchor="middle" class="ssm-small">Same state-space idea, efficient long-filter view</text>
 
-                  <g class="svg-lines strong mamba-readout" marker-end="url(#arrowhead-ssm-blue)">
-                    <line x1="554" y1="221" x2="584" y2="221"></line>
-                  </g>
-                  <rect class="svg-green mamba-output" x="590" y="192" width="48" height="58"></rect>
-                  <text x="614" y="227">y</text>
+                  <rect x="455" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <rect x="503" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <rect x="551" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <rect x="599" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <rect x="647" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <rect x="695" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <text x="474" y="143" class="ssm-input-text">x₁</text>
+                  <text x="522" y="143" class="ssm-input-text">x₂</text>
+                  <text x="570" y="143" class="ssm-input-text">x₃</text>
+                  <text x="618" y="143" class="ssm-input-text">x₄</text>
+                  <text x="666" y="143" class="ssm-input-text">x₅</text>
+                  <text x="714" y="143" class="ssm-input-text">x₆</text>
 
-                  <g transform="translate(0 294)">
-                    <rect class="svg-green" x="0" y="0" width="225" height="46"></rect>
-                    <text class="mamba-chip-text" x="18" y="29">parallel scan in training</text>
-                  </g>
-                  <g transform="translate(260 294)">
-                    <rect class="svg-orange" x="0" y="0" width="250" height="46"></rect>
-                    <text class="mamba-chip-text" x="18" y="29">input-dependent gates</text>
-                  </g>
+                  <path d="M595 158 L595 180" class="ssm-blue-arrow"></path>
+                  <rect x="485" y="186" width="230" height="46" class="ssm-filter"></rect>
+                  <text x="600" y="209" class="ssm-filter-text">one long learned filter</text>
+                  <path d="M595 232 L595 254" class="ssm-blue-arrow"></path>
+
+                  <rect x="455" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <rect x="503" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <rect x="551" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <rect x="599" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <rect x="647" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <rect x="695" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <text x="474" y="277" class="ssm-out-text">y₁</text>
+                  <text x="522" y="277" class="ssm-out-text">y₂</text>
+                  <text x="570" y="277" class="ssm-out-text">y₃</text>
+                  <text x="618" y="277" class="ssm-out-text">y₄</text>
+                  <text x="666" y="277" class="ssm-out-text">y₅</text>
+                  <text x="714" y="277" class="ssm-out-text">y₆</text>
+
+                  <text x="600" y="330" text-anchor="middle" class="ssm-caption-title">Train efficiently like a convolution</text>
+                  <text x="600" y="354" text-anchor="middle" class="ssm-caption-text">Structured dynamics become a long filter</text>
+                </g>
+
+                <g class="ssm-mamba-group fragment">
+                  <text x="995" y="54" text-anchor="middle" class="ssm-title">Mamba</text>
+                  <rect x="820" y="78" width="350" height="227" class="ssm-panel"></rect>
+                  <text x="995" y="104" text-anchor="middle" class="ssm-small">The current input decides what memory should do</text>
+
+                  <rect x="845" y="126" width="62" height="34" class="ssm-input"></rect>
+                  <circle cx="965" cy="143" r="20" class="ssm-gate"></circle>
+                  <circle cx="1070" cy="143" r="24" class="ssm-state"></circle>
+                  <text x="876" y="143" class="ssm-input-text">x₁</text>
+                  <text x="965" y="143" class="ssm-gate-text">g</text>
+                  <text x="1070" y="143" class="ssm-state-text">s₁</text>
+                  <path d="M907 143 L943 143" class="ssm-blue-arrow"></path>
+                  <path d="M985 143 L1042 143" class="ssm-orange-arrow"></path>
+
+                  <rect x="845" y="184" width="62" height="34" class="ssm-input"></rect>
+                  <circle cx="965" cy="201" r="20" class="ssm-gate"></circle>
+                  <circle cx="1070" cy="201" r="24" class="ssm-state"></circle>
+                  <text x="876" y="201" class="ssm-input-text">x₂</text>
+                  <text x="965" y="201" class="ssm-gate-text">g</text>
+                  <text x="1070" y="201" class="ssm-state-text">s₂</text>
+                  <path d="M907 201 L943 201" class="ssm-blue-arrow"></path>
+                  <path d="M985 201 L1042 201" class="ssm-orange-arrow"></path>
+
+                  <rect x="845" y="242" width="62" height="34" class="ssm-input"></rect>
+                  <circle cx="965" cy="259" r="20" class="ssm-gate"></circle>
+                  <circle cx="1070" cy="259" r="24" class="ssm-state"></circle>
+                  <text x="876" y="259" class="ssm-input-text">x₃</text>
+                  <text x="965" y="259" class="ssm-gate-text">g</text>
+                  <text x="1070" y="259" class="ssm-state-text">s₃</text>
+                  <path d="M907 259 L943 259" class="ssm-blue-arrow"></path>
+                  <path d="M985 259 L1042 259" class="ssm-orange-arrow"></path>
+
+                  <path d="M1094 161 C1118 170 1118 182 1094 193" class="ssm-state-flow"></path>
+                  <path d="M1094 219 C1118 228 1118 240 1094 251" class="ssm-state-flow"></path>
+
+                  <text x="995" y="330" text-anchor="middle" class="ssm-caption-title">Selective memory</text>
+                  <text x="995" y="354" text-anchor="middle" class="ssm-caption-text">Important inputs are written; others can be ignored</text>
                 </g>
               </svg>
             </div>
-            <p class="source">
-              S4: Gu et al., 2021. Mamba: Gu and Dao, 2023.
+
+            <p class="callout fragment">
+              RNNs carry state, Transformers retrieve from tokens, and modern SSMs propagate information through a compact state efficiently.
             </p>
+
+            <p class="source">
+              S4: Gu, Goel, and Ré, 2021. Mamba: Gu and Dao, 2023.
+            </p>
+
+            <aside class="notes">
+              This slide should be explained very simply. Left: a basic state-space model carries a
+              compact hidden state through time. That is memory-efficient, but naturally sequential.
+              Middle: S4 keeps the same state-space idea, but uses structure so that training can be
+              done efficiently like a long convolution. Right: Mamba adds selectivity. The current
+              input controls how the state is updated, so the model can decide what to keep, what to
+              write, and what to ignore. The point is not the algebra. Like an RNN, it has a state;
+              unlike attention, it does not build all pairwise token interactions; and like a TCN, it
+              can model long temporal effects efficiently.
+            </aside>
           </section>
         </section>
 
         <section class="chapter-stack" data-section="remote-sensing-synthesis" aria-label="Remote-sensing examples and synthesis">
-          <section id="crop-phenology">
-            <div class="kicker">Phenology</div>
-            <h2>Crop mapping reads temporal signatures</h2>
-            <span class="rule"></span>
-            <div class="card figure-card phenology-figure">
-              <img class="media wide image-frame" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
-              <p class="caption">
-                Monthly NDVI images from Sentinel-2 composites. Source: ESA EO Science for Society.
-              </p>
-            </div>
-            <div class="three-col">
-              <div class="card fragment">
-                <h3>RNN/LSTM</h3>
-                <p class="small">Growth stage</p>
-              </div>
-              <div class="card fragment">
-                <h3>TCN</h3>
-                <p class="small">Phenology motifs</p>
-              </div>
-              <div class="card fragment">
-                <h3>Transformer/SSM</h3>
-                <p class="small">Long context</p>
-              </div>
-            </div>
-          </section>
-
-          <section id="flood-change">
-            <div class="kicker">Change and events</div>
-            <h2>Flood mapping is a before/after temporal task</h2>
-            <span class="rule"></span>
-            <div class="media-row paired-scenes">
-              <div>
-                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
-                <p class="caption">Before: March 23, 2015</p>
-              </div>
-              <div>
-                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
-                <p class="caption">After: May 26, 2015</p>
-              </div>
-            </div>
-            <p class="source">
-              NASA Earth Observatory images by Joshua Stevens, using Landsat data from the U.S. Geological Survey.
-            </p>
-          </section>
-
           <section id="architecture-map">
-            <div class="kicker">Architecture map</div>
-            <h2>Which memory mechanism fits which problem?</h2>
+            <div class="kicker">Takeaways</div>
+            <h2>Which mechanism fits which problem?</h2>
             <span class="rule"></span>
             <table class="comparison architecture-table">
               <thead>
@@ -1278,29 +1496,6 @@
             </table>
           </section>
 
-          <section id="takeaways">
-            <div class="kicker">Takeaways</div>
-            <h2>Same question, different memory mechanisms</h2>
-            <span class="rule"></span>
-            <div class="three-col">
-              <div class="card">
-                <h3>State</h3>
-                <p class="small">Compress the past.</p>
-              </div>
-              <div class="card fragment">
-                <h3>Filter</h3>
-                <p class="small">Scan temporal motifs.</p>
-              </div>
-              <div class="card fragment">
-                <h3>Select</h3>
-                <p class="small">Choose useful context.</p>
-              </div>
-            </div>
-            <p class="quote fragment">
-              For temporal data, architecture is a hypothesis about what kind of past matters.
-            </p>
-          </section>
-
           <section id="references" class="references-slide">
             <div class="kicker">Sources and credits</div>
             <h2>References</h2>
@@ -1312,6 +1507,8 @@
               <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
               <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
               <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a>, "Attention Is All You Need", NeurIPS, 2017.</li>
+              <li><a href="https://arxiv.org/abs/1806.07366">Chen, Rubanova, Bettencourt, and Duvenaud</a>, "Neural Ordinary Differential Equations", NeurIPS, 2018.</li>
+              <li><a href="https://arxiv.org/abs/1907.03907">Rubanova, Chen, and Duvenaud</a>, "Latent ODEs for Irregularly-Sampled Time Series", NeurIPS, 2019.</li>
               <li><a href="https://arxiv.org/abs/2111.00396">Gu et al.</a>, "Efficiently Modeling Long Sequences with Structured State Spaces", 2021.</li>
               <li><a href="https://arxiv.org/abs/2312.00752">Gu and Dao</a>, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces", 2023.</li>
               <li><a href="https://www.mdpi.com/2072-4292/11/5/523">Pelletier, Webb, and Petitjean</a>, "Temporal Convolutional Neural Network for the Classification of Satellite Image Time Series", Remote Sensing, 2019.</li>
