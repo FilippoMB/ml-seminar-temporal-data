@@ -351,8 +351,9 @@
 
 .memory-choice-layout {
   display: grid;
-  gap: 22px;
+  gap: 34px;
   grid-template-rows: auto 1fr;
+  margin-top: 24px;
 }
 
 .memory-choice-text {
@@ -386,19 +387,23 @@
   display: flex;
   justify-content: center;
   justify-self: stretch;
-  min-height: 370px;
+  min-height: 330px;
   overflow: hidden;
 }
 
 .memory-choice-figure .media {
   max-height: none;
-  transform: scale(1.18);
+  transform: scale(1.08);
   width: 100%;
 }
 
 .model-compare {
   align-items: stretch;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.model-compare + .memory-strip {
+  margin-top: 34px;
 }
 
 .model-card {

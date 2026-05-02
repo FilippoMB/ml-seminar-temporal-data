@@ -36,6 +36,53 @@
           </div>
         </section>
 
+        <section class="chapter-stack" data-section="motivating-examples" aria-label="Motivating examples">
+          <section id="remote-sensing-sequences" class="eo-sequence-slide">
+            <div class="kicker">Earth observation example</div>
+            <h2>NDVI time series</h2>
+            <span class="rule"></span>
+
+            <div class="ndvi-motivation-layout">
+              <div class="ndvi-explainer">
+                <p class="lead">
+                  <strong>Normalized Difference Vegetation Index (NDVI)</strong> quantifies vegetation by measuring the difference between near-infrared (which vegetation strongly reflects) and red light (which vegetation absorbs).
+                </p>
+
+                <div class="ndvi-signal-grid">
+                  <div><strong>Phenology</strong><span>green-up, peak season, senescence</span></div>
+                  <div><strong>Productivity</strong><span>vegetation vigor and seasonal amplitude</span></div>
+                  <div><strong>Agriculture</strong><span>crop calendars, management, illegal ploughing</span></div>
+                  <div><strong>Disturbance</strong><span>deforestation, wild fires, abrupt vegetation loss</span></div>
+                </div>
+              </div>
+
+              <div class="ndvi-example-grid">
+                <div class="card figure-card ndvi-example-card ndvi-series-card">
+                  <img class="media" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
+                  <p class="caption">
+                    NDVI time series reveal vegetation dynamics that single images miss.
+                  </p>
+                </div>
+
+                <div class="card figure-card ndvi-example-card ndvi-map-card">
+                  <img class="media" src="assets/remote_sensing/sa_modis.gif" alt="Animated MODIS NDVI change over South Africa across a single year">
+                  <p class="caption">
+                    NDVI change over South Africa across a single year.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="electricity-baselines" class="electricity-slide">
+            <div class="kicker">Motivating example</div>
+            <h2>Nonlinear relationships, simple baselines</h2>
+            <span class="rule"></span>
+            <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
+            <p class="caption">Load consumption profile on a backbone of the electricity network of Rome. The temperature-load relation is nonlinear; copying yesterday is the first baseline to beat.</p>
+          </section>
+        </section>
+
         <section class="chapter-stack" data-section="problem-framing" aria-label="Problem framing">
           <section id="memory-motivation">
             <div class="kicker">Motivation</div>
@@ -103,16 +150,6 @@
                 <div class="fragment" data-fragment-index="2"><strong><em>u</em><sub>t-W:t+H</sub></strong><span>known covariates</span></div>
                 <div class="fragment" data-fragment-index="3"><strong><em>a</em></strong><span>static metadata</span></div>
               </div>
-              <div class="memory-strip fragment" data-fragment-index="4">
-                <span class="memory-strip-label">Architecture question</span>
-                <p>How should the model represent the past?</p>
-                <ul>
-                  <li>fixed lags or windows</li>
-                  <li>recurrent hidden state</li>
-                  <li>learned temporal filters</li>
-                  <li>attention or state-space scan</li>
-                </ul>
-              </div>
             </div>
           </section>
 
@@ -134,51 +171,15 @@
                 <p class="equation compact">\(\widehat{X}^{\,i}_{t:t+H}=\mathcal{F}_{\theta}(X^{\,i}_{t-W:t}, a^{\,i})\)</p>
               </div>
             </div>
-            <p class="note fragment">Remote sensing usually favors global models.</p>
-          </section>
-
-          <section id="electricity-baselines" class="electricity-slide">
-            <div class="kicker">Motivating example</div>
-            <h2>Nonlinear relationships, simple baselines</h2>
-            <span class="rule"></span>
-            <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
-            <p class="caption">Load consumption profile on a backbone of the electricity network of Rome. The temperature-load relation is nonlinear; copying yesterday is the first baseline to beat.</p>
-          </section>
-
-          <section id="remote-sensing-sequences" class="eo-sequence-slide">
-            <div class="kicker">Earth observation example</div>
-            <h2>NDVI time series</h2>
-            <span class="rule"></span>
-
-            <div class="ndvi-motivation-layout">
-              <div class="ndvi-explainer">
-                <p class="lead">
-                  <strong>Normalized Difference Vegetation Index (NDVI)</strong> quantifies vegetation by measuring the difference between near-infrared (which vegetation strongly reflects) and red light (which vegetation absorbs).
-                </p>
-
-                <div class="ndvi-signal-grid">
-                  <div><strong>Phenology</strong><span>green-up, peak season, senescence</span></div>
-                  <div><strong>Productivity</strong><span>vegetation vigor and seasonal amplitude</span></div>
-                  <div><strong>Agriculture</strong><span>crop calendars, management, illegal ploughing</span></div>
-                  <div><strong>Disturbance</strong><span>deforestation, wild fires, abrupt vegetation loss</span></div>
-                </div>
-              </div>
-
-              <div class="ndvi-example-grid">
-                <div class="card figure-card ndvi-example-card ndvi-series-card">
-                  <img class="media" src="assets/remote_sensing/esa_ndvi_timeseries.png" alt="NDVI time series from Sentinel-2 images">
-                  <p class="caption">
-                    NDVI time series reveal vegetation dynamics that single images miss.
-                  </p>
-                </div>
-
-                <div class="card figure-card ndvi-example-card ndvi-map-card">
-                  <img class="media" src="assets/remote_sensing/sa_modis.gif" alt="Animated MODIS NDVI change over South Africa across a single year">
-                  <p class="caption">
-                    NDVI change over South Africa across a single year.
-                  </p>
-                </div>
-              </div>
+            <div class="memory-strip fragment">
+              <span class="memory-strip-label">Architecture question</span>
+              <p>How should the model represent the past?</p>
+              <ul>
+                <li>fixed lags or windows</li>
+                <li>recurrent hidden state</li>
+                <li>learned temporal filters</li>
+                <li>attention or state-space scan</li>
+              </ul>
             </div>
           </section>
 
@@ -211,7 +212,7 @@
 
           <section id="mlp-window-operator">
             <div class="kicker">Nonlinear windows</div>
-            <h2>An MLP is a learned window operator</h2>
+            <h2>MLP: a trainable, nonlinear window operator</h2>
             <span class="rule"></span>
             <div class="two-col wide-right">
               <div>
@@ -219,9 +220,9 @@
               </div>
               <div>
                 <ul>
-                  <li class="fragment">Fixed-size input</li>
-                  <li class="fragment">Nonlinear lag interactions</li>
-                  <li class="fragment">Many examples from one long series</li>
+                  <li class="fragment"><strong>Task:</strong> Learn the map \(X_{t-W:t} \mapsto \widehat{X}_{t:t+H}\)</li>
+                  <li class="fragment"><strong>Model:</strong> hidden layers learn nonlinear relationships among lags and variables</li>
+                  <li class="fragment"><strong>Batching:</strong> many window-target pairs are stacked and processed in parallel</li>
                 </ul>
               </div>
             </div>
@@ -229,8 +230,11 @@
 
           <section id="window-memory-choice" class="memory-choice-slide">
             <div class="kicker">Limitation</div>
-            <h2>What should <em>P</em> be?</h2>
+            <h2>What should <em>\( H \)</em> be?</h2>
             <span class="rule"></span>
+            <div class="card figure-card memory-choice-figure">
+              <img class="media" src="assets/figures/sequence-media/word_pred.gif" alt="Different sentences require different memory lengths">
+            </div>
             <div class="memory-choice-layout">
               <div class="memory-choice-text">
                 <ul class="memory-choice-list">
@@ -242,16 +246,13 @@
                   Can the model learn its own memory?
                 </p>
               </div>
-              <div class="card figure-card memory-choice-figure">
-                <img class="media" src="assets/figures/sequence-media/word_pred.gif" alt="Different sentences require different memory lengths">
-              </div>
             </div>
           </section>
         </section>
 
         <section class="chapter-stack" data-section="recurrent-state" aria-label="Recurrent state and reservoir computing">
           <section id="rnn-hidden-state" class="rnn-slide">
-            <div class="kicker">RNN idea</div>
+            <div class="kicker">Recurrent Neural Networks</div>
             <h2>A hidden state carries context</h2>
             <span class="rule"></span>
             <div class="two-col wide-right">
