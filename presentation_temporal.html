@@ -636,7 +636,7 @@
             <div class="kicker">Temporal convolutional networks</div>
             <h2>Stacked filters build long temporal features</h2>
             <span class="rule"></span>
-            <div class="two-col wide-left">
+            <div class="two-col wide-left token-input-layout">
               <svg class="diagram tcn-diagram" viewBox="0 0 660 420" role="img" aria-label="Temporal convolution receptive field expands with depth">
                 <defs>
                   <marker id="arrowhead-tcn-purple" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
@@ -1003,125 +1003,234 @@
             <p class="callout attention-callout fragment">
               Attention selects observations by content; time encodings tell it when they occurred.
             </p>
-
-            <aside class="notes">
-              Spend little time on the full Transformer architecture. The important idea here is retrieval.
-              A token computes scores against other tokens, normalizes those scores, and combines the values.
-              For forecasting, the mask must remove future observations. For sequence classification, the model
-              may be allowed to attend bidirectionally over the observed sequence.
-            </aside>
           </section>
 
           <section id="transformer-tradeoffs">
-            <div class="kicker">Transformers</div>
-            <h2>What changes relative to windows, RNNs, and TCNs?</h2>
+            <div class="kicker">Repeated self-attention turns observations into contextual tokens</div>
+            <h2>Temporal Transformer</h2>
             <span class="rule"></span>
 
-            <p class="lead">
-              A Transformer does not scan or compress the sequence first: it builds direct token-to-token links.
+            <p class="lead temporal-transformer-lead">
+              Each observation becomes a token. Repeated self-attention lets tokens gather information
+              from relevant dates, and the final token set is pooled to make a prediction.
             </p>
 
-            <table class="comparison architecture-table">
-              <thead>
-                <tr>
-                  <th>Model</th>
-                  <th>How it uses the past</th>
-                  <th>Main limitation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>MLP window</strong></td>
-                  <td>Dense map from fixed lags</td>
-                  <td>Choose \(W\); lag positions are fixed</td>
-                </tr>
-                <tr>
-                  <td><strong>RNN / LSTM</strong></td>
-                  <td>Compress past into \(h_t\)</td>
-                  <td>Sequential bottleneck; long credit paths</td>
-                </tr>
-                <tr>
-                  <td><strong>TCN</strong></td>
-                  <td>Apply local filters over a receptive field</td>
-                  <td>Context set by depth and dilation</td>
-                </tr>
-                <tr>
-                  <td><strong>Transformer</strong></td>
-                  <td>Retrieve directly from allowed tokens</td>
-                  <td>\(T^2\) attention; needs time and masks</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="card temporal-transformer-card">
+              <svg class="diagram temporal-transformer-diagram" viewBox="0 0 1040 450" role="img" aria-label="Temporal Transformer pipeline from observation tokens through repeated self-attention blocks to contextual tokens and prediction">
+                <rect class="tt-panel" x="14" y="20" width="312" height="410"></rect>
+                <rect class="tt-panel" x="364" y="20" width="332" height="410"></rect>
+                <rect class="tt-panel" x="734" y="20" width="292" height="410"></rect>
 
-            <p class="callout fragment">
-              Best fit: non-local dependencies, irregular observations, and tasks where different dates matter for different examples.
-            </p>
+                <!-- Stage 1 -->
+                <g transform="translate(38 52)">
+                  <text class="tt-stage-title" x="130" y="22">1. observation tokens</text>
 
-            <p class="source">
-              Transformer architecture: Vaswani et al., 2017.
-            </p>
+                  <g transform="translate(0 112)">
+                    <g transform="translate(0 0)">
+                      <rect class="tt-token" x="0" y="0" width="56" height="46"></rect>
+                      <text class="tt-label" x="28" y="27">x<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+                      <text class="tt-small" x="28" y="67">t<tspan baseline-shift="sub" font-size="8">1</tspan></text>
+                    </g>
+                    <g transform="translate(68 0)">
+                      <rect class="tt-token" x="0" y="0" width="56" height="46"></rect>
+                      <text class="tt-label" x="28" y="27">x<tspan baseline-shift="sub" font-size="10">2</tspan></text>
+                      <text class="tt-small" x="28" y="67">t<tspan baseline-shift="sub" font-size="8">2</tspan></text>
+                    </g>
+                    <g transform="translate(136 0)">
+                      <rect class="tt-token" x="0" y="0" width="56" height="46"></rect>
+                      <text class="tt-label" x="28" y="27">x<tspan baseline-shift="sub" font-size="10">3</tspan></text>
+                      <text class="tt-small" x="28" y="67">t<tspan baseline-shift="sub" font-size="8">3</tspan></text>
+                    </g>
+                    <g transform="translate(204 0)">
+                      <rect class="tt-token" x="0" y="0" width="56" height="46"></rect>
+                      <text class="tt-label" x="28" y="27">x<tspan baseline-shift="sub" font-size="10">4</tspan></text>
+                      <text class="tt-small" x="28" y="67">t<tspan baseline-shift="sub" font-size="8">4</tspan></text>
+                    </g>
+                  </g>
+
+                  <g transform="translate(20 232)">
+                    <rect class="tt-chip" x="0" y="0" width="220" height="54"></rect>
+                    <text class="tt-label" x="110" y="22">signal + time encoding</text>
+                    <text class="tt-small" x="110" y="40">mask controls allowed links</text>
+                  </g>
+                </g>
+
+                <g class="tt-connector" transform="translate(331 200)">
+                  <line x1="0" y1="0" x2="18" y2="0"></line>
+                  <polygon points="18,-6 32,0 18,6"></polygon>
+                </g>
+
+                <!-- Stage 2 -->
+                <g transform="translate(390 52)">
+                  <text class="tt-stage-title" x="140" y="22">2. repeated self-attention blocks</text>
+
+                  <g class="tt-block-group" transform="translate(0 88)">
+                    <rect class="tt-block" x="0" y="0" width="280" height="104"></rect>
+                    <text class="tt-title" x="140" y="30">Transformer block</text>
+
+                    <rect class="tt-subblock attention" x="22" y="62" width="132" height="30"></rect>
+                    <text class="tt-subblock-label" x="88" y="80">self-attention</text>
+
+                    <line class="tt-inner-line" x1="166" y1="77" x2="194" y2="77"></line>
+                    <polygon class="tt-inner-head" points="194,71 206,77 194,83"></polygon>
+
+                    <rect class="tt-subblock" x="214" y="62" width="44" height="30"></rect>
+                    <text class="tt-subblock-label" x="236" y="80">MLP</text>
+                  </g>
+
+                  <g class="tt-connector" transform="translate(140 202)">
+                    <line x1="0" y1="0" x2="0" y2="30"></line>
+                    <polygon points="-7,30 0,44 7,30"></polygon>
+                  </g>
+                  <text class="tt-small tt-repeat" x="174" y="225">repeat L times</text>
+
+                  <g class="tt-block-group" transform="translate(0 252)">
+                    <rect class="tt-block" x="0" y="0" width="280" height="104"></rect>
+                    <text class="tt-title" x="140" y="30">Transformer block</text>
+
+                    <rect class="tt-subblock attention" x="22" y="62" width="132" height="30"></rect>
+                    <text class="tt-subblock-label" x="88" y="80">self-attention</text>
+
+                    <line class="tt-inner-line" x1="166" y1="77" x2="194" y2="77"></line>
+                    <polygon class="tt-inner-head" points="194,71 206,77 194,83"></polygon>
+
+                    <rect class="tt-subblock" x="214" y="62" width="44" height="30"></rect>
+                    <text class="tt-subblock-label" x="236" y="80">MLP</text>
+                  </g>
+                </g>
+
+                <g class="tt-connector" transform="translate(701 200)">
+                  <line x1="0" y1="0" x2="18" y2="0"></line>
+                  <polygon points="18,-6 32,0 18,6"></polygon>
+                </g>
+
+                <!-- Stage 3 -->
+                <g transform="translate(756 52)">
+                  <text class="tt-stage-title" x="120" y="22">3. contextual tokens</text>
+
+                  <g transform="translate(0 110)">
+                    <g transform="translate(0 0)">
+                      <rect class="tt-token-ctx" x="0" y="0" width="52" height="46"></rect>
+                      <text class="tt-label" x="26" y="27">z<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+                    </g>
+                    <g transform="translate(62 0)">
+                      <rect class="tt-token-ctx" x="0" y="0" width="52" height="46"></rect>
+                      <text class="tt-label" x="26" y="27">z<tspan baseline-shift="sub" font-size="10">2</tspan></text>
+                    </g>
+                    <g transform="translate(124 0)">
+                      <rect class="tt-token-ctx" x="0" y="0" width="52" height="46"></rect>
+                      <text class="tt-label" x="26" y="27">z<tspan baseline-shift="sub" font-size="10">3</tspan></text>
+                    </g>
+                    <g transform="translate(186 0)">
+                      <rect class="tt-token-ctx" x="0" y="0" width="52" height="46"></rect>
+                      <text class="tt-label" x="26" y="27">z<tspan baseline-shift="sub" font-size="10">4</tspan></text>
+                    </g>
+                  </g>
+
+                  <text class="tt-small" x="119" y="200">tokens now include temporal context</text>
+
+                  <g class="tt-blue-connector" transform="translate(119 224)">
+                    <line x1="0" y1="0" x2="0" y2="40"></line>
+                    <polygon points="-7,40 0,54 7,40"></polygon>
+                  </g>
+
+                  <g transform="translate(0 308)">
+                    <rect class="tt-pool" x="0" y="0" width="112" height="48"></rect>
+                    <text class="tt-label" x="56" y="29">predict</text>
+
+                    <g class="tt-blue-connector" transform="translate(126 24)">
+                      <line x1="0" y1="0" x2="38" y2="0"></line>
+                      <polygon points="38,-7 52,0 38,7"></polygon>
+                    </g>
+
+                    <rect class="tt-output" x="180" y="0" width="82" height="48"></rect>
+                    <text class="tt-label" x="221" y="29">ŷ</text>
+                  </g>
+                </g>
+              </svg>
+            </div>
 
             <aside class="notes">
-              This is the main comparison slide. Do not say Transformers are always better.
-              Say that they change the inductive bias. MLPs assume a fixed window, RNNs assume
-              the past can be summarized in a state, and TCNs assume useful temporal motifs can be
-              detected locally and composed. Attention assumes that useful context can be selected
-              by learned pairwise relevance. The price is the pairwise attention matrix and the need
-              to encode time/order explicitly.
+              The key message is simple.
+
+              Step 1: each observation becomes a token with signal and time information.
+
+              Step 2: repeated Transformer blocks apply self-attention and an MLP.
+              Self-attention lets each token look at other relevant dates.
+
+              Step 3: after several blocks, each token becomes contextual: it still refers to one date,
+              but now includes information gathered from other useful dates.
+              A final pooling or CLS readout makes the sequence prediction.
+
+              Compared with previous models:
+              MLP uses fixed lags,
+              RNN compresses into a running state,
+              TCN scans local motifs,
+              Transformer builds direct token-to-token interactions.
             </aside>
           </section>
 
           <section id="satellite-attention-inputs">
-            <div class="kicker">Irregular data</div>
-            <h2>Tokens need time and validity</h2>
+            <div class="kicker">Temporal sequences</div>
+            <h2>Attention needs time and availability information</h2>
             <span class="rule"></span>
 
-            <div class="two-col wide-left token-layout">
+            <div class="two-col wide-left">
               <div>
                 <p class="lead">
-                  Each observation becomes a token: what was measured, when it was observed, and whether attention may use it.
+                  A temporal Transformer does not only need observations.
+                  It also needs to know when they happened and whether they should be used.
                 </p>
 
-                <ul>
-                  <li class="fragment"><strong>Signal:</strong> bands, indices, image features</li>
-                  <li class="fragment"><strong>Time:</strong> date, day-of-year, \(\Delta t\)</li>
-                  <li class="fragment"><strong>Mask:</strong> Unavailable regions and future information</li>
+                <ul class="token-input-list">
+                  <li><strong>Signal:</strong> measurements, indices, or learned features</li>
+                  <li><strong>Time:</strong> date, lag, phase, or time gap</li>
+                  <li><strong>Availability:</strong> missing, padded, unreliable, or forbidden tokens</li>
                 </ul>
+
               </div>
 
               <div class="card sequence-card">
-                <h3>Example sequence</h3>
+                <h3>Example temporal sequence</h3>
 
-                <div class="temporal-strip labeled attention-sequence" aria-label="Satellite observations with cloud masks and peak-season signal">
+                <div class="temporal-strip labeled attention-sequence" aria-label="Temporal sequence with available, informative, and unavailable observations">
                   <span class="usable">Jan</span>
                   <span class="usable">Feb</span>
-                  <span class="missing"><strong>Mar</strong><em>cloud</em></span>
-                  <span class="usable">Apr</span>
+                  <span class="missing"><strong>Mar</strong><em>gap</em></span>
+                  <span class="usable"><strong>Apr</strong><em>low</em></span>
                   <span class="usable">May</span>
-                  <span class="peak peak-a"><strong>Jun</strong><em>peak</em></span>
-                  <span class="peak peak-b"><strong>Jul</strong><em>peak</em></span>
-                  <span class="missing"><strong>Aug</strong><em>cloud</em></span>
-                  <span class="usable">Sep</span>
+                  <span class="peak peak-a"><strong>Jun</strong><em>key</em></span>
+                  <span class="peak peak-b"><strong>Jul</strong><em>key</em></span>
+                  <span class="missing"><strong>Aug</strong><em>gap</em></span>
+                  <span class="usable"><strong>Sep</strong><em>low</em></span>
                   <span class="usable">Oct</span>
                   <span class="usable">Nov</span>
                   <span class="usable">Dec</span>
                 </div>
 
                 <div class="sequence-legend" aria-hidden="true">
-                  <span><i class="usable"></i>clean</span>
-                  <span><i class="peak"></i>peak signal</span>
-                  <span><i class="missing"></i>masked</span>
+                  <span><i class="usable"></i>available</span>
+                  <span><i class="peak"></i>informative</span>
+                  <span><i class="missing"></i>unavailable</span>
                 </div>
 
                 <p class="small">
-                  Clean peak-season observations stay available; cloudy dates are masked.
+                  The model ignores unavailable dates and can focus attention on the most informative ones.
                 </p>
               </div>
             </div>
 
-            <p class="callout token-time-callout fragment">
-              Without time encoding, attention sees a set of observations, not a temporal sequence.
-            </p>
+            <aside class="notes">
+              Keep this slide separate from the previous Transformer slide.
+
+              Slide 27 explains the architecture: tokens pass through repeated self-attention blocks.
+              This slide explains the input representation: what information each temporal token needs.
+
+              The important message is general, not remote-sensing-specific:
+              some observations may be unavailable, unreliable, padded, or not allowed because they are in the future.
+              Other observations may be available but not very informative. These do not need to be masked;
+              attention can simply learn to give them low weight.
+            </aside>
           </section>
         </section>
 
@@ -1141,8 +1250,8 @@
           </section>
 
           <section id="continuous-time-dynamics">
-            <div class="kicker">State space models</div>
-            <h2>Memory as continuous dynamics</h2>
+            <div class="kicker">Memory as continuous dynamics</div>
+            <h2>Learning rates of changes</h2>
             <span class="rule"></span>
 
             <div class="two-col wide-left continuous-layout">
@@ -1230,8 +1339,8 @@
           </section>
 
           <section id="ssm-intuition">
-            <div class="kicker">State space models</div>
-            <h2>Sampling turns dynamics into state updates</h2>
+            <div class="kicker">Sampling turns dynamics into state updates</div>
+            <h2>State space models</h2>
             <span class="rule"></span>
 
             <div class="two-col wide-left ssm-discrete-layout">
@@ -1374,8 +1483,8 @@
           </section>
 
           <section id="mamba-scan">
-            <div class="kicker">S4 and Mamba</div>
-            <h2>Modern SSMs make state memory practical</h2>
+            <div class="kicker">Modern SSMs make state memory practical</div>
+            <h2>S4 and Mamba</h2>
             <span class="rule"></span>
 
             <p class="lead">
@@ -1600,8 +1709,9 @@
             <h2>References</h2>
             <span class="rule"></span>
             <ul class="small references">
-              <li>Reservoir-computing examples adapted from course notebook media.</li>
-              <li>Selected schematics adapted from prior tutorial material.</li>
+              <li><a href="https://github.com/FilippoMB/python-time-series-handbook">Bianchi</a>, <em>Time Series Analysis with Python</em>, online handbook, 2024.</li>
+              <li>Bianchi, Maiorino, Kampffmeyer, Rizzi, and Jenssen, "Recurrent neural networks for short-term load forecasting: an overview and comparative analysis", Springer, 2017.</li>
+              <li>Bianchi, Scardapane, L&oslash;kse, and Jenssen, "Reservoir computing approaches for representation and classification of multivariate time series", IEEE Transactions on Neural Networks and Learning Systems, 32(5), 2169-2179, 2020.</li>
               <li><a href="https://doi.org/10.1145/3533382">Benidis et al.</a>, "Deep Learning for Time Series Forecasting", ACM Computing Surveys, 2022.</li>
               <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
               <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
