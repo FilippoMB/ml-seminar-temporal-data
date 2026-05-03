@@ -94,7 +94,7 @@
           </section>
 
           <section id="electricity-baselines" class="electricity-slide">
-            <div class="kicker">Motivating example</div>
+            <div class="kicker">When should we use deep learning?</div>
             <h2>Nonlinear relationships, simple baselines</h2>
             <span class="rule"></span>
             <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
@@ -104,7 +104,7 @@
 
         <section class="chapter-stack" data-section="problem-framing" aria-label="Problem framing">
           <section id="memory-motivation">
-            <div class="kicker">Motivation</div>
+            <div class="kicker">Main idea</div>
             <h2>Temporal data is about usable memory</h2>
             <span class="rule"></span>
             <div class="two-col wide-left tcn-layout">
@@ -113,9 +113,9 @@
                   The signal is often not in one observation, but in how observations change.
                 </p>
                 <ul>
-                  <li class="fragment"><strong>Horizon:</strong> what future or label?</li>
-                  <li class="fragment"><strong>Order:</strong> which past evidence matters?</li>
-                  <li class="fragment"><strong>Missingness:</strong> gaps, clouds, irregular dates</li>
+                  <li class="fragment"><strong>Future:</strong> what forecast horizon?</li>
+                  <li class="fragment"><strong>Past:</strong> how far back should we look?</li>
+                  <li class="fragment"><strong>Missingness:</strong> gaps, irregular samples</li>
                   <li class="fragment"><strong>Leakage:</strong> keep future information hidden</li>
                 </ul>
               </div>
@@ -130,7 +130,7 @@
 
           <section id="sequence-setup" class="setup-slide">
             <div class="kicker">Formal setup</div>
-            <h2>Window and horizon setup</h2>
+            <h2>Window and horizon</h2>
             <span class="rule"></span>
             <div class="setup-layout">
               <div class="equation setup-equation">
@@ -165,7 +165,7 @@
 
               <div class="setup-meta">
                 <div class="fragment" data-fragment-index="0"><strong><em>X</em><sub>t-W:t</sub></strong><span>observed window</span></div>
-                <div class="fragment" data-fragment-index="1"><strong><em>m</em><sub>t-W:t</sub></strong><span>validity / cloud mask</span></div>
+                <div class="fragment" data-fragment-index="1"><strong><em>m</em><sub>t-W:t</sub></strong><span>validity mask</span></div>
                 <div class="fragment" data-fragment-index="2"><strong><em>u</em><sub>t-W:t+H</sub></strong><span>known covariates</span></div>
                 <div class="fragment" data-fragment-index="3"><strong><em>a</em></strong><span>static metadata</span></div>
               </div>
@@ -205,7 +205,7 @@
 
         <section class="chapter-stack" data-section="fixed-windows" aria-label="Fixed windows">
           <section id="sliding-windows" class="window-slide" data-auto-animate>
-            <div class="kicker">Fixed windows</div>
+            <div class="kicker">Fixed past context</div>
             <h2>Sliding windows</h2>
             <span class="rule"></span>
             <div class="window-layout">
@@ -215,11 +215,13 @@
 	                  \widehat{X}_{t:t+H}=\mathcal{F}_{\theta}\left(X_{t-W:t}\right)
 	                  \]
 	                </div>
-                <div class="method-pills">
-                  <span class="fragment">Linear AR</span>
-                  <span class="fragment">Trees</span>
-                  <span class="fragment">SVMs</span>
-                  <span class="fragment">MLPs</span>
+                <div class="window-method-card">
+                  <ul>
+                    <li class="fragment">AR models</li>
+                    <li class="fragment">Regression trees / forests</li>
+                    <li class="fragment">SVMs</li>
+                    <li class="fragment">MLPs</li>
+                  </ul>
                 </div>
               </div>
               <div class="window-visual">
@@ -229,8 +231,8 @@
           </section>
 
           <section id="mlp-window-operator">
-            <div class="kicker">Nonlinear windows</div>
-            <h2>MLP: a trainable, nonlinear window operator</h2>
+            <div class="kicker">Nonlinear windowed approach</div>
+            <h2>MLP: a trainable, nonlinear function approximator</h2>
             <span class="rule"></span>
             <div class="two-col wide-right">
               <div>
@@ -247,8 +249,8 @@
           </section>
 
           <section id="window-memory-choice" class="memory-choice-slide">
-            <div class="kicker">Limitation</div>
-            <h2>What should <em>\( H \)</em> be?</h2>
+            <div class="kicker">Windowed approaches limitations</div>
+            <h2>What should <em>\( W \)</em> be?</h2>
             <span class="rule"></span>
             <div class="card figure-card memory-choice-figure">
               <img class="media" src="assets/figures/sequence-media/word_pred.gif" alt="Different sentences require different memory lengths">
@@ -312,15 +314,15 @@
                   <li class="fragment">Backpropagate through the chain</li>
                 </ul>
                 <p class="callout fragment">
-                  Memory helps, but training can be hard.
+                  Vanishing and exploding gradients make the training of RNNs challenging.
                 </p>
               </div>
             </div>
           </section>
 
           <section id="gated-recurrence" class="lstm-gates-slide">
-            <div class="kicker">Gated recurrence</div>
-            <h2>LSTM gates control memory</h2>
+            <div class="kicker">RNNs with gates control memory update and information flows</div>
+            <h2>LSTM with gates</h2>
             <span class="rule"></span>
             <div class="lstm-gate-segments">
               <article class="lstm-gate-segment">
@@ -336,7 +338,7 @@
                   </div>
                 </div>
               </article>
-              <article class="lstm-gate-segment">
+              <article class="lstm-gate-segment fragment" data-fragment-index="0">
                 <div class="lstm-gate-media">
                   <img src="assets/animations/input-gate.gif" alt="Input gate animation">
                 </div>
@@ -350,7 +352,7 @@
                   </div>
                 </div>
               </article>
-              <article class="lstm-gate-segment">
+              <article class="lstm-gate-segment fragment" data-fragment-index="1">
                 <div class="lstm-gate-media">
                   <img src="assets/animations/cell-state.gif" alt="Cell state update animation">
                 </div>
@@ -368,13 +370,13 @@
           </section>
 
           <section id="reservoir-readout" class="reservoir-slide">
-            <div class="kicker">Reservoir computing</div>
-            <h2>Echo State Networks</h2>
+            <div class="kicker">Reservoir computing and Echo State Networks</div>
+            <h2>Randomized RNNs</h2>
             <span class="rule"></span>
             <div class="two-col wide-right">
               <div>
                 <ul>
-                  <li class="fragment" data-fragment-index="0">Random recurrent (\(W_h\)) and input (\(W_i\)) weights</li>
+                  <li class="fragment" data-fragment-index="0">Randomized recurrent (\(W_h\)) and input (\(W_i\)) weights</li>
                   <li class="fragment" data-fragment-index="1">Train only the readout</li>
                   <li class="fragment" data-fragment-index="2">Large reservoir produces rich temporal features</li>
                   <li class="fragment" data-fragment-index="3">Readout select only the features useful for the task</li>
@@ -1416,17 +1418,6 @@
             <p class="source">
               S4: Gu, Goel, and Ré, 2021. Mamba: Gu and Dao, 2023.
             </p>
-
-            <aside class="notes">
-              This slide should be explained very simply. Left: a basic state-space model carries a
-              compact hidden state through time. That is memory-efficient, but naturally sequential.
-              Middle: S4 keeps the same state-space idea, but uses structure so that training can be
-              done efficiently like a long convolution. Right: Mamba adds selectivity. The current
-              input controls how the state is updated, so the model can decide what to keep, what to
-              write, and what to ignore. The point is not the algebra. Like an RNN, it has a state;
-              unlike attention, it does not build all pairwise token interactions; and like a TCN, it
-              can model long temporal effects efficiently.
-            </aside>
           </section>
         </section>
 
@@ -1451,7 +1442,7 @@
                   <td>Fixed explicit lags</td>
                   <td>High</td>
                   <td>Baselines; engineered features</td>
-                  <td>Choosing \(P\)</td>
+                  <td>Choosing window size \(W\)</td>
                 </tr>
                 <tr>
                   <td><strong>RNN/GRU/LSTM</strong></td>
@@ -1471,14 +1462,14 @@
                   <td><strong>TCN</strong></td>
                   <td>Receptive field by depth/dilation</td>
                   <td>High</td>
-                  <td>Phenology; local motifs</td>
+                  <td>Recurring patterns; local motifs</td>
                   <td>Context by design</td>
                 </tr>
                 <tr>
                   <td><strong>Transformer</strong></td>
                   <td>Direct attention over observed dates</td>
                   <td>High</td>
-                  <td>Irregular dates; masks</td>
+                  <td>Irregular and missing data</td>
                   <td>Memory cost</td>
                 </tr>
                 <tr>

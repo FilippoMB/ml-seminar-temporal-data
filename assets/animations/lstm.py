@@ -467,7 +467,7 @@ def draw_token(
     shadow = with_alpha(PALETTE["shadow"], max(0, int(alpha * 0.10)))
     canvas.ellipse((center[0] + 1.4, center[1] + 2.0), radius + 1.2, shadow)
     canvas.ellipse(center, radius, with_alpha(fill, alpha), outline=with_alpha(outline, alpha), width=3)
-    token_text_size = max(12, int(round(radius * 0.78))) if len(label) < 5 else max(10, int(round(radius * 0.62)))
+    token_text_size = max(17, int(round(radius * 1.12))) if len(label) < 5 else max(13, int(round(radius * 0.78)))
     canvas.text(center, label, family="serif_bold_italic", size=token_text_size, fill=with_alpha(PALETTE["ink"], alpha))
     if label_offset is not None:
         lx = center[0] + label_offset[0]
@@ -520,7 +520,7 @@ def draw_static_lstm(canvas: Canvas, t: float, animation: str) -> None:
     draw_gate(
         canvas,
         (260, 266),
-        PALETTE["rose_fill"],
+        PALETTE["rose_soft"],
         PALETTE["rose_edge"],
         "f_t",
         active=fade_between(t, 0.20, 0.42) if animation == "forget" else 0.0,
@@ -540,7 +540,7 @@ def draw_static_lstm(canvas: Canvas, t: float, animation: str) -> None:
         (508, 266),
         PALETTE["blue_fill"],
         PALETTE["blue_edge"],
-        "g_t",
+        "Ĉ_t",
         active=fade_between(t, 0.54, 0.72) if animation == "input" else 0.0,
         kind="tanh",
         label_offset=(-42, 53),
@@ -554,7 +554,15 @@ def draw_static_lstm(canvas: Canvas, t: float, animation: str) -> None:
         active=fade_between(t, 0.46, 0.64) if animation == "cell" else 0.0,
         label_offset=(-42, 53),
     )
-    draw_gate(canvas, (735, 190), PALETTE["blue_fill"], PALETTE["blue_edge"], "", active=0.0, kind="tanh")
+    draw_gate(
+        canvas,
+        (735, 190),
+        PALETTE["blue_fill"],
+        PALETTE["blue_edge"],
+        "",
+        active=fade_between(t, 0.56, 0.76) if animation == "cell" else 0.0,
+        kind="tanh",
+    )
 
     canvas.math_label((66, top_y - 30), "C", "t-1", size=27, anchor="lm")
     canvas.math_label((66, hidden_y - 31), "h", "t-1", size=26, anchor="lm")
@@ -696,7 +704,7 @@ def draw_input_animation_state(canvas: Canvas, t: float) -> None:
     draw_token(
         canvas,
         route_point(g_route, interval(t, 0.70, 0.84)),
-        "g",
+        "Ĉ",
         PALETTE["blue_fill"],
         PALETTE["blue_edge"],
         radius=19,

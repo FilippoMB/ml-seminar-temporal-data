@@ -1145,7 +1145,7 @@
 }
 
 .window-layout {
-  align-items: center;
+  align-items: start;
   display: grid;
   gap: 24px;
   grid-template-columns: 0.72fr 1.28fr;
@@ -1158,15 +1158,36 @@
 
 .window-equation {
   font-size: 13pt;
+  margin-top: 0;
 }
 
-.method-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.window-method-card {
+  background: #fff;
+  border: 1px solid var(--temporal-line);
+  border-left: 5px solid var(--temporal-green);
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 13px 16px 13px 17px;
+}
+
+.window-method-card ul {
+  color: var(--temporal-ink);
+  display: grid;
+  font-size: 14pt;
+  gap: 7px;
+  line-height: 1.15;
+  margin: 0 0 0 1em;
+  padding: 0;
+}
+
+.window-method-card li {
+  font-size: inherit;
+  font-weight: 650;
+  margin: 0;
 }
 
 .window-visual .media {
+  margin-top: 4px;
   max-height: 410px;
   width: 100%;
 }
