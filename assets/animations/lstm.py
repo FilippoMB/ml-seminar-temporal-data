@@ -727,9 +727,10 @@ def draw_cell_animation_state(canvas: Canvas, t: float) -> None:
     h_route = [(72, 344), (596, 344), (632, 308), (632, 278)]
     x_route = [(162, 430), (162, 344), (616, 344), (652, 308), (652, 278)]
     o_route = [(642, 266), (735, 266)]
-    cell_to_output_mul_route = [(548, 146), (735, 146), (735, 190), (735, 266)]
+    cell_to_split_route = [(548, 146), (735, 146)]
+    cell_to_output_mul_route = [(735, 146), (735, 190), (735, 266)]
+    cell_to_exit_route = [(735, 146), (850, 146)]
     hidden_route = [(735, 285), (735, 344), (850, 344)]
-    cell_output_route = [(548, 146), (850, 146)]
 
     h_progress = interval(t, 0.03, 0.48)
     x_progress = interval(t, 0.06, 0.50)
@@ -763,10 +764,21 @@ def draw_cell_animation_state(canvas: Canvas, t: float) -> None:
         alpha=o_alpha,
     )
 
-    c_branch_alpha = int(248 * (1 - interval(t, 0.78, 0.86)))
+    pre_split_alpha = int(248 * (1 - interval(t, 0.58, 0.66)))
     draw_token(
         canvas,
-        route_point(cell_to_output_mul_route, interval(t, 0.30, 0.80)),
+        route_point(cell_to_split_route, interval(t, 0.20, 0.58)),
+        "C",
+        PALETTE["gold_fill"],
+        PALETTE["gold_edge"],
+        radius=19,
+        alpha=pre_split_alpha,
+    )
+
+    c_branch_alpha = int(248 * interval(t, 0.58, 0.66) * (1 - interval(t, 0.78, 0.86)))
+    draw_token(
+        canvas,
+        route_point(cell_to_output_mul_route, interval(t, 0.58, 0.80)),
         "C",
         PALETTE["gold_fill"],
         PALETTE["gold_edge"],
@@ -785,10 +797,10 @@ def draw_cell_animation_state(canvas: Canvas, t: float) -> None:
         alpha=hidden_alpha,
     )
 
-    cell_out_alpha = int(248 * interval(t, 0.82, 0.90) * (1 - interval(t, 0.99, 1.0)))
+    cell_out_alpha = int(248 * interval(t, 0.58, 0.66) * (1 - interval(t, 0.99, 1.0)))
     draw_token(
         canvas,
-        route_point(cell_output_route, interval(t, 0.86, 0.99)),
+        route_point(cell_to_exit_route, interval(t, 0.88, 0.99)),
         "C",
         PALETTE["gold_fill"],
         PALETTE["gold_edge"],
