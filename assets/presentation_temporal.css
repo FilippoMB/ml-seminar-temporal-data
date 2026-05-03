@@ -2742,23 +2742,33 @@
 }
 
 .temporal-transformer-diagram .tt-token {
+  animation: transformer-flow-primary 4.4s ease-in-out infinite;
   fill: #e8f7fb;
   stroke: #2b92ac;
   stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
   rx: 8px;
 }
 
 .temporal-transformer-diagram .tt-token-ctx {
+  animation: transformer-flow-green 4.4s ease-in-out infinite;
+  animation-delay: 2.3s;
   fill: var(--temporal-green-soft);
   stroke: var(--temporal-green);
   stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
   rx: 8px;
 }
 
 .temporal-transformer-diagram .tt-chip {
+  animation: transformer-flow-primary 4.4s ease-in-out infinite;
   fill: #eef8fb;
   stroke: #2b92ac;
   stroke-width: 1.8;
+  transform-box: fill-box;
+  transform-origin: center;
   rx: 10px;
 }
 
@@ -2766,7 +2776,19 @@
   fill: var(--temporal-purple-soft);
   stroke: var(--temporal-purple);
   stroke-width: 2.2;
+  transform-box: fill-box;
+  transform-origin: center;
   rx: 12px;
+}
+
+.temporal-transformer-diagram .tt-block.block-1 {
+  animation: transformer-flow-purple 4.4s ease-in-out infinite;
+  animation-delay: 0.78s;
+}
+
+.temporal-transformer-diagram .tt-block.block-2 {
+  animation: transformer-flow-purple 4.4s ease-in-out infinite;
+  animation-delay: 1.52s;
 }
 
 .temporal-transformer-diagram .tt-title {
@@ -2835,16 +2857,24 @@
 }
 
 .temporal-transformer-diagram .tt-pool {
+  animation: transformer-flow-orange 4.4s ease-in-out infinite;
+  animation-delay: 2.96s;
   fill: var(--temporal-orange-soft);
   stroke: var(--temporal-orange);
   stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
   rx: 9px;
 }
 
 .temporal-transformer-diagram .tt-output {
+  animation: transformer-flow-green 4.4s ease-in-out infinite;
+  animation-delay: 3.46s;
   fill: var(--temporal-green-soft);
   stroke: var(--temporal-green);
   stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
   rx: 9px;
 }
 
@@ -2854,6 +2884,50 @@
   }
   20%, 42% {
     filter: drop-shadow(0 0 5px rgba(113, 103, 154, 0.45));
+  }
+}
+
+@keyframes transformer-flow-primary {
+  0%, 18%, 100% {
+    filter: none;
+    transform: scale(1);
+  }
+  5%, 12% {
+    filter: drop-shadow(0 0 7px rgba(43, 146, 172, 0.34));
+    transform: scale(1.055);
+  }
+}
+
+@keyframes transformer-flow-purple {
+  0%, 18%, 100% {
+    filter: none;
+    transform: scale(1);
+  }
+  5%, 12% {
+    filter: drop-shadow(0 0 8px rgba(117, 104, 155, 0.36));
+    transform: scale(1.045);
+  }
+}
+
+@keyframes transformer-flow-green {
+  0%, 18%, 100% {
+    filter: none;
+    transform: scale(1);
+  }
+  5%, 12% {
+    filter: drop-shadow(0 0 7px rgba(79, 138, 91, 0.34));
+    transform: scale(1.055);
+  }
+}
+
+@keyframes transformer-flow-orange {
+  0%, 18%, 100% {
+    filter: none;
+    transform: scale(1);
+  }
+  5%, 12% {
+    filter: drop-shadow(0 0 7px rgba(183, 119, 25, 0.32));
+    transform: scale(1.055);
   }
 }
 
