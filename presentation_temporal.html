@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
-    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260429-polish">
+    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260503-section-titles">
   </head>
   <body>
     <div class="reveal">
@@ -37,6 +37,20 @@
         </section>
 
         <section class="chapter-stack" data-section="motivating-examples" aria-label="Motivating examples">
+          <section id="section-introductory-examples" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">01</div>
+              <div class="section-title-copy">
+                <div class="kicker">Time Turns Observations into Signals</div>
+                <h2>Introductory examples</h2>
+                <span class="rule"></span>
+                <p>
+                  NDVI, floods, and electricity demand.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="remote-sensing-sequences" class="eo-sequence-slide">
             <div class="kicker">Earth observation example</div>
             <h2>NDVI time series</h2>
@@ -103,6 +117,20 @@
         </section>
 
         <section class="chapter-stack" data-section="problem-framing" aria-label="Problem framing">
+          <section id="section-general-deep-learning-models" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">02</div>
+              <div class="section-title-copy">
+                <div class="kicker">What Should a Model Remember?</div>
+                <h2>Deep learning for temporal data</h2>
+                <span class="rule"></span>
+                <p>
+                  Definitions and approach families.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="memory-motivation">
             <div class="kicker">Main idea</div>
             <h2>Temporal data is about usable memory</h2>
@@ -204,6 +232,20 @@
         </section>
 
         <section class="chapter-stack" data-section="fixed-windows" aria-label="Fixed windows">
+          <section id="section-windowed-approaches" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">03</div>
+              <div class="section-title-copy">
+                <div class="kicker">Learn from a Fixed Slice of the Past</div>
+                <h2>Windowed approaches</h2>
+                <span class="rule"></span>
+                <p>
+                  Sliding window and MLP.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="sliding-windows" class="window-slide" data-auto-animate>
             <div class="kicker">Fixed past context</div>
             <h2>Sliding windows</h2>
@@ -240,7 +282,7 @@
               </div>
               <div>
                 <ul>
-                  <li class="fragment"><strong>Task:</strong> Learn the map \(X_{t-W:t} \mapsto \widehat{X}_{t:t+H}\)</li>
+                  <li class="fragment"><strong>Task:</strong> Learn the map \(X_{t-W:t} \mapsto \widehat{X}_{t+H}\)</li>
                   <li class="fragment"><strong>Model:</strong> hidden layers learn nonlinear relationships among lags and variables</li>
                   <li class="fragment"><strong>Batching:</strong> many window-target pairs are stacked and processed in parallel</li>
                 </ul>
@@ -271,6 +313,20 @@
         </section>
 
         <section class="chapter-stack" data-section="recurrent-state" aria-label="Recurrent state and reservoir computing">
+          <section id="section-recurrent-state" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">04</div>
+              <div class="section-title-copy">
+                <div class="kicker">Variable context windows</div>
+                <h2>Recurrent models</h2>
+                <span class="rule"></span>
+                <p>
+                  RNNs, LSTMs, and Reservoir Computing.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="rnn-hidden-state" class="rnn-slide">
             <div class="kicker">Recurrent Neural Networks</div>
             <h2>A hidden state carries context</h2>
@@ -278,20 +334,20 @@
             <div class="rnn-layout">
               <div class="rnn-explainer">
                 <div class="rnn-step-list">
-                  <div class="rnn-step fragment">
+                  <div class="rnn-step fragment" data-fragment-index="0">
                     <strong>Read \(x_t\)</strong>
                     <span>consume the next observation in the sequence</span>
                   </div>
-                  <div class="rnn-step fragment">
+                  <div class="rnn-step fragment" data-fragment-index="1">
                     <strong>Update \(h_t\)</strong>
                     <span>combine current input with the previous memory \(h_{t-1}\)</span>
                   </div>
-                  <div class="rnn-step fragment">
+                  <div class="rnn-step fragment" data-fragment-index="2">
                     <strong>Predict \(y_t\)</strong>
                     <span>decode the updated state into an output</span>
                   </div>
                 </div>
-                <p class="rnn-summary fragment">A single update rule is shared across time. The hidden state \(h_t\) is the compact memory passed to the next step.</p>
+                <p class="rnn-summary fragment" data-fragment-index="0">A single update rule is shared across time. The hidden state \(h_t\) is the compact memory passed to the next step.</p>
               </div>
               <div class="card figure-card rnn-figure-card">
                 <img class="media" src="assets/figures/sequence-media/RNN.gif" alt="Animated recurrent neural network">
@@ -411,6 +467,20 @@
         </section>
 
         <section class="chapter-stack" data-section="temporal-convolutions" aria-label="Temporal convolutions">
+          <section id="section-temporal-convolutions" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">05</div>
+              <div class="section-title-copy">
+                <div class="kicker">Scan for Reusable Temporal Motifs</div>
+                <h2>Temporal Convolutions</h2>
+                <span class="rule"></span>
+                <p>
+                  1-D filters, receptive fields, and causal convolutions.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="temporal-convolution-filter" data-auto-animate>
             <div class="kicker">1-D convolution</div>
             <h2>A temporal filter scans for reusable motifs</h2>
@@ -682,8 +752,8 @@
           </section>
 
           <section id="causal-convolution">
-            <div class="kicker">Causal convolution</div>
-            <h2>Causal padding keeps the future hidden</h2>
+            <div class="kicker">Keeping the future hidden</div>
+            <h2>Causal convolutions</h2>
             <span class="rule"></span>
             <div class="two-col wide-left causal-layout">
               <div>
@@ -749,22 +819,22 @@
               </svg>
             </div>
             <p class="callout causal-leakage-callout fragment">
-              Causality is not just a layer option: preprocessing, normalization, and imputation must also respect time.
+              Preprocessing, normalization, and imputation must also respect time.
             </p>
           </section>
 
           <section id="rs-temporal-filters">
-            <div class="kicker">Phenology example</div>
-            <h2>Temporal filters detect phenology and change</h2>
+            <div class="kicker">Temporal filters detect patterns and changes</div>
+            <h2>Filters example</h2>
             <span class="rule"></span>
             <div class="two-col wide-left">
               <div>
                 <p class="lead">
-                  A temporal CNN acts like a learned bank of matched filters.
+                  A temporal CNN acts learns a bank of filters matching temporal patterns.
                 </p>
 
                 <ul>
-                  <li class="fragment"><strong>Green-up:</strong> increasing vegetation signal</li>
+                  <li class="fragment"><strong>Increments:</strong> The input signal goes up</li>
                   <li class="fragment"><strong>Peak / plateau:</strong> crop calendar evidence</li>
                   <li class="fragment"><strong>Drop:</strong> harvest, flood, burn, disturbance</li>
                 </ul>
@@ -783,7 +853,7 @@
                     <text class="svg-label motif-column-label" x="389" y="-12">feature maps</text>
 
                     <g transform="translate(0 20)">
-                      <text class="motif-row-label" x="55" y="37">Green-up</text>
+                      <text class="motif-row-label" x="55" y="37">Increments</text>
                       <line class="tap-line tap-2" x1="116" y1="74" x2="250" y2="74"></line>
                       <path class="tap-line tap-2" d="M116 68 C142 66 164 52 184 34 C202 18 222 12 250 10"></path>
                       <rect class="conv-tap tap-2" x="166" y="14" width="58" height="44"></rect>
@@ -824,9 +894,23 @@
         </section>
 
         <section class="chapter-stack" data-section="attention-transformers" aria-label="Attention and transformers">
+          <section id="section-attention-transformers" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">06</div>
+              <div class="section-title-copy">
+                <div class="kicker">Retrieve the Relevant Past</div>
+                <h2>Transformers</h2>
+                <span class="rule"></span>
+                <p>
+                  Attention, tokens, and validity.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="self-attention-memory">
-            <div class="kicker">Self-attention</div>
-            <h2>Attention retrieves from the observed past</h2>
+            <div class="kicker">Attention retrieves information from the observed past</div>
+            <h2>Self-attention</h2>
             <span class="rule"></span>
 
             <div class="two-col wide-left attention-layout">
@@ -1042,6 +1126,20 @@
         </section>
 
         <section class="chapter-stack" data-section="state-space-models" aria-label="State space models">
+          <section id="section-state-space-models" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">07</div>
+              <div class="section-title-copy">
+                <div class="kicker">Memory as Learned Dynamics</div>
+                <h2>State space models</h2>
+                <span class="rule"></span>
+                <p>
+                  Continuous-time models, S4, and Mamba.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="continuous-time-dynamics">
             <div class="kicker">State space models</div>
             <h2>Memory as continuous dynamics</h2>
@@ -1422,6 +1520,20 @@
         </section>
 
         <section class="chapter-stack" data-section="remote-sensing-synthesis" aria-label="Remote-sensing examples and synthesis">
+          <section id="section-remote-sensing-synthesis" class="section-title-slide">
+            <div class="section-title-layout">
+              <div class="section-title-index">08</div>
+              <div class="section-title-copy">
+                <div class="kicker">Wrapping things up</div>
+                <h2>Conclusion</h2>
+                <span class="rule"></span>
+                <p>
+                  Takeaways and references
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section id="architecture-map">
             <div class="kicker">Takeaways</div>
             <h2>Which mechanism fits which problem?</h2>
