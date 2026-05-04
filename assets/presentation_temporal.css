@@ -930,28 +930,27 @@
 }
 
 .section-title-slide::before {
-  background: var(--temporal-line);
-  bottom: 76px;
   content: "";
-  height: 2px;
-  left: 46px;
   position: absolute;
-  right: 46px;
+  bottom: 56px;
+  left: 46px;
+  width: calc(100% - 92px);
+  height: 3px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 3px;
 }
 
 .section-title-slide::after {
-  background: var(--temporal-primary);
-  border-radius: 999px;
-  bottom: 68px;
-  box-shadow:
-    148px 0 0 var(--temporal-green),
-    296px 0 0 var(--temporal-orange),
-    444px 0 0 var(--temporal-purple);
   content: "";
-  height: 18px;
-  left: 46px;
   position: absolute;
-  width: 18px;
+  bottom: 56px;
+  left: 46px;
+  width: calc((100% - 92px) * (var(--progress) / 8));
+  height: 3px;
+  background: linear-gradient(to right, var(--temporal-primary), var(--temporal-purple));
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(113, 103, 154, 0.25);
+  transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .section-title-layout {
