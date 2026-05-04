@@ -1354,25 +1354,46 @@
                     <animateMotion
                       dur="5s"
                       repeatCount="indefinite"
+                      calcMode="paced"
                       path="M70 218 C115 178 145 92 190 118 C235 145 260 230 312 180 C365 130 395 72 455 104 C505 130 520 190 548 150">
                     </animateMotion>
                   </circle>
 
                   <g>
-                    <line x1="70" y1="260" x2="70" y2="218" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
-                    <circle cx="70" cy="218" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <!-- t1 -->
+                    <line x1="70" y1="218" x2="70" y2="218" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5">
+                      <animate attributeName="y2" values="218;260;260;218" keyTimes="0;0.05;0.95;1" dur="5s" repeatCount="indefinite" />
+                    </line>
+                    <circle cx="70" cy="218" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3" opacity="0">
+                      <animate attributeName="opacity" values="1;0" keyTimes="0;0.95" dur="5s" repeatCount="indefinite" calcMode="discrete" />
+                    </circle>
                     <text x="70" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₁</text>
 
-                    <line x1="190" y1="260" x2="190" y2="118" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
-                    <circle cx="190" cy="118" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <!-- t2 -->
+                    <line x1="190" y1="118" x2="190" y2="118" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5">
+                      <animate attributeName="y2" values="118;118;260;260;118" keyTimes="0;0.28;0.33;0.95;1" dur="5s" repeatCount="indefinite" />
+                    </line>
+                    <circle cx="190" cy="118" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3" opacity="0">
+                      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.28;0.95" dur="5s" repeatCount="indefinite" calcMode="discrete" />
+                    </circle>
                     <text x="190" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₂</text>
 
-                    <line x1="312" y1="260" x2="312" y2="180" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
-                    <circle cx="312" cy="180" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <!-- t3 -->
+                    <line x1="312" y1="180" x2="312" y2="180" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5">
+                      <animate attributeName="y2" values="180;180;260;260;180" keyTimes="0;0.52;0.57;0.95;1" dur="5s" repeatCount="indefinite" />
+                    </line>
+                    <circle cx="312" cy="180" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3" opacity="0">
+                      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.52;0.95" dur="5s" repeatCount="indefinite" calcMode="discrete" />
+                    </circle>
                     <text x="312" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₃</text>
 
-                    <line x1="455" y1="260" x2="455" y2="104" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5"></line>
-                    <circle cx="455" cy="104" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3"></circle>
+                    <!-- t4 -->
+                    <line x1="455" y1="104" x2="455" y2="104" stroke="#b77719" stroke-width="2" stroke-dasharray="5 5">
+                      <animate attributeName="y2" values="104;104;260;260;104" keyTimes="0;0.82;0.87;0.95;1" dur="5s" repeatCount="indefinite" />
+                    </line>
+                    <circle cx="455" cy="104" r="8" fill="#fff4df" stroke="#b77719" stroke-width="3" opacity="0">
+                      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.82;0.95" dur="5s" repeatCount="indefinite" calcMode="discrete" />
+                    </circle>
                     <text x="455" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₄</text>
                   </g>
 
