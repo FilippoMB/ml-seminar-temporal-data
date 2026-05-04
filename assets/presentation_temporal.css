@@ -2055,6 +2055,12 @@
   stroke-width: 2;
 }
 
+.svg-primary {
+  fill: var(--temporal-primary-soft);
+  stroke: var(--temporal-primary);
+  stroke-width: 2;
+}
+
 .svg-lines,
 .arrow {
   fill: none;
@@ -2236,12 +2242,20 @@
   fill: var(--temporal-orange);
 }
 
-#arrowhead-tcn-red path {
-  fill: var(--temporal-red);
+#arrowhead-tcn-green path {
+  fill: var(--temporal-green);
 }
 
 .tcn-input-row .svg-box {
   animation: tcn-input-pulse 4.8s ease-in-out infinite;
+  fill: var(--temporal-primary-soft);
+  stroke: var(--temporal-primary);
+  fill-opacity: 1;
+}
+
+.tcn-input-row text {
+  fill: var(--temporal-primary-dark);
+  font-weight: 700;
 }
 
 .tcn-links line {
@@ -2252,18 +2266,21 @@
 }
 
 .tcn-links.layer-1 line {
-  animation: tcn-link-draw 4.8s ease-in-out infinite;
+  animation: tcn-link-pulse 4.8s ease-in-out infinite;
+  animation-delay: 0s;
   stroke: var(--temporal-purple);
 }
 
 .tcn-links.layer-2 line {
-  animation: tcn-link-draw 4.8s ease-in-out 0.9s infinite;
+  animation: tcn-link-pulse 4.8s ease-in-out infinite;
+  animation-delay: 1.2s;
   stroke: var(--temporal-orange);
 }
 
 .tcn-links.layer-3 line {
-  animation: tcn-link-draw 4.8s ease-in-out 1.8s infinite;
-  stroke: var(--temporal-red);
+  animation: tcn-link-pulse 4.8s ease-in-out infinite;
+  animation-delay: 2.4s;
+  stroke: var(--temporal-green);
 }
 
 .tcn-nodes circle,
@@ -2276,17 +2293,20 @@
 
 .tcn-nodes.layer-1 circle,
 .tcn-nodes.layer-1 text {
-  animation-name: tcn-layer-1-pulse;
+  animation-name: tcn-node-pulse;
+  animation-delay: 0s;
 }
 
 .tcn-nodes.layer-2 circle,
 .tcn-nodes.layer-2 text {
-  animation-name: tcn-layer-2-pulse;
+  animation-name: tcn-node-pulse;
+  animation-delay: 1.2s;
 }
 
 .tcn-nodes.layer-3 circle,
 .tcn-nodes.layer-3 text {
-  animation-name: tcn-layer-3-pulse;
+  animation-name: tcn-node-pulse;
+  animation-delay: 2.4s;
 }
 
 .field-bar {
@@ -2295,91 +2315,59 @@
 }
 
 .field-bar.field-1 {
-  animation-name: tcn-field-1-pulse;
+  animation-name: tcn-field-pulse;
+  animation-delay: 0s;
   fill: var(--temporal-purple);
 }
 
 .field-bar.field-2 {
-  animation-name: tcn-field-2-pulse;
+  animation-name: tcn-field-pulse;
+  animation-delay: 1.2s;
   fill: var(--temporal-orange);
 }
 
 .field-bar.field-3 {
-  animation-name: tcn-field-3-pulse;
-  fill: var(--temporal-red);
+  animation-name: tcn-field-pulse;
+  animation-delay: 2.4s;
+  fill: var(--temporal-green);
 }
 
 @keyframes tcn-input-pulse {
-  0%, 100% {
-    fill: #ffffff;
+  0%, 5%, 95%, 100% {
+    fill: var(--temporal-primary-soft);
   }
-  12%, 72% {
-    fill: #f5faf8;
+  15%, 85% {
+    fill: var(--temporal-primary-soft);
+    filter: brightness(0.95);
   }
 }
 
-@keyframes tcn-link-draw {
-  0%, 9%, 100% {
-    opacity: 0.34;
+@keyframes tcn-link-pulse {
+  0%, 5%, 45%, 100% {
+    opacity: 0;
     stroke-width: 1.9;
   }
-  24%, 78% {
+  15%, 35% {
     opacity: 0.95;
     stroke-width: 2.6;
   }
 }
 
-@keyframes tcn-layer-1-pulse {
-  0%, 9%, 100% {
-    opacity: 0.42;
-  }
-  18%, 38% {
-    opacity: 1;
-  }
-}
-
-@keyframes tcn-layer-2-pulse {
-  0%, 28%, 100% {
+@keyframes tcn-node-pulse {
+  0%, 5%, 45%, 100% {
     opacity: 0.38;
   }
-  42%, 62% {
+  15%, 35% {
     opacity: 1;
   }
 }
 
-@keyframes tcn-layer-3-pulse {
-  0%, 50%, 100% {
-    opacity: 0.38;
+@keyframes tcn-field-pulse {
+  0%, 5%, 45%, 100% {
+    opacity: 0;
   }
-  66%, 86% {
+  15%, 35% {
     opacity: 1;
-  }
-}
-
-@keyframes tcn-field-1-pulse {
-  0%, 12%, 100% {
-    opacity: 0;
-  }
-  18%, 38% {
-    opacity: 0.46;
-  }
-}
-
-@keyframes tcn-field-2-pulse {
-  0%, 34%, 100% {
-    opacity: 0;
-  }
-  42%, 62% {
-    opacity: 0.46;
-  }
-}
-
-@keyframes tcn-field-3-pulse {
-  0%, 58%, 100% {
-    opacity: 0;
-  }
-  66%, 86% {
-    opacity: 0.46;
   }
 }
 
