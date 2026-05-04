@@ -1633,31 +1633,68 @@
                   <rect x="30" y="78" width="350" height="227" class="ssm-panel"></rect>
                   <text x="205" y="104" text-anchor="middle" class="ssm-small">A compact state is updated step by step</text>
 
-                  <rect x="70" y="128" width="52" height="34" class="ssm-input"></rect>
-                  <rect x="145" y="128" width="52" height="34" class="ssm-input"></rect>
-                  <rect x="220" y="128" width="52" height="34" class="ssm-input"></rect>
-                  <rect x="295" y="128" width="52" height="34" class="ssm-input"></rect>
+                  <rect x="70" y="128" width="52" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="2s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="145" y="128" width="52" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;5;2;2" keyTimes="0;0.25;0.5;1" dur="2s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="220" y="128" width="52" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;5;2;2" keyTimes="0;0.5;0.75;1" dur="2s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="295" y="128" width="52" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;5;2;2" keyTimes="0;0.75;1;1" dur="2s" repeatCount="indefinite" />
+                  </rect>
                   <text x="96" y="145" class="ssm-input-text">x₁</text>
                   <text x="171" y="145" class="ssm-input-text">x₂</text>
                   <text x="246" y="145" class="ssm-input-text">x₃</text>
                   <text x="321" y="145" class="ssm-input-text">x₄</text>
 
-                  <circle cx="96" cy="218" r="24" class="ssm-state"></circle>
-                  <circle cx="171" cy="218" r="24" class="ssm-state"></circle>
-                  <circle cx="246" cy="218" r="24" class="ssm-state"></circle>
-                  <circle cx="321" cy="218" r="24" class="ssm-state"></circle>
+                  <circle cx="96" cy="218" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;7;3;3" keyTimes="0;0.25;0.5;1" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="171" cy="218" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.25;0.5;0.75;1" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="246" cy="218" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.5;0.75;1;1" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="321" cy="218" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="7;3;3" keyTimes="0;0.25;1" dur="2s" repeatCount="indefinite" />
+                  </circle>
                   <text x="96" y="218" class="ssm-state-text">s₁</text>
                   <text x="171" y="218" class="ssm-state-text">s₂</text>
                   <text x="246" y="218" class="ssm-state-text">s₃</text>
                   <text x="321" y="218" class="ssm-state-text">s₄</text>
 
-                  <path d="M96 162 L96 190" class="ssm-blue-arrow"></path>
-                  <path d="M171 162 L171 190" class="ssm-blue-arrow"></path>
-                  <path d="M246 162 L246 190" class="ssm-blue-arrow"></path>
-                  <path d="M321 162 L321 190" class="ssm-blue-arrow"></path>
-                  <path d="M120 218 L143 218" class="ssm-purple-arrow"></path>
-                  <path d="M195 218 L218 218" class="ssm-purple-arrow"></path>
-                  <path d="M270 218 L293 218" class="ssm-purple-arrow"></path>
+                  <path d="M96 165 L96 165" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M96 165 L96 165; M96 165 L96 187; M96 165 L96 187; M96 165 L96 165" keyTimes="0; 0.25; 0.26; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.25; 0.26; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M171 165 L171 165" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M171 165 L171 165; M171 165 L171 165; M171 165 L171 187; M171 165 L171 187; M171 165 L171 165" keyTimes="0; 0.25; 0.5; 0.51; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.249; 0.25; 0.5; 0.51; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M246 165 L246 165" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M246 165 L246 165; M246 165 L246 165; M246 165 L246 187; M246 165 L246 187; M246 165 L246 165" keyTimes="0; 0.5; 0.75; 0.76; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.499; 0.5; 0.75; 0.76; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M321 165 L321 165" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M321 165 L321 165; M321 165 L321 165; M321 165 L321 187; M321 165 L321 187" keyTimes="0; 0.75; 0.999; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0" keyTimes="0; 0.749; 0.75; 0.999; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M124 218 L124 218" class="ssm-purple-arrow">
+                    <animate attributeName="d" values="M124 218 L124 218; M124 218 L124 218; M124 218 L140 218; M124 218 L140 218; M124 218 L124 218" keyTimes="0; 0.25; 0.5; 0.51; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.249; 0.25; 0.5; 0.51; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M199 218 L199 218" class="ssm-purple-arrow">
+                    <animate attributeName="d" values="M199 218 L199 218; M199 218 L199 218; M199 218 L215 218; M199 218 L215 218; M199 218 L199 218" keyTimes="0; 0.5; 0.75; 0.76; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.499; 0.5; 0.75; 0.76; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M274 218 L274 218" class="ssm-purple-arrow">
+                    <animate attributeName="d" values="M274 218 L274 218; M274 218 L274 218; M274 218 L290 218; M274 218 L290 218" keyTimes="0; 0.75; 0.999; 1" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0" keyTimes="0; 0.749; 0.75; 0.999; 1" dur="2s" repeatCount="indefinite" />
+                  </path>
 
                   <text x="205" y="330" text-anchor="middle" class="ssm-caption-title">Good memory, but sequential</text>
                   <text x="205" y="354" text-anchor="middle" class="ssm-caption-text">Training and inference follow one chain</text>
@@ -1668,12 +1705,24 @@
                   <rect x="425" y="78" width="350" height="227" class="ssm-panel"></rect>
                   <text x="600" y="104" text-anchor="middle" class="ssm-small">Same state-space idea, efficient long-filter view</text>
 
-                  <rect x="455" y="128" width="38" height="30" class="ssm-input"></rect>
-                  <rect x="503" y="128" width="38" height="30" class="ssm-input"></rect>
-                  <rect x="551" y="128" width="38" height="30" class="ssm-input"></rect>
-                  <rect x="599" y="128" width="38" height="30" class="ssm-input"></rect>
-                  <rect x="647" y="128" width="38" height="30" class="ssm-input"></rect>
-                  <rect x="695" y="128" width="38" height="30" class="ssm-input"></rect>
+                  <rect x="455" y="128" width="38" height="30" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="503" y="128" width="38" height="30" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="551" y="128" width="38" height="30" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="599" y="128" width="38" height="30" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="647" y="128" width="38" height="30" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="695" y="128" width="38" height="30" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
                   <text x="474" y="143" class="ssm-input-text">x₁</text>
                   <text x="522" y="143" class="ssm-input-text">x₂</text>
                   <text x="570" y="143" class="ssm-input-text">x₃</text>
@@ -1681,17 +1730,77 @@
                   <text x="666" y="143" class="ssm-input-text">x₅</text>
                   <text x="714" y="143" class="ssm-input-text">x₆</text>
 
-                  <path d="M595 158 L595 180" class="ssm-blue-arrow"></path>
-                  <rect x="485" y="186" width="230" height="46" class="ssm-filter"></rect>
+                  <path d="M474 161 L474 161" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M474 161 L474 161; M474 161 L600 209; M474 161 L600 209; M474 161 L474 161" keyTimes="0; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M522 161 L522 161" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M522 161 L522 161; M522 161 L600 209; M522 161 L600 209; M522 161 L522 161" keyTimes="0; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M570 161 L570 161" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M570 161 L570 161; M570 161 L600 209; M570 161 L600 209; M570 161 L570 161" keyTimes="0; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M618 161 L618 161" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M618 161 L618 161; M618 161 L600 209; M618 161 L600 209; M618 161 L618 161" keyTimes="0; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M666 161 L666 161" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M666 161 L666 161; M666 161 L600 209; M666 161 L600 209; M666 161 L666 161" keyTimes="0; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M714 161 L714 161" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M714 161 L714 161; M714 161 L600 209; M714 161 L600 209; M714 161 L714 161" keyTimes="0; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.15; 0.151; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M600 209 L600 209" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M600 209 L600 209; M600 209 L600 209; M600 209 L474 259; M600 209 L474 259; M600 209 L600 209" keyTimes="0; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.149; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M600 209 L600 209" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M600 209 L600 209; M600 209 L600 209; M600 209 L522 259; M600 209 L522 259; M600 209 L600 209" keyTimes="0; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.149; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M600 209 L600 209" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M600 209 L600 209; M600 209 L600 209; M600 209 L570 259; M600 209 L570 259; M600 209 L600 209" keyTimes="0; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.149; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M600 209 L600 209" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M600 209 L600 209; M600 209 L600 209; M600 209 L618 259; M600 209 L618 259; M600 209 L600 209" keyTimes="0; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.149; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M600 209 L600 209" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M600 209 L600 209; M600 209 L600 209; M600 209 L666 259; M600 209 L666 259; M600 209 L600 209" keyTimes="0; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.149; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M600 209 L600 209" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M600 209 L600 209; M600 209 L600 209; M600 209 L714 259; M600 209 L714 259; M600 209 L600 209" keyTimes="0; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.149; 0.15; 0.3; 0.301; 1" dur="3s" repeatCount="indefinite" />
+                  </path>
+                  <rect x="485" y="186" width="230" height="46" class="ssm-filter" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.05;0.15;0.25;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
                   <text x="600" y="209" class="ssm-filter-text">one long learned filter</text>
-                  <path d="M595 232 L595 254" class="ssm-blue-arrow"></path>
 
-                  <rect x="455" y="262" width="38" height="30" class="ssm-out"></rect>
-                  <rect x="503" y="262" width="38" height="30" class="ssm-out"></rect>
-                  <rect x="551" y="262" width="38" height="30" class="ssm-out"></rect>
-                  <rect x="599" y="262" width="38" height="30" class="ssm-out"></rect>
-                  <rect x="647" y="262" width="38" height="30" class="ssm-out"></rect>
-                  <rect x="695" y="262" width="38" height="30" class="ssm-out"></rect>
+                  <rect x="455" y="262" width="38" height="30" class="ssm-out" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.3;0.4;0.6;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="503" y="262" width="38" height="30" class="ssm-out" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.3;0.4;0.6;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="551" y="262" width="38" height="30" class="ssm-out" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.3;0.4;0.6;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="599" y="262" width="38" height="30" class="ssm-out" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.3;0.4;0.6;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="647" y="262" width="38" height="30" class="ssm-out" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.3;0.4;0.6;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
+                  <rect x="695" y="262" width="38" height="30" class="ssm-out" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.3;0.4;0.6;1" dur="3s" repeatCount="indefinite" />
+                  </rect>
                   <text x="474" y="277" class="ssm-out-text">y₁</text>
                   <text x="522" y="277" class="ssm-out-text">y₂</text>
                   <text x="570" y="277" class="ssm-out-text">y₃</text>
@@ -1708,35 +1817,75 @@
                   <rect x="820" y="78" width="350" height="227" class="ssm-panel"></rect>
                   <text x="995" y="104" text-anchor="middle" class="ssm-small">The current input decides what memory should do</text>
 
-                  <rect x="845" y="126" width="62" height="34" class="ssm-input"></rect>
-                  <circle cx="965" cy="143" r="20" class="ssm-gate"></circle>
-                  <circle cx="1070" cy="143" r="24" class="ssm-state"></circle>
+                  <rect x="845" y="126" width="62" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.1;1" dur="6s" repeatCount="indefinite" />
+                  </rect>
+                  <circle cx="965" cy="143" r="20" class="ssm-gate" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.025;0.05;0.15;1" dur="6s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="1070" cy="143" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.125;0.15;0.25;1" dur="6s" repeatCount="indefinite" />
+                  </circle>
                   <text x="876" y="143" class="ssm-input-text">x₁</text>
                   <text x="965" y="143" class="ssm-gate-text">g</text>
                   <text x="1070" y="143" class="ssm-state-text">s₁</text>
-                  <path d="M907 143 L943 143" class="ssm-blue-arrow"></path>
-                  <path d="M985 143 L1042 143" class="ssm-orange-arrow"></path>
+                  <path d="M910 143 L910 143" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M910 143 L910 143; M910 143 L941 143; M910 143 L941 143; M910 143 L910 143" keyTimes="0; 0.05; 0.051; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.05; 0.051; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M989 143 L989 143" class="ssm-orange-arrow">
+                    <animate attributeName="d" values="M989 143 L989 143; M989 143 L989 143; M989 143 L1042 143; M989 143 L1042 143; M989 143 L989 143" keyTimes="0; 0.075; 0.125; 0.126; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.074; 0.075; 0.125; 0.126; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
 
-                  <rect x="845" y="184" width="62" height="34" class="ssm-input"></rect>
-                  <circle cx="965" cy="201" r="20" class="ssm-gate"></circle>
-                  <circle cx="1070" cy="201" r="24" class="ssm-state"></circle>
+                  <rect x="845" y="184" width="62" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.25;0.3;0.4;1" dur="6s" repeatCount="indefinite" />
+                  </rect>
+                  <circle cx="965" cy="201" r="20" class="ssm-gate" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;7;3;3" keyTimes="0;0.325;0.35;0.38;0.41;0.45;1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="stroke" values="#b47622;#b47622;#d9381e;#b47622;#d9381e;#b47622;#b47622" keyTimes="0;0.325;0.35;0.38;0.41;0.45;1" dur="6s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="1070" cy="201" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.40;0.425;0.525;1" dur="6s" repeatCount="indefinite" />
+                  </circle>
                   <text x="876" y="201" class="ssm-input-text">x₂</text>
                   <text x="965" y="201" class="ssm-gate-text">g</text>
                   <text x="1070" y="201" class="ssm-state-text">s₂</text>
-                  <path d="M907 201 L943 201" class="ssm-blue-arrow"></path>
-                  <path d="M985 201 L1042 201" class="ssm-orange-arrow"></path>
+                  <path d="M910 201 L910 201" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M910 201 L910 201; M910 201 L910 201; M910 201 L941 201; M910 201 L941 201; M910 201 L910 201" keyTimes="0; 0.25; 0.3; 0.301; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.249; 0.25; 0.3; 0.301; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
 
-                  <rect x="845" y="242" width="62" height="34" class="ssm-input"></rect>
-                  <circle cx="965" cy="259" r="20" class="ssm-gate"></circle>
-                  <circle cx="1070" cy="259" r="24" class="ssm-state"></circle>
+
+                  <rect x="845" y="242" width="62" height="34" class="ssm-input" stroke-width="2">
+                    <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.55;0.6;0.7;1" dur="6s" repeatCount="indefinite" />
+                  </rect>
+                  <circle cx="965" cy="259" r="20" class="ssm-gate" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.625;0.65;0.75;1" dur="6s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="1070" cy="259" r="24" class="ssm-state" stroke-width="3">
+                    <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.70;0.725;0.825;1" dur="6s" repeatCount="indefinite" />
+                  </circle>
                   <text x="876" y="259" class="ssm-input-text">x₃</text>
                   <text x="965" y="259" class="ssm-gate-text">g</text>
                   <text x="1070" y="259" class="ssm-state-text">s₃</text>
-                  <path d="M907 259 L943 259" class="ssm-blue-arrow"></path>
-                  <path d="M985 259 L1042 259" class="ssm-orange-arrow"></path>
+                  <path d="M910 259 L910 259" class="ssm-blue-arrow">
+                    <animate attributeName="d" values="M910 259 L910 259; M910 259 L910 259; M910 259 L941 259; M910 259 L941 259; M910 259 L910 259" keyTimes="0; 0.55; 0.6; 0.601; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.549; 0.55; 0.6; 0.601; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M989 259 L989 259" class="ssm-orange-arrow">
+                    <animate attributeName="d" values="M989 259 L989 259; M989 259 L989 259; M989 259 L1042 259; M989 259 L1042 259; M989 259 L989 259" keyTimes="0; 0.625; 0.675; 0.676; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.624; 0.625; 0.675; 0.676; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
 
-                  <path d="M1094 161 C1118 170 1118 182 1094 193" class="ssm-state-flow"></path>
-                  <path d="M1094 219 C1118 228 1118 240 1094 251" class="ssm-state-flow"></path>
+                  <path d="M1094 161 C1094 161 1094 161 1094 161" class="ssm-state-flow">
+                    <animate attributeName="d" values="M1094 161 C1094 161 1094 161 1094 161; M1094 161 C1094 161 1094 161 1094 161; M1094 161 C1101 163 1106 165 1109 168; M1094 161 C1108 165 1115 170 1115 176; M1094 161 C1115 167 1120 176 1110 184; M1094 161 C1122 170 1122 182 1096 193; M1094 161 C1094 161 1094 161 1094 161; M1094 161 C1094 161 1094 161 1094 161" keyTimes="0; 0.25; 0.2875; 0.325; 0.3625; 0.40; 0.401; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.249; 0.25; 0.40; 0.401; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
+                  <path d="M1094 219 C1094 219 1094 219 1094 219" class="ssm-state-flow">
+                    <animate attributeName="d" values="M1094 219 C1094 219 1094 219 1094 219; M1094 219 C1094 219 1094 219 1094 219; M1094 219 C1101 221 1106 223 1109 226; M1094 219 C1108 223 1115 228 1115 234; M1094 219 C1115 225 1120 234 1110 242; M1094 219 C1122 228 1122 240 1096 251; M1094 219 C1094 219 1094 219 1094 219; M1094 219 C1094 219 1094 219 1094 219" keyTimes="0; 0.55; 0.5875; 0.625; 0.6625; 0.70; 0.701; 1" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.549; 0.55; 0.70; 0.701; 1" dur="6s" repeatCount="indefinite" />
+                  </path>
 
                   <text x="995" y="330" text-anchor="middle" class="ssm-caption-title">Selective memory</text>
                   <text x="995" y="354" text-anchor="middle" class="ssm-caption-text">Important inputs are written; others can be ignored</text>
