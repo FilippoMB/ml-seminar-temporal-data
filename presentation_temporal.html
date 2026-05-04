@@ -1448,10 +1448,22 @@
                   <g transform="translate(18 20)">
 
                     <g stroke="#75689b" stroke-width="3" fill="none" marker-end="url(#ssm-scan-arrow)">
-                      <path d="M58 132 L128 132"></path>
-                      <path d="M182 132 L282 132"></path>
-                      <path d="M336 132 L410 132"></path>
-                      <path d="M464 132 L544 132"></path>
+                      <path d="M58 132 L58 132">
+                        <animate attributeName="d" values="M58 132 L58 132; M58 132 L128 132; M58 132 L128 132; M58 132 L58 132" keyTimes="0; 0.14; 0.141; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.14; 0.141; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M182 132 L182 132">
+                        <animate attributeName="d" values="M182 132 L182 132; M182 132 L182 132; M182 132 L282 132; M182 132 L282 132; M182 132 L182 132" keyTimes="0; 0.2; 0.34; 0.341; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.199; 0.2; 0.34; 0.341; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M336 132 L336 132">
+                        <animate attributeName="d" values="M336 132 L336 132; M336 132 L336 132; M336 132 L410 132; M336 132 L410 132; M336 132 L336 132" keyTimes="0; 0.4; 0.54; 0.541; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.399; 0.4; 0.54; 0.541; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M464 132 L464 132">
+                        <animate attributeName="d" values="M464 132 L464 132; M464 132 L464 132; M464 132 L544 132; M464 132 L544 132; M464 132 L464 132" keyTimes="0; 0.6; 0.74; 0.741; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.599; 0.6; 0.74; 0.741; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
                     </g>
 
                     <g fill="#5c6670" font-size="15">
@@ -1462,11 +1474,22 @@
                     </g>
 
                     <g>
-                      <circle cx="32" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
-                      <circle cx="156" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
-                      <circle cx="310" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
-                      <circle cx="438" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
-                      <circle cx="570" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3"></circle>
+                      <!-- Nodes -->
+                      <circle cx="32" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3">
+                        <animate attributeName="stroke-width" values="7;3;3" keyTimes="0;0.1;1" dur="5s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="156" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3">
+                        <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.14;0.17;0.20;1" dur="5s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="310" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3">
+                        <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.34;0.37;0.40;1" dur="5s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="438" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3">
+                        <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.54;0.57;0.60;1" dur="5s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="570" cy="132" r="26" fill="#f4f0ff" stroke="#75689b" stroke-width="3">
+                        <animate attributeName="stroke-width" values="3;3;7;3;3" keyTimes="0;0.74;0.77;0.80;1" dur="5s" repeatCount="indefinite" />
+                      </circle>
 
                       <text x="32" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₀</text>
                       <text x="156" y="138" text-anchor="middle" font-size="17" fill="#40375f">s₁</text>
@@ -1484,17 +1507,37 @@
                     </g>
 
                     <g stroke="#2b92ac" stroke-width="2.5" fill="none" marker-end="url(#ssm-scan-input-arrow)">
-                      <path d="M156 68 L156 104"></path>
-                      <path d="M310 68 L310 104"></path>
-                      <path d="M438 68 L438 104"></path>
-                      <path d="M570 68 L570 104"></path>
+                      <path d="M156 68 L156 68">
+                        <animate attributeName="d" values="M156 68 L156 68; M156 68 L156 104; M156 68 L156 104; M156 68 L156 68" keyTimes="0; 0.14; 0.141; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 1; 1; 0; 0" keyTimes="0; 0.001; 0.14; 0.141; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M310 68 L310 68">
+                        <animate attributeName="d" values="M310 68 L310 68; M310 68 L310 68; M310 68 L310 104; M310 68 L310 104; M310 68 L310 68" keyTimes="0; 0.2; 0.34; 0.341; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.199; 0.2; 0.34; 0.341; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M438 68 L438 68">
+                        <animate attributeName="d" values="M438 68 L438 68; M438 68 L438 68; M438 68 L438 104; M438 68 L438 104; M438 68 L438 68" keyTimes="0; 0.4; 0.54; 0.541; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.399; 0.4; 0.54; 0.541; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M570 68 L570 68">
+                        <animate attributeName="d" values="M570 68 L570 68; M570 68 L570 68; M570 68 L570 104; M570 68 L570 104; M570 68 L570 68" keyTimes="0; 0.6; 0.74; 0.741; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.599; 0.6; 0.74; 0.741; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
                     </g>
 
                     <g>
-                      <rect x="130" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
-                      <rect x="284" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
-                      <rect x="412" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
-                      <rect x="544" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2"></rect>
+                      <rect x="130" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2">
+                        <animate attributeName="stroke-width" values="5;2;2" keyTimes="0;0.1;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="284" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.2;0.25;0.3;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="412" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.4;0.45;0.5;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="544" y="28" width="52" height="34" rx="8" fill="#e8f7fb" stroke="#2b92ac" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.6;0.65;0.7;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
 
                       <text x="156" y="51" text-anchor="middle" font-size="16" fill="#07546a">u₁</text>
                       <text x="310" y="51" text-anchor="middle" font-size="16" fill="#07546a">u₂</text>
@@ -1503,17 +1546,37 @@
                     </g>
 
                     <g stroke="#5a9b5a" stroke-width="2.4" fill="none" marker-end="url(#ssm-scan-output-arrow)">
-                      <path d="M156 160 L156 218"></path>
-                      <path d="M310 160 L310 218"></path>
-                      <path d="M438 160 L438 218"></path>
-                      <path d="M570 160 L570 218"></path>
+                      <path d="M156 160 L156 160">
+                        <animate attributeName="d" values="M156 160 L156 160; M156 160 L156 160; M156 160 L156 218; M156 160 L156 218; M156 160 L156 160" keyTimes="0; 0.2; 0.34; 0.341; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.199; 0.2; 0.34; 0.341; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M310 160 L310 160">
+                        <animate attributeName="d" values="M310 160 L310 160; M310 160 L310 160; M310 160 L310 218; M310 160 L310 218; M310 160 L310 160" keyTimes="0; 0.4; 0.54; 0.541; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.399; 0.4; 0.54; 0.541; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M438 160 L438 160">
+                        <animate attributeName="d" values="M438 160 L438 160; M438 160 L438 160; M438 160 L438 218; M438 160 L438 218; M438 160 L438 160" keyTimes="0; 0.6; 0.74; 0.741; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.599; 0.6; 0.74; 0.741; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
+                      <path d="M570 160 L570 160">
+                        <animate attributeName="d" values="M570 160 L570 160; M570 160 L570 160; M570 160 L570 218; M570 160 L570 218; M570 160 L570 160" keyTimes="0; 0.8; 0.94; 0.941; 1" dur="5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.799; 0.8; 0.94; 0.941; 1" dur="5s" repeatCount="indefinite" />
+                      </path>
                     </g>
 
                     <g>
-                      <rect x="130" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
-                      <rect x="284" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
-                      <rect x="412" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
-                      <rect x="544" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2"></rect>
+                      <rect x="130" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.34;0.37;0.40;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="284" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.54;0.57;0.60;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="412" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.74;0.77;0.80;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="544" y="224" width="52" height="34" rx="8" fill="#edf8ed" stroke="#5a9b5a" stroke-width="2">
+                        <animate attributeName="stroke-width" values="2;2;5;2;2" keyTimes="0;0.94;0.97;1;1" dur="5s" repeatCount="indefinite" />
+                      </rect>
 
                       <text x="156" y="247" text-anchor="middle" font-size="16" fill="#2f6f2f">y₁</text>
                       <text x="310" y="247" text-anchor="middle" font-size="16" fill="#2f6f2f">y₂</text>

@@ -2465,6 +2465,14 @@
   stroke: #2b92ac;
 }
 
+.ssm-flow {
+  opacity: 0;
+  pointer-events: none;
+}
+.ssm-flow.state { fill: #75689b; }
+.ssm-flow.input { fill: #2b92ac; }
+.ssm-flow.output { fill: #5a9b5a; }
+
 .attention-target-arrow {
   fill: #07546a;
   opacity: 0.96;
