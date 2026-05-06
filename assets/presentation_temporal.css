@@ -3156,6 +3156,8 @@
   column-gap: 26px;
   font-size: 10.2pt;
   line-height: 1.18;
+  list-style-position: outside;
+  padding-left: 24px;
 }
 
 .reveal .references li {
