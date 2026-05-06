@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/simple.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
-    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260503-section-titles">
+    <link rel="stylesheet" href="assets/presentation_temporal.css?v=20260506-css-cleanup">
   </head>
   <body>
     <div class="reveal">
@@ -36,8 +36,8 @@
           </div>
         </section>
 
-        <section class="chapter-stack" data-section="motivating-examples" aria-label="Motivating examples">
-          <section id="section-introductory-examples" class="section-title-slide" style="--progress: 1;">
+        <section class="chapter-stack" data-section="temporal-motivation-examples" aria-label="Temporal motivation examples">
+          <section id="section-temporal-motivation-examples" class="section-title-slide" style="--progress: 1;">
             <div class="section-title-layout">
               <div class="section-title-index">01</div>
               <div class="section-title-copy">
@@ -51,22 +51,22 @@
             </div>
           </section>
 
-          <section id="remote-sensing-sequences" class="eo-sequence-slide">
+          <section id="ndvi-time-series-example" class="eo-sequence-slide">
             <div class="kicker">Earth observation example</div>
             <h2>NDVI time series</h2>
             <span class="rule"></span>
 
             <div class="ndvi-motivation-layout">
               <div class="ndvi-explainer">
-                <p class="lead">
+                <p class="lead accent-card">
                   <strong>Normalized Difference Vegetation Index (NDVI)</strong> quantifies vegetation by measuring the difference between near-infrared (which vegetation strongly reflects) and red light (which vegetation absorbs).
                 </p>
 
                 <div class="ndvi-signal-grid">
-                  <div><strong>Phenology</strong><span>green-up, peak season, senescence</span></div>
-                  <div><strong>Productivity</strong><span>vegetation vigor and seasonal amplitude</span></div>
-                  <div><strong>Agriculture</strong><span>crop calendars, management, illegal ploughing</span></div>
-                  <div><strong>Disturbance</strong><span>deforestation, wild fires, abrupt vegetation loss</span></div>
+                  <div class="accent-card"><strong>Phenology</strong><span>green-up, peak season, senescence</span></div>
+                  <div class="accent-card"><strong>Productivity</strong><span>vegetation vigor and seasonal amplitude</span></div>
+                  <div class="accent-card"><strong>Agriculture</strong><span>crop calendars, management, illegal ploughing</span></div>
+                  <div class="accent-card"><strong>Disturbance</strong><span>deforestation, wild fires, abrupt vegetation loss</span></div>
                 </div>
               </div>
 
@@ -88,7 +88,7 @@
             </div>
           </section>
 
-          <section id="flood-change">
+          <section id="flood-mapping-temporal-change">
             <div class="kicker">Change and events</div>
             <h2>Flood mapping is a temporal task</h2>
             <span class="rule"></span>
@@ -107,7 +107,7 @@
             </p>
           </section>
 
-          <section id="electricity-baselines" class="electricity-slide">
+          <section id="electricity-load-baselines" class="electricity-slide">
             <div class="kicker">When should we use deep learning?</div>
             <h2>Nonlinear relationships, simple baselines</h2>
             <span class="rule"></span>
@@ -116,8 +116,8 @@
           </section>
         </section>
 
-        <section class="chapter-stack" data-section="problem-framing" aria-label="Problem framing">
-          <section id="section-general-deep-learning-models" class="section-title-slide" style="--progress: 2;">
+        <section class="chapter-stack" data-section="temporal-learning-setup" aria-label="Temporal learning setup">
+          <section id="section-temporal-learning-setup" class="section-title-slide" style="--progress: 2;">
             <div class="section-title-layout">
               <div class="section-title-index">02</div>
               <div class="section-title-copy">
@@ -131,7 +131,7 @@
             </div>
           </section>
 
-          <section id="memory-motivation">
+          <section id="temporal-memory-motivation">
             <div class="kicker">Main idea</div>
             <h2>Temporal data is about usable memory</h2>
             <span class="rule"></span>
@@ -156,7 +156,7 @@
             </div>
           </section>
 
-          <section id="sequence-setup" class="setup-slide">
+          <section id="forecast-window-horizon-setup" class="setup-slide">
             <div class="kicker">Formal setup</div>
             <h2>Window and horizon</h2>
             <span class="rule"></span>
@@ -192,15 +192,15 @@
               </div>
 
               <div class="setup-meta">
-                <div class="fragment" data-fragment-index="0"><strong><em>X</em><sub>t-W:t</sub></strong><span>observed window</span></div>
-                <div class="fragment" data-fragment-index="1"><strong><em>m</em><sub>t-W:t</sub></strong><span>validity mask</span></div>
-                <div class="fragment" data-fragment-index="2"><strong><em>u</em><sub>t-W:t+H</sub></strong><span>known covariates</span></div>
-                <div class="fragment" data-fragment-index="3"><strong><em>a</em></strong><span>static metadata</span></div>
+                <div class="fragment accent-card" data-fragment-index="0"><strong><em>X</em><sub>t-W:t</sub></strong><span>observed window</span></div>
+                <div class="fragment accent-card" data-fragment-index="1"><strong><em>m</em><sub>t-W:t</sub></strong><span>validity mask</span></div>
+                <div class="fragment accent-card" data-fragment-index="2"><strong><em>u</em><sub>t-W:t+H</sub></strong><span>known covariates</span></div>
+                <div class="fragment accent-card" data-fragment-index="3"><strong><em>a</em></strong><span>static metadata</span></div>
               </div>
             </div>
           </section>
 
-          <section id="local-global-predictors">
+          <section id="local-vs-global-predictors">
             <div class="kicker">Learning across collections</div>
             <h2>Local and global predictors</h2>
             <span class="rule"></span>
@@ -231,8 +231,8 @@
 
         </section>
 
-        <section class="chapter-stack" data-section="fixed-windows" aria-label="Fixed windows">
-          <section id="section-windowed-approaches" class="section-title-slide" style="--progress: 3;">
+        <section class="chapter-stack" data-section="windowed-models" aria-label="Windowed models">
+          <section id="section-windowed-models" class="section-title-slide" style="--progress: 3;">
             <div class="section-title-layout">
               <div class="section-title-index">03</div>
               <div class="section-title-copy">
@@ -246,7 +246,7 @@
             </div>
           </section>
 
-          <section id="sliding-windows" class="window-slide" data-auto-animate>
+          <section id="sliding-window-baselines" class="window-slide" data-auto-animate>
             <div class="kicker">Fixed past context</div>
             <h2>Sliding windows</h2>
             <span class="rule"></span>
@@ -257,7 +257,7 @@
 	                  \widehat{X}_{t:t+H}=\mathcal{F}_{\theta}\left(X_{t-W:t}\right)
 	                  \]
 	                </div>
-                <div class="window-method-card">
+                <div class="window-method-card accent-card">
                   <ul>
                     <li class="fragment">AR models</li>
                     <li class="fragment">Regression trees / forests</li>
@@ -272,7 +272,7 @@
             </div>
           </section>
 
-          <section id="mlp-window-operator">
+          <section id="mlp-window-forecasting">
             <div class="kicker">Nonlinear windowed approach</div>
             <h2>MLP: a trainable, nonlinear function approximator</h2>
             <span class="rule"></span>
@@ -290,7 +290,7 @@
             </div>
           </section>
 
-          <section id="window-memory-choice" class="memory-choice-slide">
+          <section id="window-length-tradeoff" class="memory-choice-slide">
             <div class="kicker">Windowed approaches limitations</div>
             <h2>What should <em>\( W \)</em> be?</h2>
             <span class="rule"></span>
@@ -300,9 +300,9 @@
             <div class="memory-choice-layout">
               <div class="memory-choice-text">
                 <ul class="memory-choice-list">
-                  <li class="fragment">Too short: miss evidence</li>
-                  <li class="fragment">Too long: add noise</li>
-                  <li class="fragment">Memory becomes hand-designed</li>
+                  <li class="fragment accent-card">Too short: miss evidence</li>
+                  <li class="fragment accent-card">Too long: add noise</li>
+                  <li class="fragment accent-card">Memory becomes hand-designed</li>
                 </ul>
                 <p class="callout fragment">
                   Can the model learn its own memory?
@@ -312,8 +312,8 @@
           </section>
         </section>
 
-        <section class="chapter-stack" data-section="recurrent-state" aria-label="Recurrent state and reservoir computing">
-          <section id="section-recurrent-state" class="section-title-slide" style="--progress: 4;">
+        <section class="chapter-stack" data-section="recurrent-and-reservoir-models" aria-label="Recurrent and reservoir models">
+          <section id="section-recurrent-and-reservoir-models" class="section-title-slide" style="--progress: 4;">
             <div class="section-title-layout">
               <div class="section-title-index">04</div>
               <div class="section-title-copy">
@@ -327,22 +327,22 @@
             </div>
           </section>
 
-          <section id="rnn-hidden-state" class="rnn-slide">
+          <section id="rnn-hidden-state-memory" class="rnn-slide">
             <div class="kicker">Recurrent Neural Networks</div>
             <h2>A hidden state carries context</h2>
             <span class="rule"></span>
             <div class="rnn-layout">
               <div class="rnn-explainer">
                 <div class="rnn-step-list">
-                  <div class="rnn-step fragment" data-fragment-index="0">
+                  <div class="rnn-step accent-card fragment" data-fragment-index="0">
                     <strong>Read \(x_t\)</strong>
                     <span>consume the next observation in the sequence</span>
                   </div>
-                  <div class="rnn-step fragment" data-fragment-index="1">
+                  <div class="rnn-step accent-card fragment" data-fragment-index="1">
                     <strong>Update \(h_t\)</strong>
                     <span>combine current input with the previous memory \(h_{t-1}\)</span>
                   </div>
-                  <div class="rnn-step fragment" data-fragment-index="2">
+                  <div class="rnn-step accent-card fragment" data-fragment-index="2">
                     <strong>Predict \(y_t\)</strong>
                     <span>decode the updated state into an output</span>
                   </div>
@@ -355,7 +355,7 @@
             </div>
           </section>
 
-          <section id="bptt-training">
+          <section id="backpropagation-through-time">
             <div class="kicker">Training</div>
             <h2>Backpropagation through time</h2>
             <span class="rule"></span>
@@ -376,7 +376,7 @@
             </div>
           </section>
 
-          <section id="gated-recurrence" class="lstm-gates-slide">
+          <section id="lstm-gates" class="lstm-gates-slide">
             <div class="kicker">RNNs with gates control memory update and information flows</div>
             <h2>LSTM with gates</h2>
             <span class="rule"></span>
@@ -425,7 +425,7 @@
             </div>
           </section>
 
-          <section id="reservoir-readout" class="reservoir-slide">
+          <section id="reservoir-computing-readout" class="reservoir-slide">
             <div class="kicker">Reservoir computing and Echo State Networks</div>
             <h2>Randomized RNNs</h2>
             <span class="rule"></span>
@@ -442,12 +442,12 @@
                 <img class="media image-frame" src="assets/figures/sequence-media/Reservoir.gif" alt="Animated reservoir computing schematic">
               </div>
             </div>
-            <p class="callout reservoir-callout fragment">
+            <p class="callout full-width-callout reservoir-callout fragment">
               Useful when training a standard RNN is too expensive or when data are not enough.
             </p>
           </section>
 
-          <section id="reservoir-practice">
+          <section id="reservoir-hyperparameters">
             <div class="kicker">Trade-offs: lack of training make hyperparameters critical</div>
             <h2>Reservoir configuration</h2>
             <span class="rule"></span>
@@ -466,8 +466,8 @@
           </section>
         </section>
 
-        <section class="chapter-stack" data-section="temporal-convolutions" aria-label="Temporal convolutions">
-          <section id="section-temporal-convolutions" class="section-title-slide" style="--progress: 5;">
+        <section class="chapter-stack" data-section="temporal-convolutional-models" aria-label="Temporal convolutional models">
+          <section id="section-temporal-convolutional-models" class="section-title-slide" style="--progress: 5;">
             <div class="section-title-layout">
               <div class="section-title-index">05</div>
               <div class="section-title-copy">
@@ -481,7 +481,7 @@
             </div>
           </section>
 
-          <section id="temporal-convolution-filter" data-auto-animate>
+          <section id="temporal-convolution-motif-filter" data-auto-animate>
             <div class="kicker">1-D convolution</div>
             <h2>A temporal filter scans for reusable motifs</h2>
             <span class="rule"></span>
@@ -489,7 +489,7 @@
               <div class="card conv-card">
                 <h3>Image analogy</h3>
                 <p class="small">A small kernel scans space and reuses the same detector at every location.</p>
-                <svg class="diagram conv2d-diagram" viewBox="0 0 420 250" role="img" aria-label="A 2-D convolution kernel scanning an image patch">
+                <svg class="diagram diagram-frameless conv2d-diagram" viewBox="0 0 420 250" role="img" aria-label="A 2-D convolution kernel scanning an image patch">
                   <defs>
                     <marker id="conv2d-arrow" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
                       <path d="M0,0 L5,2.5 L0,5 Z" fill="#2b92ac"></path>
@@ -548,7 +548,7 @@
               <div class="card conv-card">
                 <h3>Temporal filter</h3>
                 <p class="small">The same learned kernel scans time to detect slopes, peaks, pulses, or changes.</p>
-                <svg class="diagram conv-diagram" viewBox="0 0 620 310" role="img" aria-label="A temporal convolution filter sliding across indexed observations">
+                <svg class="diagram diagram-frameless conv-diagram" viewBox="0 0 620 310" role="img" aria-label="A temporal convolution filter sliding across indexed observations">
                   <defs>
                     <marker id="conv-arrow-1" markerWidth="5" markerHeight="5" refX="4.1" refY="2.5" orient="auto">
                       <path d="M0,0 L5,2.5 L0,5 Z" fill="#75689b"></path>
@@ -632,7 +632,7 @@
             </aside>
           </section>
 
-          <section id="tcn-receptive-field">
+          <section id="tcn-receptive-fields">
             <div class="kicker">Temporal convolutional networks</div>
             <h2>Stacked filters build long temporal features</h2>
             <span class="rule"></span>
@@ -746,12 +746,12 @@
 
               </div>
             </div>
-            <p class="callout tcn-receptive-callout fragment">
+            <p class="callout full-width-callout tcn-receptive-callout fragment">
               The receptive field is the maximum history that can affect one output.
             </p>
           </section>
 
-          <section id="causal-convolution">
+          <section id="causal-temporal-convolution">
             <div class="kicker">Keeping the future hidden</div>
             <h2>Causal convolutions</h2>
             <span class="rule"></span>
@@ -818,12 +818,12 @@
                 </g>
               </svg>
             </div>
-            <p class="callout causal-leakage-callout fragment">
+            <p class="callout full-width-callout causal-leakage-callout fragment">
               Preprocessing, normalization, and imputation must also respect time.
             </p>
           </section>
 
-          <section id="rs-temporal-filters">
+          <section id="temporal-filter-patterns">
             <div class="kicker">Temporal filters detect patterns and changes</div>
             <h2>Filters example</h2>
             <span class="rule"></span>
@@ -847,7 +847,7 @@
               <div class="card">
                 <h3>Example temporal motifs</h3>
 
-                <svg class="diagram motif-diagram" viewBox="0 0 620 330" role="img" aria-label="Temporal motifs detected by convolutional filters">
+                <svg class="diagram diagram-frameless motif-diagram" viewBox="0 0 620 330" role="img" aria-label="Temporal motifs detected by convolutional filters">
                   <defs>
                     <linearGradient id="motif-grad-blue" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stop-color="#eeeaf7" stop-opacity="0"></stop>
@@ -952,8 +952,8 @@
           </section>
         </section>
 
-        <section class="chapter-stack" data-section="attention-transformers" aria-label="Attention and transformers">
-          <section id="section-attention-transformers" class="section-title-slide" style="--progress: 6;">
+        <section class="chapter-stack" data-section="attention-and-transformers" aria-label="Attention and transformers">
+          <section id="section-attention-and-transformers" class="section-title-slide" style="--progress: 6;">
             <div class="section-title-layout">
               <div class="section-title-index">06</div>
               <div class="section-title-copy">
@@ -967,7 +967,7 @@
             </div>
           </section>
 
-          <section id="self-attention-memory">
+          <section id="self-attention-temporal-memory">
             <div class="kicker">Attention retrieves information from the observed past</div>
             <h2>Self-attention</h2>
             <span class="rule"></span>
@@ -1059,24 +1059,24 @@
               </svg>
             </div>
 
-            <p class="callout attention-callout fragment">
+            <p class="callout full-width-callout attention-callout fragment">
               Attention selects observations by content; time encodings tell it when they occurred.
             </p>
           </section>
 
-          <section id="transformer-tradeoffs">
+          <section id="temporal-transformer-pipeline">
             <div class="kicker">Repeated self-attention turns observations into contextual tokens</div>
             <h2>Temporal Transformer</h2>
             <span class="rule"></span>
 
             <div class="tt-feature-grid">
-              <div><strong>Observation tokens</strong><span>each observation becomes a distinct token</span></div>
-              <div><strong>Self-attention</strong><span>repeated blocks let tokens gather information from relevant dates</span></div>
-              <div><strong>Contextual tokens</strong><span>the final token set is pooled to make a unified prediction</span></div>
+              <div class="accent-card accent-primary"><strong>Observation tokens</strong><span>each observation becomes a distinct token</span></div>
+              <div class="accent-card accent-primary"><strong>Self-attention</strong><span>repeated blocks let tokens gather information from relevant dates</span></div>
+              <div class="accent-card accent-primary"><strong>Contextual tokens</strong><span>the final token set is pooled to make a unified prediction</span></div>
             </div>
 
             <div class="card temporal-transformer-card">
-              <svg class="diagram temporal-transformer-diagram" viewBox="0 0 1040 380" role="img" aria-label="Temporal Transformer pipeline from observation tokens through repeated self-attention blocks to contextual tokens and prediction">
+              <svg class="diagram diagram-frameless temporal-transformer-diagram" viewBox="0 0 1040 380" role="img" aria-label="Temporal Transformer pipeline from observation tokens through repeated self-attention blocks to contextual tokens and prediction">
                 <rect class="tt-panel" x="14" y="20" width="312" height="340"></rect>
                 <rect class="tt-panel" x="364" y="20" width="332" height="340"></rect>
                 <rect class="tt-panel" x="734" y="20" width="292" height="340"></rect>
@@ -1230,7 +1230,7 @@
             </aside>
           </section>
 
-          <section id="satellite-attention-inputs">
+          <section id="transformer-time-and-availability-inputs">
             <div class="kicker">Temporal sequences</div>
             <h2>Attention needs time and availability information</h2>
             <span class="rule"></span>
@@ -1309,12 +1309,12 @@
             </div>
           </section>
 
-          <section id="continuous-time-dynamics">
+          <section id="continuous-time-state-dynamics">
             <div class="kicker">Memory as continuous dynamics</div>
             <h2>Learning rates of changes</h2>
             <span class="rule"></span>
 
-            <div class="two-col wide-left continuous-layout">
+            <div class="two-col wide-left stretch-layout continuous-layout">
               <div>
                 <p class="lead">
                   Instead of storing a finite window, model a hidden state that evolves in continuous time.
@@ -1407,7 +1407,7 @@
               </div>
             </div>
 
-            <p class="callout continuous-callout fragment">
+            <p class="callout full-width-callout continuous-callout fragment">
               Continuous time makes irregular sampling and variable time gaps natural.
             </p>
 
@@ -1419,12 +1419,12 @@
             </aside>
           </section>
 
-          <section id="ssm-intuition">
+          <section id="discrete-state-space-scan">
             <div class="kicker">Sampling turns dynamics into state updates</div>
             <h2>State space models</h2>
             <span class="rule"></span>
 
-            <div class="two-col wide-left ssm-discrete-layout">
+            <div class="two-col wide-left stretch-layout ssm-discrete-layout">
               <div>
                 <p class="lead">
                   Observe the continuous system only at times \(t_i\).<br>
@@ -1613,7 +1613,7 @@
               </div>
             </div>
 
-            <p class="ssm-parameter-card fragment">
+            <p class="ssm-parameter-card accent-card fragment">
               \(A,B,C,D\) define transition, input injection, readout, and skip connection; the layer learns these dynamics.
             </p>
 
@@ -1626,7 +1626,7 @@
             </aside>
           </section>
 
-          <section id="mamba-scan">
+          <section id="s4-mamba-selective-scan">
             <div class="kicker">Modern SSMs make state memory practical</div>
             <h2>S4 and Mamba</h2>
             <span class="rule"></span>
@@ -1637,7 +1637,7 @@
             </p>
 
             <div class="card mamba-comparison-card">
-              <svg class="diagram mamba-comparison-diagram" viewBox="0 18 1200 352" role="img" aria-label="Didactic comparison of naive SSM, S4, and Mamba">
+              <svg class="diagram diagram-frameless mamba-comparison-diagram" viewBox="0 18 1200 352" role="img" aria-label="Didactic comparison of naive SSM, S4, and Mamba">
                 <defs>
                   <marker id="arrow-purple" markerWidth="6" markerHeight="6" refX="5.1" refY="3" orient="auto">
                     <path d="M0,0 L6,3 L0,6 Z" fill="#75689b"></path>
@@ -1921,8 +1921,8 @@
           </section>
         </section>
 
-        <section class="chapter-stack" data-section="remote-sensing-synthesis" aria-label="Remote-sensing examples and synthesis">
-          <section id="section-remote-sensing-synthesis" class="section-title-slide" style="--progress: 8;">
+        <section class="chapter-stack" data-section="model-selection-and-references" aria-label="Model selection and references">
+          <section id="section-model-selection-and-references" class="section-title-slide" style="--progress: 8;">
             <div class="section-title-layout">
               <div class="section-title-index">08</div>
               <div class="section-title-copy">
@@ -1936,7 +1936,7 @@
             </div>
           </section>
 
-          <section id="architecture-map">
+          <section id="architecture-selection-map">
             <div class="kicker">Takeaways</div>
             <h2>Which mechanism fits which problem?</h2>
             <span class="rule"></span>
