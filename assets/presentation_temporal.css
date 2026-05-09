@@ -328,24 +328,22 @@
   grid-template-columns: 1.28fr 0.72fr;
 }
 
+.memory-choice-list-card {
+  padding: 13px 16px 13px 17px;
+}
+
 .reveal .memory-choice-list {
   display: grid;
-  gap: 10px;
+  gap: 7px;
   grid-template-columns: minmax(0, 1fr);
   font-size: 16pt;
-  list-style: none;
-  margin-bottom: 0;
-  margin-top: 0;
-  padding-left: 0;
+  line-height: 1.15;
+  margin: 0 0 0 1em;
+  padding: 0;
 }
 
 .reveal .memory-choice-list li {
   font-size: inherit;
-  list-style: none;
-}
-
-.reveal .memory-choice-list li::marker {
-  content: "";
 }
 
 .memory-choice-text .callout {
@@ -382,17 +380,28 @@
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   min-height: 348px;
+  padding-bottom: 12px;
 }
 
 .model-card .media.short {
-  align-self: center;
+  align-self: end;
   height: 150px;
   justify-self: stretch;
   object-fit: contain;
   width: 100%;
 }
 
+.model-card .small {
+  margin-top: 4px;
+}
+
 .model-card .equation.compact {
+  margin: 8px 0 0;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.local-global-source {
   margin-top: 10px;
 }
 
@@ -469,16 +478,21 @@
 .rnn-figure-card {
   align-items: center;
   display: flex;
+  height: 282px;
   justify-content: center;
-  min-height: 418px;
+  min-height: 0;
   overflow: hidden;
-  padding: 16px 18px;
+  padding: 10px 14px;
 }
 
 .rnn-figure-card .media {
-  max-height: 430px;
-  max-width: none;
-  width: 108%;
+  max-height: 262px;
+  max-width: 100%;
+  width: 100%;
+}
+
+.rnn-source {
+  margin-top: 10px;
 }
 
 .lstm-gates-slide .rule {
@@ -487,7 +501,7 @@
 
 .lstm-gate-segments {
   display: grid;
-  gap: 11px;
+  gap: 9px;
 }
 
 .lstm-gate-segment {
@@ -524,7 +538,11 @@
   border-left: 5px solid var(--temporal-green);
   border-radius: var(--radius-card);
   display: grid;
-  padding: 13px 17px 14px;
+  padding: 11px 17px 12px;
+}
+
+.lstm-source {
+  margin-top: 8px;
 }
 
 .lstm-gate-card h3 {
@@ -556,8 +574,12 @@
 
 .reservoir-callout {
   box-sizing: border-box;
-  margin: 28px 0 0;
+  margin: 20px 0 0;
   width: 100%;
+}
+
+.reservoir-source {
+  margin-top: 8px;
 }
 
 .conv-bridge-grid {
@@ -704,10 +726,6 @@
 .electricity-figure {
   max-height: 430px;
   width: 100%;
-}
-
-.electricity-slide .caption {
-  margin-top: 6px;
 }
 
 .image-frame {
@@ -1079,7 +1097,8 @@
   color: var(--temporal-ink);
   font-weight: 650;
   line-height: 1.16;
-  padding: 10px 12px 10px 13px;
+  margin: 0;
+  padding: 0;
 }
 
 .window-layout {
@@ -1123,6 +1142,10 @@
   margin-top: 4px;
   max-height: 410px;
   width: 100%;
+}
+
+.sliding-window-source {
+  margin-top: 10px;
 }
 
 .temporal-mini-strip {
@@ -1319,6 +1342,10 @@
   margin: 22px 0 0;
 }
 
+.causal-source {
+  margin-top: 8px;
+}
+
 .token-input-layout {
   align-items: start;
   gap: 28px;
@@ -1375,6 +1402,10 @@
 
 .continuous-callout {
   margin: 22px 0 0;
+}
+
+.continuous-source {
+  margin-top: 8px;
 }
 
 .reveal #discrete-state-space-scan .lead {
@@ -2003,6 +2034,10 @@
   line-height: 1.15;
   margin: 8px 0 0;
   width: 100%;
+}
+
+.attention-source {
+  margin-top: 8px;
 }
 
 .attention-diagram .svg-label {

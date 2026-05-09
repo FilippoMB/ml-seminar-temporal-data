@@ -85,6 +85,10 @@
                   </p>
                 </div>
               </div>
+
+              <p class="source">
+                NDVI context adapted from <a href="https://jdmwhite.github.io/Intro_to_Spatial/">White, <em>Introduction to Spatial Data in R</em></a>, 2022.
+              </p>
             </div>
           </section>
 
@@ -111,8 +115,11 @@
             <div class="kicker">When should we use deep learning?</div>
             <h2>Nonlinear relationships, simple baselines</h2>
             <span class="rule"></span>
+            <p>Load consumption profile on a backbone of the electricity network of Rome. The temperature-load relation is nonlinear; copying yesterday is the first baseline to beat.</p>
             <img class="media image-frame electricity-figure" src="assets/figures/electricity_temperature_baseline_slide.png?v=20260429-slide8fix" alt="Temperature-load scatter and previous-day electricity baseline">
-            <p class="caption">Load consumption profile on a backbone of the electricity network of Rome. The temperature-load relation is nonlinear; copying yesterday is the first baseline to beat.</p>
+            <p class="source">
+              Bianchi et al., "Recurrent neural networks for short-term load forecasting: an overview and comparative analysis", 2017.
+            </p>
           </section>
         </section>
 
@@ -227,6 +234,9 @@
                 <li>attention or state-space scan</li>
               </ul>
             </div>
+            <p class="source local-global-source">
+              Cini et al., "Graph Deep Learning for Spatiotemporal Time Series", 2023.
+            </p>
           </section>
 
         </section>
@@ -270,6 +280,9 @@
                 <img class="media image-frame" src="assets/figures/sequence-media/sin.gif" alt="Animated sliding window over a sinusoidal time series">
               </div>
             </div>
+            <p class="source sliding-window-source">
+              Bianchi, <em>Time Series Analysis with Python</em>, online handbook, 2024.
+            </p>
           </section>
 
           <section id="mlp-window-forecasting">
@@ -299,11 +312,13 @@
             </div>
             <div class="memory-choice-layout">
               <div class="memory-choice-text">
-                <ul class="memory-choice-list">
-                  <li class="fragment accent-card">Too short: miss evidence</li>
-                  <li class="fragment accent-card">Too long: add noise</li>
-                  <li class="fragment accent-card">Memory becomes hand-designed</li>
-                </ul>
+                <div class="memory-choice-list-card accent-card fragment">
+                  <ul class="memory-choice-list">
+                    <li>Too short: miss evidence</li>
+                    <li class="fragment">Too long: add noise</li>
+                    <li class="fragment">Memory becomes hand-designed</li>
+                  </ul>
+                </div>
                 <p class="callout fragment">
                   Can the model learn its own memory?
                 </p>
@@ -353,6 +368,9 @@
                 <img class="media" src="assets/figures/sequence-media/RNN.gif" alt="Animated recurrent neural network">
               </div>
             </div>
+            <p class="source rnn-source">
+              Bianchi, <em>Time Series Analysis with Python</em>, online handbook, 2024.
+            </p>
           </section>
 
           <section id="backpropagation-through-time">
@@ -423,6 +441,9 @@
                 </div>
               </article>
             </div>
+            <p class="source lstm-source">
+              Hochreiter and Schmidhuber, "Long short-term memory", 1997.
+            </p>
           </section>
 
           <section id="reservoir-computing-readout" class="reservoir-slide">
@@ -444,6 +465,9 @@
             </div>
             <p class="callout full-width-callout reservoir-callout fragment">
               Useful when training a standard RNN is too expensive or when data are not enough.
+            </p>
+            <p class="source reservoir-source">
+              Bianchi et al., "Reservoir computing approaches for representation and classification of multivariate time series", 2020.
             </p>
           </section>
 
@@ -821,6 +845,9 @@
             <p class="callout full-width-callout causal-leakage-callout fragment">
               Preprocessing, normalization, and imputation must also respect time.
             </p>
+            <p class="source causal-source">
+              Van Den Oord et al., "Wavenet: A generative model for raw audio", 2016.
+            </p>
           </section>
 
           <section id="temporal-filter-patterns">
@@ -1061,6 +1088,9 @@
 
             <p class="callout full-width-callout attention-callout fragment">
               Attention selects observations by content; time encodings tell it when they occurred.
+            </p>
+            <p class="source attention-source">
+              Vaswani et al., "Attention Is All You Need", 2017.
             </p>
           </section>
 
@@ -1409,6 +1439,9 @@
 
             <p class="callout full-width-callout continuous-callout fragment">
               Continuous time makes irregular sampling and variable time gaps natural.
+            </p>
+            <p class="source continuous-source">
+              Gu et al., "Combining recurrent, convolutional, and continuous-time models with linear state space layers", 2021.
             </p>
 
             <aside class="notes">
@@ -2005,17 +2038,21 @@
               <li><a href="https://github.com/FilippoMB/python-time-series-handbook">Bianchi</a>, <em>Time Series Analysis with Python</em>, online handbook, 2024.</li>
               <li>Bianchi, Maiorino, Kampffmeyer, Rizzi, and Jenssen, "Recurrent neural networks for short-term load forecasting: an overview and comparative analysis", Springer, 2017.</li>
               <li>Bianchi, Scardapane, L&oslash;kse, and Jenssen, "Reservoir computing approaches for representation and classification of multivariate time series", IEEE Transactions on Neural Networks and Learning Systems, 32(5), 2169-2179, 2020.</li>
+              <li><a href="https://jdmwhite.github.io/Intro_to_Spatial/">White</a>, <em>Introduction to Spatial Data in R</em>, SAEON GSN workshop, 2022.</li>
+              <li>Hochreiter and Schmidhuber, "Long short-term memory", Neural Computation, 9(8), 1735-1780, MIT Press, 1997.</li>
               <li><a href="https://doi.org/10.1145/3533382">Benidis et al.</a>, "Deep Learning for Time Series Forecasting", ACM Computing Surveys, 2022.</li>
               <li>Jaeger, "The echo state approach to analysing and training recurrent neural networks", 2001.</li>
               <li><a href="https://arxiv.org/abs/1803.01271">Bai, Kolter, and Koltun</a>, "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling", 2018.</li>
+              <li><a href="https://arxiv.org/abs/1609.03499">Van Den Oord et al.</a>, "Wavenet: A generative model for raw audio", arXiv preprint arXiv:1609.03499 12.1, 2016.</li>
               <li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a>, "Attention Is All You Need", NeurIPS, 2017.</li>
               <li><a href="https://arxiv.org/abs/1806.07366">Chen, Rubanova, Bettencourt, and Duvenaud</a>, "Neural Ordinary Differential Equations", NeurIPS, 2018.</li>
               <li><a href="https://arxiv.org/abs/1907.03907">Rubanova, Chen, and Duvenaud</a>, "Latent ODEs for Irregularly-Sampled Time Series", NeurIPS, 2019.</li>
+              <li><a href="https://arxiv.org/abs/2110.13985">Gu et al.</a>, "Combining recurrent, convolutional, and continuous-time models with linear state space layers", NeurIPS, 2021.</li>
               <li><a href="https://arxiv.org/abs/2111.00396">Gu et al.</a>, "Efficiently Modeling Long Sequences with Structured State Spaces", 2021.</li>
               <li><a href="https://arxiv.org/abs/2312.00752">Gu and Dao</a>, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces", 2023.</li>
               <li><a href="https://www.mdpi.com/2072-4292/11/5/523">Pelletier, Webb, and Petitjean</a>, "Temporal Convolutional Neural Network for the Classification of Satellite Image Time Series", Remote Sensing, 2019.</li>
               <li><a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Garnot_Satellite_Image_Time_Series_Classification_With_Pixel-Set_Encoders_and_Temporal_CVPR_2020_paper.pdf">Garnot et al.</a>, "Satellite Image Time Series Classification with Pixel-Set Encoders and Temporal Self-Attention", CVPR, 2020.</li>
-              <li><a href="https://gmlg.ch/tutorials/graph-based-processing/ecml-2023">Alippi, Zambon, Cini, and Marisca</a>, "Graph Deep Learning for Spatiotemporal Time Series", ECML/PKDD tutorial, 2023.</li>
+              <li><a href="https://gmlg.ch/tutorials/graph-based-processing/ecml-2023">Cini, Marisca, and Zambon</a>, "Graph Deep Learning for Spatiotemporal Time Series", ECML/PKDD tutorial, 2023.</li>
               <li><a href="https://eo4society.esa.int/2022/04/12/dynamic-sentinel-2-mosaic-service/">ESA EO Science for Society</a>, "Dynamic Sentinel-2 mosaic service", 2022.</li>
               <li><a href="https://earthobservatory.nasa.gov/images/85959/flooding-of-the-red-river">NASA Earth Observatory</a>, "Flooding of The Red River", 2015.</li>
             </ol>
