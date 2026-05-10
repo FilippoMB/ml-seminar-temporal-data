@@ -122,17 +122,19 @@
             <div class="kicker">Change and events</div>
             <h2>Flood mapping is a temporal task</h2>
             <span class="rule"></span>
-            <div class="media-row paired-scenes">
-              <div>
-                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
-                <p class="caption">Before: March 23, 2015</p>
+            <div class="flood-animation-wrapper">
+              <div class="image-frame">
+                <div class="flood-image-stack">
+                  <img class="before-image" src="assets/remote_sensing/nasa_redriver_before.jpg" alt="Red River before flooding">
+                  <img class="after-image" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
+                </div>
               </div>
-              <div>
-                <img class="media tall image-frame" src="assets/remote_sensing/nasa_redriver_after.jpg" alt="Red River after flooding">
-                <p class="caption">After: May 26, 2015</p>
+              <div class="flood-caption-stack">
+                <p class="caption before-caption">Before: March 23, 2015</p>
+                <p class="caption after-caption">After: May 26, 2015</p>
               </div>
             </div>
-            <p class="source">
+            <p class="source flood-source">
               NASA Earth Observatory images by Joshua Stevens, using Landsat data from the U.S. Geological Survey.
             </p>
           </section>
@@ -1367,7 +1369,7 @@
 
           <section id="continuous-time-state-dynamics">
             <div class="kicker">Memory as continuous dynamics</div>
-            <h2>Learning rates of changes</h2>
+            <h2>Learning rates of change</h2>
             <span class="rule"></span>
 
             <div class="two-col wide-left stretch-layout continuous-layout">
@@ -1396,7 +1398,9 @@
                   <line x1="58" y1="260" x2="58" y2="48" stroke="#9aa3ad" stroke-width="2"></line>
 
                   <text x="538" y="288" font-size="16" fill="#5c6670" font-style="italic">t</text>
-                  <text x="20" y="58" font-size="16" fill="#5c6670" font-style="italic">s(t)</text>
+                  <text x="20" y="58" font-size="16" fill="#5c6670" font-style="italic">
+                    <tspan>s</tspan><tspan>(t)</tspan>
+                  </text>
 
                   <path
                     d="M70 218 C115 178 145 92 190 118 C235 145 260 230 312 180 C365 130 395 72 455 104 C505 130 520 190 548 150"
@@ -1453,10 +1457,10 @@
                     <text x="455" y="288" text-anchor="middle" font-size="15" fill="#b77719" font-style="italic">t₄</text>
                   </g>
 
-                  <g transform="translate(334 44)">
-                    <rect x="0" y="0" width="190" height="36" rx="10" fill="#f4f0ff" stroke="#75689b" stroke-width="2"></rect>
-                    <text x="95" y="24" text-anchor="middle" font-size="15" fill="#40375f">
-                      <tspan font-style="italic">f</tspan><tspan baseline-shift="sub" font-size="11">θ</tspan> predicts <tspan font-style="italic">ds/dt</tspan>
+                  <g transform="translate(320 44)">
+                    <rect x="0" y="0" width="220" height="36" rx="10" fill="#f4f0ff" stroke="#75689b" stroke-width="2"></rect>
+                    <text x="110" y="24" text-anchor="middle" font-size="15" fill="#40375f">
+                      <tspan font-style="italic">f</tspan><tspan baseline-shift="sub" font-size="11">θ</tspan> parameterizes <tspan font-style="italic">ds/dt</tspan>
                     </text>
                   </g>
                 </svg>
@@ -1464,17 +1468,18 @@
             </div>
 
             <p class="callout full-width-callout continuous-callout fragment">
-              Continuous time makes irregular sampling and variable time gaps natural.
+              Continuous dynamics evolve across irregular gaps; updates happen at observation times.
             </p>
             <p class="source continuous-source">
-              Gu et al., "Combining recurrent, convolutional, and continuous-time models with linear state space layers", 2021.
+              Chen et al., "Neural Ordinary Differential Equations", 2018; Rubanova et al., "Latent ODEs for Irregularly-Sampled Time Series", 2019.
             </p>
 
             <aside class="notes">
               For this audience, start from physics intuition. There is a latent state, and the state evolves
-              according to a differential equation. In a Neural ODE, the derivative is parameterized by a neural
-              network. Observations are available only at discrete times, possibly irregularly. The model can
-              evolve the state between observations, then read it out or update it when data arrives.
+              according to a differential equation. In Neural ODE and Latent ODE models, the derivative is
+              parameterized by a neural network. Observations are available only at discrete times, possibly
+              irregularly. The model can evolve the state between observations, then read it out or update it when
+              data arrives.
             </aside>
           </section>
 
@@ -1511,7 +1516,7 @@
               </div>
 
               <div class="card ssm-scan-card">
-                <h3>Irregular observations: scan state at observed times</h3>
+                <h3>State updates at observed times</h3>
 
                 <svg class="diagram" viewBox="0 0 620 330" role="img" aria-label="Discretized state-space scan with variable time gaps">
                   <defs>
@@ -1673,7 +1678,10 @@
             </div>
 
             <p class="ssm-parameter-card accent-card fragment">
-              \(A,B,C,D\) define transition, input injection, readout, and skip connection; the layer learns these dynamics.
+              \(A,B,C,D\) define state dynamics, input injection, readout, and skip connection; the layer learns these dynamics.
+            </p>
+            <p class="source ssm-source">
+              Gu et al., "Combining recurrent, convolutional, and continuous-time models with linear state space layers", 2021.
             </p>
 
             <aside class="notes">
